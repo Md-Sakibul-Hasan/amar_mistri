@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/app_theme.dart';
 import '../../../../core/router/app_router.dart';
 
 class SplashPage extends StatefulWidget {
@@ -23,19 +24,6 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
   late final AnimationController _dotsController;
 
-  static const _gradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    transform: GradientRotation(160 * math.pi / 180),
-    colors: [
-      Color(0xFF1A73E8),
-      Color(0xFF00A2D2),
-      Color(0xFF00BFA5),
-    ],
-    stops: [0.0, 0.5, 1.0],
-  );
-
-  static const _tealBright = Color(0xFF00E5C9);
   static const _serviceEmojis = ['⚡', '🔧', '❄️', '🎨', '🪚'];
 
   @override
@@ -68,10 +56,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     _iconsSlide = Tween<Offset>(
       begin: const Offset(0, 0.4),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _iconsController,
-      curve: Curves.easeOut,
-    ));
+    ).animate(CurvedAnimation(parent: _iconsController, curve: Curves.easeOut));
 
     // Dots bounce loop
     _dotsController = AnimationController(
@@ -105,25 +90,21 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(gradient: _gradient),
+        decoration: const BoxDecoration(gradient: AppTheme.brandGradient),
         child: Stack(
           clipBehavior: Clip.hardEdge,
           children: [
             // Decorative circles
-            Positioned(
-              top: -80,
-              right: -80,
-              child: _Circle(size: 300, opacity: 0.10),
-            ),
+            Positioned(top: -80, right: -80, child: AppTheme.circle(300, 0.10)),
             Positioned(
               bottom: 60,
               left: -60,
-              child: _Circle(size: 200, opacity: 0.10),
+              child: AppTheme.circle(200, 0.10),
             ),
             Positioned(
               bottom: 200,
               right: 20,
-              child: _Circle(size: 150, opacity: 0.05),
+              child: AppTheme.circle(150, 0.05),
             ),
 
             // Center logo + brand
@@ -139,24 +120,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                       _LogoBadge(),
                       const SizedBox(height: 24),
                       // Brand name
-                      RichText(
-                        textAlign: TextAlign.center,
-                        text: const TextSpan(
-                          style: TextStyle(
-                            fontSize: 36,
-                            fontWeight: FontWeight.w900,
-                            color: Colors.white,
-                            letterSpacing: -0.5,
-                          ),
-                          children: [
-                            TextSpan(text: 'Amar '),
-                            TextSpan(
-                              text: 'Mistri',
-                              style: TextStyle(color: _tealBright),
-                            ),
-                          ],
-                        ),
-                      ),
+                      AppTheme.brandName(fontSize: 36),
                       const SizedBox(height: 8),
                       const Text(
                         'Find trusted local services near you',
@@ -193,9 +157,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                         decoration: BoxDecoration(
                           color: Colors.white.withAlpha(51),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.white.withAlpha(77),
-                          ),
+                          border: Border.all(color: Colors.white.withAlpha(77)),
                         ),
                         child: Center(
                           child: Text(e, style: const TextStyle(fontSize: 20)),
@@ -220,8 +182,8 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                       return AnimatedBuilder(
                         animation: _dotsController,
                         builder: (_, __) {
-                          final offset =
-                              ((_dotsController.value * 3) - i).clamp(0.0, 1.0);
+                          final offset = ((_dotsController.value * 3) - i)
+                              .clamp(0.0, 1.0);
                           final t = math.sin(offset * math.pi).clamp(0.0, 1.0);
                           final scale = 0.6 + 0.4 * t;
                           final opacity = 0.4 + 0.6 * t;
@@ -230,8 +192,9 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                             width: 6 * scale,
                             height: 6 * scale,
                             decoration: BoxDecoration(
-                              color:
-                                  Colors.white.withAlpha((255 * opacity).round()),
+                              color: Colors.white.withAlpha(
+                                (255 * opacity).round(),
+                              ),
                               shape: BoxShape.circle,
                             ),
                           );
@@ -258,28 +221,6 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
   }
 }
 
-class _Circle extends StatelessWidget {
-  final double size;
-  final double opacity;
-
-  const _Circle({required this.size, required this.opacity});
-
-  @override
-  Widget build(BuildContext context) {
-    return Opacity(
-      opacity: opacity,
-      child: Container(
-        width: size,
-        height: size,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-        ),
-      ),
-    );
-  }
-}
-
 class _LogoBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -296,10 +237,7 @@ class _LogoBadge extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white.withAlpha(51),
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(
-                color: Colors.white.withAlpha(102),
-                width: 2,
-              ),
+              border: Border.all(color: Colors.white.withAlpha(102), width: 2),
             ),
             child: Center(
               // Inner white container
@@ -324,7 +262,7 @@ class _LogoBadge extends StatelessWidget {
               width: 28,
               height: 28,
               decoration: const BoxDecoration(
-                color: Color(0xFF00BFA5),
+                color: AppTheme.teal,
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.bolt, size: 16, color: Colors.white),

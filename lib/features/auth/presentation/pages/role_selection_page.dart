@@ -1,25 +1,10 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/constants/app_theme.dart';
 import '../../../../core/router/app_router.dart';
 
 class RoleSelectionPage extends StatelessWidget {
   const RoleSelectionPage({super.key});
-
-  static const _gradient = LinearGradient(
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-    transform: GradientRotation(160 * math.pi / 180),
-    colors: [
-      Color(0xFF1A73E8),
-      Color(0xFF00A2D2),
-      Color(0xFF00BFA5),
-    ],
-    stops: [0.0, 0.5, 1.0],
-  );
-
-  static const _tealBright = Color(0xFF00E5C9);
 
   @override
   Widget build(BuildContext context) {
@@ -27,26 +12,18 @@ class RoleSelectionPage extends StatelessWidget {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(gradient: _gradient),
+        decoration: const BoxDecoration(gradient: AppTheme.brandGradient),
         child: Stack(
           clipBehavior: Clip.hardEdge,
           children: [
             // Decorative circles
-            Positioned(
-              top: -80,
-              right: -80,
-              child: _Circle(size: 300, opacity: 0.10),
-            ),
+            Positioned(top: -80, right: -80, child: AppTheme.circle(300, 0.10)),
             Positioned(
               bottom: 40,
               left: -60,
-              child: _Circle(size: 200, opacity: 0.08),
+              child: AppTheme.circle(200, 0.08),
             ),
-            Positioned(
-              top: 200,
-              right: 20,
-              child: _Circle(size: 120, opacity: 0.05),
-            ),
+            Positioned(top: 200, right: 20, child: AppTheme.circle(120, 0.05)),
 
             SafeArea(
               child: Padding(
@@ -86,24 +63,7 @@ class RoleSelectionPage extends StatelessWidget {
                     const SizedBox(height: 20),
 
                     // Title
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: const TextSpan(
-                        style: TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
-                          letterSpacing: -0.5,
-                        ),
-                        children: [
-                          TextSpan(text: 'Amar '),
-                          TextSpan(
-                            text: 'Mistri',
-                            style: TextStyle(color: _tealBright),
-                          ),
-                        ],
-                      ),
-                    ),
+                    AppTheme.brandName(fontSize: 32),
                     const SizedBox(height: 8),
                     const Text(
                       'How would you like to continue?',
@@ -143,28 +103,6 @@ class RoleSelectionPage extends StatelessWidget {
   }
 }
 
-class _Circle extends StatelessWidget {
-  final double size;
-  final double opacity;
-
-  const _Circle({required this.size, required this.opacity});
-
-  @override
-  Widget build(BuildContext context) {
-    return Opacity(
-      opacity: opacity,
-      child: Container(
-        width: size,
-        height: size,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-        ),
-      ),
-    );
-  }
-}
-
 class _RoleCard extends StatelessWidget {
   final String emoji;
   final String title;
@@ -192,10 +130,7 @@ class _RoleCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white.withAlpha(38),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: Colors.white.withAlpha(77),
-              width: 1.5,
-            ),
+            border: Border.all(color: Colors.white.withAlpha(77), width: 1.5),
           ),
           child: Row(
             children: [
@@ -206,9 +141,7 @@ class _RoleCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Colors.white.withAlpha(51),
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                    color: Colors.white.withAlpha(77),
-                  ),
+                  border: Border.all(color: Colors.white.withAlpha(77)),
                 ),
                 child: Center(
                   child: Text(emoji, style: const TextStyle(fontSize: 24)),
