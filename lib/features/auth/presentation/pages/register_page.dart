@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_theme.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/widgets/app_text_field.dart';
 import '../bloc/auth_bloc.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -173,9 +174,9 @@ class _RegisterPageState extends State<RegisterPage> {
             const SizedBox(height: 24),
 
             // Full Name
-            const _FieldLabel('Full Name'),
+            const AppFieldLabel('Full Name'),
             const SizedBox(height: 6),
-            _Field(
+            AppTextField(
               controller: _nameController,
               hint: 'John Doe',
               prefixIcon: const Icon(
@@ -189,9 +190,9 @@ class _RegisterPageState extends State<RegisterPage> {
             const SizedBox(height: 16),
 
             // Email
-            const _FieldLabel('Email Address'),
+            const AppFieldLabel('Email Address'),
             const SizedBox(height: 6),
-            _Field(
+            AppTextField(
               controller: _emailController,
               hint: 'you@example.com',
               keyboardType: TextInputType.emailAddress,
@@ -207,15 +208,15 @@ class _RegisterPageState extends State<RegisterPage> {
             const SizedBox(height: 16),
 
             // Phone
-            const _FieldLabel('Phone Number'),
+            const AppFieldLabel('Phone Number'),
             const SizedBox(height: 6),
-            _PhoneInputField(controller: _phoneController),
+            AppPhoneField(controller: _phoneController),
             const SizedBox(height: 16),
 
             // Password
-            const _FieldLabel('Password'),
+            const AppFieldLabel('Password'),
             const SizedBox(height: 6),
-            _Field(
+            AppTextField(
               controller: _passwordController,
               hint: 'Min. 6 characters',
               obscureText: _obscurePassword,
@@ -236,9 +237,9 @@ class _RegisterPageState extends State<RegisterPage> {
             const SizedBox(height: 16),
 
             // Confirm Password
-            const _FieldLabel('Confirm Password'),
+            const AppFieldLabel('Confirm Password'),
             const SizedBox(height: 6),
-            _Field(
+            AppTextField(
               controller: _confirmPasswordController,
               hint: 'Re-enter password',
               obscureText: _obscureConfirm,
@@ -382,116 +383,6 @@ class _RegisterPageState extends State<RegisterPage> {
 }
 
 // ── Shared widgets ──────────────────────────────────────────────────────────
-
-class _FieldLabel extends StatelessWidget {
-  final String text;
-  const _FieldLabel(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: const TextStyle(
-        fontSize: 12,
-        fontWeight: FontWeight.w600,
-        color: Color(0xFF1A1A2E),
-      ),
-    );
-  }
-}
-
-class _Field extends StatelessWidget {
-  final TextEditingController controller;
-  final String hint;
-  final TextInputType? keyboardType;
-  final bool obscureText;
-  final Widget? prefixIcon;
-  final Widget? suffixIcon;
-  final String? Function(String?)? validator;
-
-  const _Field({
-    required this.controller,
-    required this.hint,
-    this.keyboardType,
-    this.obscureText = false,
-    this.prefixIcon,
-    this.suffixIcon,
-    this.validator,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-      decoration: AppTheme.inputDecoration(
-        hint: hint,
-        prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon,
-      ),
-      validator: validator,
-    );
-  }
-}
-
-class _PhoneInputField extends StatelessWidget {
-  final TextEditingController controller;
-  const _PhoneInputField({required this.controller});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Row(
-        children: [
-          const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('🇧🇩', style: TextStyle(fontSize: 16)),
-              SizedBox(width: 6),
-              Text(
-                '+880',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-              ),
-              SizedBox(width: 4),
-              Icon(Icons.chevron_right, size: 14, color: Colors.grey),
-            ],
-          ),
-          Container(
-            height: 24,
-            width: 1,
-            color: Colors.grey.shade300,
-            margin: const EdgeInsets.symmetric(horizontal: 8),
-          ),
-          Expanded(
-            child: TextFormField(
-              controller: controller,
-              keyboardType: TextInputType.phone,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-              decoration: InputDecoration(
-                hintText: '01XXXXXXXXX',
-                hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(vertical: 14),
-              ),
-              validator: (v) => (v == null || v.trim().length < 10)
-                  ? 'Enter a valid phone'
-                  : null,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class _SocialButton extends StatelessWidget {
   final String emoji;

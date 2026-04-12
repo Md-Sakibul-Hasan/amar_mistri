@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_theme.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/widgets/app_text_field.dart';
 import '../bloc/auth_bloc.dart';
 
 class LoginPage extends StatefulWidget {
@@ -203,13 +204,13 @@ class _LoginPageState extends State<LoginPage> {
 
             // Phone or Email input
             if (_inputMode == 'phone') ...[
-              const _FieldLabel('Phone Number'),
+              const AppFieldLabel('Phone Number'),
               const SizedBox(height: 6),
-              _PhoneField(),
+              AppPhoneField(),
             ] else ...[
-              const _FieldLabel('Email Address'),
+              const AppFieldLabel('Email Address'),
               const SizedBox(height: 6),
-              _styledField(
+              AppTextField(
                 controller: _emailController,
                 hint: 'you@example.com',
                 keyboardType: TextInputType.emailAddress,
@@ -226,9 +227,9 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 16),
 
             // Password
-            const _FieldLabel('Password'),
+            const AppFieldLabel('Password'),
             const SizedBox(height: 6),
-            _styledField(
+            AppTextField(
               controller: _passwordController,
               hint: 'Enter password',
               obscureText: _obscurePassword,
@@ -391,45 +392,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _styledField({
-    required TextEditingController controller,
-    required String hint,
-    TextInputType? keyboardType,
-    bool obscureText = false,
-    Widget? prefixIcon,
-    Widget? suffixIcon,
-    String? Function(String?)? validator,
-  }) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-      decoration: AppTheme.inputDecoration(
-        hint: hint,
-        prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon,
-      ),
-      validator: validator,
-    );
-  }
-}
-
-class _FieldLabel extends StatelessWidget {
-  final String text;
-  const _FieldLabel(this.text);
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: const TextStyle(
-        fontSize: 12,
-        fontWeight: FontWeight.w600,
-        color: Color(0xFF1A1A2E),
-      ),
-    );
-  }
 }
 
 class _TabButton extends StatelessWidget {
@@ -478,55 +440,6 @@ class _TabButton extends StatelessWidget {
   }
 }
 
-class _PhoneField extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Row(
-        children: [
-          const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('🇧🇩', style: TextStyle(fontSize: 16)),
-              SizedBox(width: 6),
-              Text(
-                '+880',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-              ),
-              SizedBox(width: 4),
-              Icon(Icons.chevron_right, size: 14, color: Colors.grey),
-            ],
-          ),
-          Container(
-            height: 24,
-            width: 1,
-            color: Colors.grey.shade300,
-            margin: const EdgeInsets.symmetric(horizontal: 8),
-          ),
-          Expanded(
-            child: TextField(
-              keyboardType: TextInputType.phone,
-              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-              decoration: InputDecoration(
-                hintText: '01XXXXXXXXX',
-                hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(vertical: 14),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class _SocialButton extends StatelessWidget {
   final String emoji;
