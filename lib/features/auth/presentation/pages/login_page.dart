@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_theme.dart';
@@ -47,15 +48,18 @@ class _LoginPageState extends State<LoginPage> {
       backgroundColor: Colors.grey.shade50,
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
+          if (state is AuthLoading) {
+            EasyLoading.show(status: 'Please wait...');
+          } else {
+            EasyLoading.dismiss();
+          }
           if (state is AuthAuthenticated) {
             final destination = state.user.role == UserRole.provider
                 ? AppRouter.providerHome
                 : AppRouter.customerHome;
             context.go(destination);
           } else if (state is AuthFailureState) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
+            EasyLoading.showError(state.message);
           }
         },
         child: SingleChildScrollView(
@@ -269,60 +273,39 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(height: 8),
 
             // CTA button
-            BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                final isLoading = state is AuthLoading;
-                return GestureDetector(
-                  onTap: isLoading
-                      ? null
-                      : (_inputMode == 'email' ? _submit : null),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 150),
-                    height: 56,
-                    decoration: BoxDecoration(
-                      gradient: AppTheme.headerGradient,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppTheme.blue.withAlpha(77),
-                          blurRadius: 12,
-                          offset: const Offset(0, 4),
+            GestureDetector(
+              onTap: _inputMode == 'email' ? _submit : null,
+              child: Container(
+                height: 56,
+                decoration: BoxDecoration(
+                  gradient: AppTheme.headerGradient,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.blue.withAlpha(77),
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: const Center(
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Login',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
                         ),
-                      ],
-                    ),
-                    child: Center(
-                      child: isLoading
-                          ? const SizedBox(
-                              width: 22,
-                              height: 22,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'Login',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                SizedBox(width: 8),
-                                Icon(
-                                  Icons.arrow_forward,
-                                  color: Colors.white,
-                                  size: 18,
-                                ),
-                              ],
-                            ),
-                    ),
+                      ),
+                      SizedBox(width: 8),
+                      Icon(Icons.arrow_forward, color: Colors.white, size: 18),
+                    ],
                   ),
-                );
-              },
+                ),
+              ),
             ),
             const SizedBox(height: 24),
 
@@ -391,7 +374,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
 }
 
 class _TabButton extends StatelessWidget {
@@ -439,7 +421,6 @@ class _TabButton extends StatelessWidget {
     );
   }
 }
-
 
 class _SocialButton extends StatelessWidget {
   final String emoji;
