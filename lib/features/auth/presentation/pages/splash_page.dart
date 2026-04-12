@@ -1,0 +1,337 @@
+import 'dart:math' as math;
+
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/router/app_router.dart';
+
+class SplashPage extends StatefulWidget {
+  const SplashPage({super.key});
+
+  @override
+  State<SplashPage> createState() => _SplashPageState();
+}
+
+class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
+  late final AnimationController _logoController;
+  late final Animation<double> _logoScale;
+  late final Animation<double> _logoOpacity;
+
+  late final AnimationController _iconsController;
+  late final Animation<double> _iconsOpacity;
+  late final Animation<Offset> _iconsSlide;
+
+  late final AnimationController _dotsController;
+
+  static const _gradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    transform: GradientRotation(160 * math.pi / 180),
+    colors: [
+      Color(0xFF1A73E8),
+      Color(0xFF00A2D2),
+      Color(0xFF00BFA5),
+    ],
+    stops: [0.0, 0.5, 1.0],
+  );
+
+  static const _tealBright = Color(0xFF00E5C9);
+  static const _serviceEmojis = ['⚡', '🔧', '❄️', '🎨', '🪚'];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Logo bounce-in
+    _logoController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 700),
+    );
+    _logoScale = CurvedAnimation(
+      parent: _logoController,
+      curve: Curves.elasticOut,
+    );
+    _logoOpacity = CurvedAnimation(
+      parent: _logoController,
+      curve: const Interval(0.0, 0.4, curve: Curves.easeIn),
+    );
+
+    // Service icons fade+slide
+    _iconsController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    _iconsOpacity = CurvedAnimation(
+      parent: _iconsController,
+      curve: Curves.easeIn,
+    );
+    _iconsSlide = Tween<Offset>(
+      begin: const Offset(0, 0.4),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _iconsController,
+      curve: Curves.easeOut,
+    ));
+
+    // Dots bounce loop
+    _dotsController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat();
+
+    // Start sequence
+    _logoController.forward();
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) _iconsController.forward();
+    });
+
+    // Navigate after 2.5 s
+    Future.delayed(const Duration(milliseconds: 2500), () {
+      if (mounted) context.go(AppRouter.roleSelection);
+    });
+  }
+
+  @override
+  void dispose() {
+    _logoController.dispose();
+    _iconsController.dispose();
+    _dotsController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(gradient: _gradient),
+        child: Stack(
+          clipBehavior: Clip.hardEdge,
+          children: [
+            // Decorative circles
+            Positioned(
+              top: -80,
+              right: -80,
+              child: _Circle(size: 300, opacity: 0.10),
+            ),
+            Positioned(
+              bottom: 60,
+              left: -60,
+              child: _Circle(size: 200, opacity: 0.10),
+            ),
+            Positioned(
+              bottom: 200,
+              right: 20,
+              child: _Circle(size: 150, opacity: 0.05),
+            ),
+
+            // Center logo + brand
+            Center(
+              child: FadeTransition(
+                opacity: _logoOpacity,
+                child: ScaleTransition(
+                  scale: _logoScale,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Logo icon
+                      _LogoBadge(),
+                      const SizedBox(height: 24),
+                      // Brand name
+                      RichText(
+                        textAlign: TextAlign.center,
+                        text: const TextSpan(
+                          style: TextStyle(
+                            fontSize: 36,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                            letterSpacing: -0.5,
+                          ),
+                          children: [
+                            TextSpan(text: 'Amar '),
+                            TextSpan(
+                              text: 'Mistri',
+                              style: TextStyle(color: _tealBright),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Find trusted local services near you',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          height: 1.5,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            // Service icons row
+            Positioned(
+              bottom: 104,
+              left: 0,
+              right: 0,
+              child: FadeTransition(
+                opacity: _iconsOpacity,
+                child: SlideTransition(
+                  position: _iconsSlide,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: _serviceEmojis.map((e) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 6),
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withAlpha(51),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Colors.white.withAlpha(77),
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(e, style: const TextStyle(fontSize: 20)),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+            ),
+
+            // Loading dots + label
+            Positioned(
+              bottom: 40,
+              left: 0,
+              right: 0,
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(3, (i) {
+                      return AnimatedBuilder(
+                        animation: _dotsController,
+                        builder: (_, __) {
+                          final offset =
+                              ((_dotsController.value * 3) - i).clamp(0.0, 1.0);
+                          final t = math.sin(offset * math.pi).clamp(0.0, 1.0);
+                          final scale = 0.6 + 0.4 * t;
+                          final opacity = 0.4 + 0.6 * t;
+                          return Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 3),
+                            width: 6 * scale,
+                            height: 6 * scale,
+                            decoration: BoxDecoration(
+                              color:
+                                  Colors.white.withAlpha((255 * opacity).round()),
+                              shape: BoxShape.circle,
+                            ),
+                          );
+                        },
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Loading...',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.white70,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Circle extends StatelessWidget {
+  final double size;
+  final double opacity;
+
+  const _Circle({required this.size, required this.opacity});
+
+  @override
+  Widget build(BuildContext context) {
+    return Opacity(
+      opacity: opacity,
+      child: Container(
+        width: size,
+        height: size,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          shape: BoxShape.circle,
+        ),
+      ),
+    );
+  }
+}
+
+class _LogoBadge extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 96,
+      height: 96,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          // Outer glass container
+          Container(
+            width: 96,
+            height: 96,
+            decoration: BoxDecoration(
+              color: Colors.white.withAlpha(51),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(
+                color: Colors.white.withAlpha(102),
+                width: 2,
+              ),
+            ),
+            child: Center(
+              // Inner white container
+              child: Container(
+                width: 72,
+                height: 72,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: const Center(
+                  child: Text('🏠', style: TextStyle(fontSize: 36)),
+                ),
+              ),
+            ),
+          ),
+          // Teal zap badge
+          Positioned(
+            top: -8,
+            right: -8,
+            child: Container(
+              width: 28,
+              height: 28,
+              decoration: const BoxDecoration(
+                color: Color(0xFF00BFA5),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.bolt, size: 16, color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
