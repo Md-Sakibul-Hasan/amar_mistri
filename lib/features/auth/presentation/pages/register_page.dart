@@ -93,8 +93,6 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-
-
   Widget _buildForm(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),

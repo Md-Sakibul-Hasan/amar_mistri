@@ -1,10 +1,13 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_theme.dart';
 import '../../../../core/router/app_router.dart';
+import '../bloc/auth_bloc.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -72,7 +75,16 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
 
     // Navigate after 2.5 s
     Future.delayed(const Duration(milliseconds: 2500), () {
-      if (mounted) context.go(AppRouter.roleSelection);
+      if (!mounted) return;
+      final authState = context.read<AuthBloc>().state;
+      if (authState is AuthAuthenticated) {
+        final destination = authState.user.role == UserRole.provider
+            ? AppRouter.providerHome
+            : AppRouter.customerHome;
+        context.go(destination);
+      } else {
+        context.go(AppRouter.roleSelection);
+      }
     });
   }
 
