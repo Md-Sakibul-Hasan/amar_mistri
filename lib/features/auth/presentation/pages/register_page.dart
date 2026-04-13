@@ -1,3 +1,5 @@
+import 'dart:ui' show lerpDouble;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -74,85 +76,24 @@ class _RegisterPageState extends State<RegisterPage> {
             EasyLoading.showError(state.message);
           }
         },
-        child: SingleChildScrollView(
-          child: Column(
-            children: [_buildHeader(isProvider), _buildForm(context)],
-          ),
+        child: CustomScrollView(
+          slivers: [
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: _HeaderDelegate(
+                isProvider: isProvider,
+                pageContext: context,
+                topPadding: MediaQuery.of(context).padding.top,
+              ),
+            ),
+            SliverToBoxAdapter(child: _buildForm(context)),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader(bool isProvider) {
-    return Container(
-      width: double.infinity,
-      constraints: const BoxConstraints(minHeight: 200),
-      decoration: const BoxDecoration(gradient: AppTheme.headerGradient),
-      child: Stack(
-        children: [
-          Positioned(
-            top: 0,
-            right: 0,
-            child: Transform.translate(
-              offset: const Offset(40, -40),
-              child: AppTheme.circle(180, 0.10),
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: Transform.translate(
-              offset: const Offset(-30, 30),
-              child: AppTheme.circle(120, 0.10),
-            ),
-          ),
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(8, 8, 16, 28),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back_ios,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                    onPressed: () => context.go(AppRouter.roleSelection),
-                  ),
-                  const SizedBox(height: 8),
-                  Center(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        AppTheme.logoBadge(size: 48, iconSize: 24),
-                        const SizedBox(width: 12),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            AppTheme.brandName(fontSize: 22),
-                            Text(
-                              isProvider
-                                  ? 'Provider Portal'
-                                  : 'Your local service partner',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.white70,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
 
   Widget _buildForm(BuildContext context) {
     return Padding(
@@ -366,6 +307,127 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+}
+
+// ── Collapsing header delegate ─────────────────────────────────────────────
+
+class _HeaderDelegate extends SliverPersistentHeaderDelegate {
+  final bool isProvider;
+  final BuildContext pageContext;
+  final double topPadding;
+
+  const _HeaderDelegate({
+    required this.isProvider,
+    required this.pageContext,
+    required this.topPadding,
+  });
+
+  @override
+  double get minExtent => topPadding + kToolbarHeight;
+
+  @override
+  double get maxExtent => topPadding + 200.0;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    final t = (shrinkOffset / (maxExtent - minExtent)).clamp(0.0, 1.0);
+    final logoSize = lerpDouble(48.0, 32.0, t)!;
+    final logoIconSize = lerpDouble(24.0, 16.0, t)!;
+    final brandFontSize = lerpDouble(22.0, 16.0, t)!;
+    final logoTop = lerpDouble(
+      topPadding + 62.0,
+      topPadding + (kToolbarHeight - 32.0) / 2,
+      t,
+    )!;
+
+    return Container(
+      decoration: const BoxDecoration(gradient: AppTheme.headerGradient),
+      child: Stack(
+        clipBehavior: Clip.hardEdge,
+        children: [
+          // Decorative circles — fade out while collapsing
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Opacity(
+              opacity: (1.0 - t).clamp(0.0, 1.0),
+              child: Transform.translate(
+                offset: const Offset(40, -40),
+                child: AppTheme.circle(180, 0.10),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            child: Opacity(
+              opacity: (1.0 - t).clamp(0.0, 1.0),
+              child: Transform.translate(
+                offset: const Offset(-30, 30),
+                child: AppTheme.circle(120, 0.10),
+              ),
+            ),
+          ),
+          // Back button — fixed at the top
+          Positioned(
+            top: topPadding + 4.0,
+            left: 4.0,
+            child: IconButton(
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+                size: 20,
+              ),
+              onPressed: () => pageContext.go(AppRouter.roleSelection),
+            ),
+          ),
+          // Logo + name — slides up and shrinks as header collapses
+          Positioned(
+            top: logoTop,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AppTheme.logoBadge(size: logoSize, iconSize: logoIconSize),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AppTheme.brandName(fontSize: brandFontSize),
+                      if (t < 0.6)
+                        Opacity(
+                          opacity: (1.0 - t / 0.6).clamp(0.0, 1.0),
+                          child: Text(
+                            isProvider
+                                ? 'Provider Portal'
+                                : 'Your local service partner',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.white70,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _HeaderDelegate oldDelegate) =>
+      oldDelegate.isProvider != isProvider ||
+      oldDelegate.topPadding != topPadding;
 }
 
 // ── Shared widgets ──────────────────────────────────────────────────────────
