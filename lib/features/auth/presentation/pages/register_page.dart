@@ -28,6 +28,13 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _obscurePassword = true;
   bool _obscureConfirm = true;
 
+  // Provider-specific state
+  final Set<String> _selectedServices = {};
+  final _experienceController = TextEditingController();
+  final _skillsController = TextEditingController();
+  final _serviceAreaController = TextEditingController();
+  final _nidController = TextEditingController();
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -35,14 +42,24 @@ class _RegisterPageState extends State<RegisterPage> {
     _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _experienceController.dispose();
+    _skillsController.dispose();
+    _serviceAreaController.dispose();
+    _nidController.dispose();
     super.dispose();
   }
 
   void _submit() {
     if (!_formKey.currentState!.validate()) return;
-    final role = widget.role == 'provider'
-        ? UserRole.provider
-        : UserRole.customer;
+    final isProvider = widget.role == 'provider';
+    if (isProvider && _selectedServices.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select at least one service.')),
+      );
+      return;
+    }
+    final role = isProvider ? UserRole.provider : UserRole.customer;
+    final expText = _experienceController.text.trim();
     context.read<AuthBloc>().add(
       AuthRegisterRequested(
         name: _nameController.text.trim(),
@@ -50,6 +67,17 @@ class _RegisterPageState extends State<RegisterPage> {
         password: _passwordController.text,
         phone: _phoneController.text.trim(),
         role: role,
+        services: isProvider ? _selectedServices.toList() : null,
+        experienceYears: isProvider && expText.isNotEmpty
+            ? int.tryParse(expText)
+            : null,
+        skills: isProvider && _skillsController.text.trim().isNotEmpty
+            ? _skillsController.text.trim()
+            : null,
+        serviceArea: isProvider && _serviceAreaController.text.trim().isNotEmpty
+            ? _serviceAreaController.text.trim()
+            : null,
+        nidNumber: isProvider ? _nidController.text.trim() : null,
       ),
     );
   }
@@ -86,14 +114,14 @@ class _RegisterPageState extends State<RegisterPage> {
                 topPadding: MediaQuery.of(context).padding.top,
               ),
             ),
-            SliverToBoxAdapter(child: _buildForm(context)),
+            SliverToBoxAdapter(child: _buildForm(context, isProvider)),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildForm(BuildContext context) {
+  Widget _buildForm(BuildContext context, bool isProvider) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
       child: Form(
@@ -155,6 +183,97 @@ class _RegisterPageState extends State<RegisterPage> {
             const SizedBox(height: 6),
             AppPhoneField(controller: _phoneController),
             const SizedBox(height: 16),
+
+            // ── Provider-only fields ─────────────────────────────────────
+            if (isProvider) ...[
+              // Services
+              const AppFieldLabel('Services Offered'),
+              const SizedBox(height: 8),
+              _ServiceChips(
+                selected: _selectedServices,
+                onToggle: (s) => setState(() {
+                  if (_selectedServices.contains(s)) {
+                    _selectedServices.remove(s);
+                  } else {
+                    _selectedServices.add(s);
+                  }
+                }),
+              ),
+              const SizedBox(height: 16),
+
+              // Experience
+              const AppFieldLabel('Experience (Years)'),
+              const SizedBox(height: 6),
+              AppTextField(
+                controller: _experienceController,
+                hint: 'e.g. 3',
+                keyboardType: TextInputType.number,
+                prefixIcon: const Icon(
+                  Icons.work_history_outlined,
+                  size: 18,
+                  color: Colors.grey,
+                ),
+                validator: (v) {
+                  if (v == null || v.trim().isEmpty) {
+                    return 'Enter years of experience';
+                  }
+                  if (int.tryParse(v.trim()) == null) {
+                    return 'Enter a valid number';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // Service Area
+              const AppFieldLabel('Service Area'),
+              const SizedBox(height: 6),
+              AppTextField(
+                controller: _serviceAreaController,
+                hint: 'e.g. Dhaka, Mirpur',
+                prefixIcon: const Icon(
+                  Icons.location_on_outlined,
+                  size: 18,
+                  color: Colors.grey,
+                ),
+                validator: (v) => (v == null || v.trim().isEmpty)
+                    ? 'Enter your service area'
+                    : null,
+              ),
+              const SizedBox(height: 16),
+
+              // NID / ID Number
+              const AppFieldLabel('NID / ID Number'),
+              const SizedBox(height: 6),
+              AppTextField(
+                controller: _nidController,
+                hint: 'National ID or other ID',
+                prefixIcon: const Icon(
+                  Icons.badge_outlined,
+                  size: 18,
+                  color: Colors.grey,
+                ),
+                validator: (v) => (v == null || v.trim().isEmpty)
+                    ? 'Enter your NID / ID number'
+                    : null,
+              ),
+              const SizedBox(height: 16),
+
+              // Skills (optional)
+              const AppFieldLabel('Skills (Optional)'),
+              const SizedBox(height: 6),
+              AppTextField(
+                controller: _skillsController,
+                hint: 'e.g. Solar panel installation, inverter repair',
+                maxLines: 3,
+                prefixIcon: const Icon(
+                  Icons.build_outlined,
+                  size: 18,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
 
             // Password
             const AppFieldLabel('Password'),
@@ -472,6 +591,48 @@ class _SocialButton extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+// ── Service chips selector ──────────────────────────────────────────────────
+
+class _ServiceChips extends StatelessWidget {
+  final Set<String> selected;
+  final void Function(String) onToggle;
+
+  const _ServiceChips({required this.selected, required this.onToggle});
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: AppConstants.availableServices.map((service) {
+        final isSelected = selected.contains(service);
+        return GestureDetector(
+          onTap: () => onToggle(service),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            decoration: BoxDecoration(
+              color: isSelected ? AppTheme.blue : Colors.grey.shade100,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: isSelected ? AppTheme.blue : Colors.grey.shade300,
+              ),
+            ),
+            child: Text(
+              service,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: isSelected ? Colors.white : Colors.grey.shade700,
+              ),
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 }
