@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "34010564832",
+    "project_id": "amar-mistri",
+    "storage_bucket": "amar-mistri.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34010564832:android:e49607e52a2e7496fe6885",
+        "android_client_info": {
+          "package_name": "com.amar_mistri.amar_mistri"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZHlnyaPQcJpfm-ylrXFFELm3murPkWvY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
