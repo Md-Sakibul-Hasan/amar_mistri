@@ -203,8 +203,49 @@ class _ProviderHeader extends StatelessWidget {
                     ),
                     onSelected: (value) {
                       if (value == 'logout') {
-                        context.read<AuthBloc>().add(
-                          const AuthLogoutRequested(),
+                        showDialog<void>(
+                          context: context,
+                          builder: (dialogContext) => AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            title: const Text(
+                              'Logout',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w800,
+                                color: Color(0xFF1A1A2E),
+                              ),
+                            ),
+                            content: const Text(
+                              'Are you sure you want to logout?',
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(dialogContext).pop(),
+                                child: const Text(
+                                  'Cancel',
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(dialogContext).pop();
+                                  context.read<AuthBloc>().add(
+                                    const AuthLogoutRequested(),
+                                  );
+                                },
+                                child: const Text(
+                                  'Logout',
+                                  style: TextStyle(
+                                    color: Color(0xFFEF4444),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         );
                       }
                     },
