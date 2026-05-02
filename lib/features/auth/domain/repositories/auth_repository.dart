@@ -27,4 +27,6 @@ abstract class AuthRepository {
   Future<Either<Failure, AppUser>> getCurrentUser();
 
   Future<Either<Failure, List<AppUser>>> getUsersByService(String service);
+
+  Future<Either<Failure, AppUser>> getProviderDetails(String uid);
 }

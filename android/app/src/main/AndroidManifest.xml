@@ -42,4 +42,18 @@
             <data android:mimeType="text/plain"/>
         </intent>
     </queries>
+    <queries>
+        <!-- url_launcher: tel -->
+        <intent>
+            <action android:name="android.intent.action.DIAL"/>
+            <data android:scheme="tel"/>
+        </intent>
+        <!-- url_launcher: WhatsApp / https -->
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="https"/>
+        </intent>
+        <!-- url_launcher: WhatsApp package -->
+        <package android:name="com.whatsapp"/>
+    </queries>
 </manifest>

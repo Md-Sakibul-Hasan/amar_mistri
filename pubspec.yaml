@@ -54,6 +54,7 @@ dependencies:
   shared_preferences: ^2.3.3
   uuid: ^4.5.1
   flutter_easyloading: ^3.0.5
+  url_launcher: ^6.3.2
 
 
 dev_dependencies:

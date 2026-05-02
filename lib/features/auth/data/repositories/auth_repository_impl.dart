@@ -90,4 +90,14 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(e.toFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, AppUser>> getProviderDetails(String uid) async {
+    try {
+      final user = await remoteDataSource.getProviderDetails(uid);
+      return Right(user);
+    } on AppException catch (e) {
+      return Left(e.toFailure());
+    }
+  }
 }

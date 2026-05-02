@@ -11,6 +11,7 @@ import '../../features/auth/presentation/pages/role_selection_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/customer/presentation/pages/customer_home_page.dart';
 import '../../features/customer/presentation/pages/providers_list_page.dart';
+import '../../features/customer/presentation/pages/provider_details_page.dart';
 import '../../features/provider/presentation/pages/provider_home_page.dart';
 import '../constants/app_constants.dart';
 
@@ -22,6 +23,7 @@ class AppRouter {
   static const String customerHome = '/customer/home';
   static const String providerHome = '/provider/home';
   static const String providersByService = '/customer/providers';
+  static const String providerDetails = '/customer/provider-details';
 
   static GoRouter router(BuildContext context) {
     final authBloc = context.read<AuthBloc>();
@@ -74,6 +76,13 @@ class AppRouter {
           builder: (_, state) {
             final service = state.uri.queryParameters['service'] ?? 'Service';
             return ProvidersListPage(service: service);
+          },
+        ),
+        GoRoute(
+          path: providerDetails,
+          builder: (_, state) {
+            final uid = state.uri.queryParameters['uid'] ?? '';
+            return ProviderDetailsPage(uid: uid);
           },
         ),
         GoRoute(

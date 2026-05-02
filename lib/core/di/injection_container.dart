@@ -11,8 +11,10 @@ import '../../features/auth/domain/usecases/register_usecase.dart';
 import '../../features/auth/domain/usecases/logout_usecase.dart';
 import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
 import '../../features/auth/domain/usecases/get_providers_by_service_usecase.dart';
+import '../../features/auth/domain/usecases/get_provider_details_usecase.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../features/customer/presentation/bloc/providers_bloc.dart';
+import '../../features/customer/presentation/bloc/provider_details_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -39,6 +41,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => LogoutUseCase(sl()));
   sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
   sl.registerLazySingleton(() => GetProvidersByServiceUseCase(sl()));
+  sl.registerLazySingleton(() => GetProviderDetailsUseCase(sl()));
 
   // BLoCs
   sl.registerFactory(
@@ -50,4 +53,5 @@ Future<void> initDependencies() async {
     ),
   );
   sl.registerFactory(() => ProvidersBloc(getProvidersByService: sl()));
+  sl.registerFactory(() => ProviderDetailsBloc(getProviderDetails: sl()));
 }

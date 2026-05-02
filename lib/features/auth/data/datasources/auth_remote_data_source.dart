@@ -25,6 +25,7 @@ abstract class AuthRemoteDataSource {
 
   Future<AppUserModel> getCurrentUser();
   Future<List<AppUserModel>> getUsersByService(String service);
+  Future<AppUserModel> getProviderDetails(String uid);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -137,6 +138,20 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ServerException(e.message ?? 'A server error occurred.');
     }
   }
+
+  @override
+  Future<AppUserModel> getProviderDetails(String uid) async {
+    try {
+      final doc = await firestore
+          .collection(AppConstants.usersCollection)
+          .doc(uid)
+          .get();
+      if (!doc.exists) throw const AuthException('Provider not found.');
+      return AppUserModel.fromFirestore(doc.data()!);
+    } on FirebaseException catch (e) {
+      throw ServerException(e.message ?? 'A server error occurred.');
+    }
+  }
 }
 
 /// Temporary mock — replace with real implementation after Firebase is connected.
@@ -212,5 +227,15 @@ class MockAuthDataSource implements AuthRemoteDataSource {
         .map((entry) => entry.user)
         .toList();
     return providers;
+  }
+
+  @override
+  Future<AppUserModel> getProviderDetails(String uid) async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    final entry = _store.values
+        .cast<({String password, AppUserModel user})?>()
+        .firstWhere((e) => e?.user.uid == uid, orElse: () => null);
+    if (entry == null) throw const AuthException('Provider not found.');
+    return entry.user;
   }
 }
