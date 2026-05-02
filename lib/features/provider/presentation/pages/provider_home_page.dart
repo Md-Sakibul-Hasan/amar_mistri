@@ -21,32 +21,34 @@ class ProviderHomePage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: _ProviderHeader(
-              greeting: _greeting(),
-              firstName: firstName,
-              serviceArea: user.serviceArea,
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: _ProviderHeader(
+                greeting: _greeting(),
+                firstName: firstName,
+                serviceArea: user.serviceArea,
+              ),
             ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                _StatsRow(user: user),
-                const SizedBox(height: 20),
-                const _QuickActionsSection(),
-                const SizedBox(height: 20),
-                const _RecentBookingsSection(),
-                const SizedBox(height: 20),
-                const _EarningsSummarySection(),
-                const SizedBox(height: 20),
-                const _TipsSection(),
-              ]),
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate([
+                  _StatsRow(user: user),
+                  const SizedBox(height: 20),
+                  const _QuickActionsSection(),
+                  const SizedBox(height: 20),
+                  const _RecentBookingsSection(),
+                  const SizedBox(height: 20),
+                  const _EarningsSummarySection(),
+                  const SizedBox(height: 20),
+                  const _TipsSection(),
+                ]),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -69,6 +71,10 @@ class _ProviderHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(24),
+          bottomRight: Radius.circular(24),
+        ),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,

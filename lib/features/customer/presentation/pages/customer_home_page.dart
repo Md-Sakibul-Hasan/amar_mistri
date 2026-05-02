@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/utils/greeting_utils.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../widgets/banner_carousel.dart';
 import '../widgets/categories_section.dart';
@@ -9,13 +10,6 @@ import '../widgets/top_providers_section.dart';
 
 class CustomerHomePage extends StatelessWidget {
   const CustomerHomePage({super.key});
-
-  static String _greeting() {
-    final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good Morning';
-    if (hour < 17) return 'Good Afternoon';
-    return 'Good Evening';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +23,7 @@ class CustomerHomePage extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: HomeHeader(greeting: _greeting(), firstName: firstName),
+              child: HomeHeader(greeting: getGreeting(), firstName: firstName),
             ),
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
