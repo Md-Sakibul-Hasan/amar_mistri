@@ -230,7 +230,7 @@ class _RegisterPageState extends State<RegisterPage> {
               const SizedBox(height: 6),
               AppTextField(
                 controller: _serviceAreaController,
-                hint: 'e.g. Dhaka, Mirpur',
+                hint: 'Enter your service area',
                 prefixIcon: const Icon(
                   Icons.location_on_outlined,
                   size: 18,

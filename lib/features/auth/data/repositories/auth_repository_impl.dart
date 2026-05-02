@@ -78,4 +78,16 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(e.toFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, List<AppUser>>> getUsersByService(
+    String service,
+  ) async {
+    try {
+      final users = await remoteDataSource.getUsersByService(service);
+      return Right(users);
+    } on AppException catch (e) {
+      return Left(e.toFailure());
+    }
+  }
 }

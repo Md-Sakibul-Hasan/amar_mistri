@@ -24,6 +24,7 @@ abstract class AuthRemoteDataSource {
   Future<void> logout();
 
   Future<AppUserModel> getCurrentUser();
+  Future<List<AppUserModel>> getUsersByService(String service);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -120,6 +121,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ServerException(e.message ?? 'A server error occurred.');
     }
   }
+
+  @override
+  Future<List<AppUserModel>> getUsersByService(String service) async {
+    try {
+      final querySnapshot = await firestore
+          .collection(AppConstants.usersCollection)
+          .where('services', arrayContains: service)
+          .get();
+      // For simplicity, return the first matching provider. Adjust as needed.
+      return querySnapshot.docs
+          .map((doc) => AppUserModel.fromFirestore(doc.data()))
+          .toList();
+    } on FirebaseException catch (e) {
+      throw ServerException(e.message ?? 'A server error occurred.');
+    }
+  }
 }
 
 /// Temporary mock — replace with real implementation after Firebase is connected.
@@ -186,5 +203,14 @@ class MockAuthDataSource implements AuthRemoteDataSource {
   Future<AppUserModel> getCurrentUser() async {
     if (_currentUser == null) throw const AuthException('No user logged in.');
     return _currentUser!;
+  }
+
+  @override
+  Future<List<AppUserModel>> getUsersByService(String service) async {
+    final providers = _store.values
+        .where((entry) => entry.user.services?.contains(service) == true)
+        .map((entry) => entry.user)
+        .toList();
+    return providers;
   }
 }

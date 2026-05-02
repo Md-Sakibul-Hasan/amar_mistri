@@ -21,7 +21,6 @@ class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
-  String _inputMode = 'email'; // 'phone' | 'email'
 
   @override
   void dispose() {
@@ -180,54 +179,24 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 20),
 
-            // Phone / Email toggle
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  _TabButton(
-                    icon: Icons.phone_outlined,
-                    label: 'Phone',
-                    active: _inputMode == 'phone',
-                    onTap: () => setState(() => _inputMode = 'phone'),
-                  ),
-                  _TabButton(
-                    icon: Icons.mail_outline,
-                    label: 'Email',
-                    active: _inputMode == 'email',
-                    onTap: () => setState(() => _inputMode = 'email'),
-                  ),
-                ],
-              ),
-            ),
             const SizedBox(height: 20),
 
-            // Phone or Email input
-            if (_inputMode == 'phone') ...[
-              const AppFieldLabel('Phone Number'),
-              const SizedBox(height: 6),
-              AppPhoneField(),
-            ] else ...[
-              const AppFieldLabel('Email Address'),
-              const SizedBox(height: 6),
-              AppTextField(
-                controller: _emailController,
-                hint: 'you@example.com',
-                keyboardType: TextInputType.emailAddress,
-                prefixIcon: const Icon(
-                  Icons.mail_outline,
-                  size: 18,
-                  color: Colors.grey,
-                ),
-                validator: (v) => (v == null || !v.contains('@'))
-                    ? 'Enter a valid email'
-                    : null,
+            const AppFieldLabel('Email Address'),
+            const SizedBox(height: 6),
+            AppTextField(
+              controller: _emailController,
+              hint: 'you@example.com',
+              keyboardType: TextInputType.emailAddress,
+              prefixIcon: const Icon(
+                Icons.mail_outline,
+                size: 18,
+                color: Colors.grey,
               ),
-            ],
+              validator: (v) => (v == null || !v.contains('@'))
+                  ? 'Enter a valid email'
+                  : null,
+            ),
+
             const SizedBox(height: 16),
 
             // Password
@@ -274,7 +243,7 @@ class _LoginPageState extends State<LoginPage> {
 
             // CTA button
             GestureDetector(
-              onTap: _inputMode == 'email' ? _submit : null,
+              onTap: _submit,
               child: Container(
                 height: 56,
                 decoration: BoxDecoration(

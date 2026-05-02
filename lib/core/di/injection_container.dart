@@ -10,7 +10,9 @@ import '../../features/auth/domain/usecases/login_usecase.dart';
 import '../../features/auth/domain/usecases/register_usecase.dart';
 import '../../features/auth/domain/usecases/logout_usecase.dart';
 import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
+import '../../features/auth/domain/usecases/get_providers_by_service_usecase.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
+import '../../features/customer/presentation/bloc/providers_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -23,10 +25,7 @@ Future<void> initDependencies() async {
 
   // Data sources
   sl.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(
-      firebaseAuth: sl(),
-      firestore: sl(),
-    ),
+    () => AuthRemoteDataSourceImpl(firebaseAuth: sl(), firestore: sl()),
   );
 
   // Repositories
@@ -39,6 +38,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
   sl.registerLazySingleton(() => LogoutUseCase(sl()));
   sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
+  sl.registerLazySingleton(() => GetProvidersByServiceUseCase(sl()));
 
   // BLoCs
   sl.registerFactory(
@@ -49,4 +49,5 @@ Future<void> initDependencies() async {
       getCurrentUserUseCase: sl(),
     ),
   );
+  sl.registerFactory(() => ProvidersBloc(getProvidersByService: sl()));
 }

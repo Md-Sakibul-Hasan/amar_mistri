@@ -10,6 +10,7 @@ import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/role_selection_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/customer/presentation/pages/customer_home_page.dart';
+import '../../features/customer/presentation/pages/providers_list_page.dart';
 import '../../features/provider/presentation/pages/provider_home_page.dart';
 import '../constants/app_constants.dart';
 
@@ -20,6 +21,7 @@ class AppRouter {
   static const String register = '/register';
   static const String customerHome = '/customer/home';
   static const String providerHome = '/provider/home';
+  static const String providersByService = '/customer/providers';
 
   static GoRouter router(BuildContext context) {
     final authBloc = context.read<AuthBloc>();
@@ -36,7 +38,7 @@ class AppRouter {
             state.matchedLocation == roleSelection ||
             state.matchedLocation == splash;
 
-        if (!isLoggedIn && !isLoggingIn) return login;
+        if (!isLoggedIn && !isLoggingIn) return roleSelection;
         if (isLoggedIn && isLoggingIn) {
           final role = authState.user.role;
           return role == UserRole.provider ? providerHome : customerHome;
@@ -66,6 +68,13 @@ class AppRouter {
         GoRoute(
           path: customerHome,
           builder: (_, __) => const CustomerHomePage(),
+        ),
+        GoRoute(
+          path: providersByService,
+          builder: (_, state) {
+            final service = state.uri.queryParameters['service'] ?? 'Service';
+            return ProvidersListPage(service: service);
+          },
         ),
         GoRoute(
           path: providerHome,

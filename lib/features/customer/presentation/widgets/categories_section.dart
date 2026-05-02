@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/app_router.dart';
 
 class CategoriesSection extends StatelessWidget {
   const CategoriesSection({super.key});
@@ -9,8 +11,11 @@ class CategoriesSection extends StatelessWidget {
     ('AC Repair', '❄️'),
     ('Painter', '🎨'),
     ('Carpenter', '🪚'),
-    ('Cleaner', '🧹'),
-    ('Mason', '🧱'),
+    ('Home Cleaner', '🧹'),
+    ('Mason / Civil', '🧱'),
+    ('Gas Technician', '🔥'),
+    ('Welder', '⚙️'),
+    ('CCTV / Security', '📹'),
   ];
 
   @override
@@ -66,7 +71,9 @@ class CategoriesSection extends StatelessWidget {
           itemBuilder: (_, i) {
             final (label, emoji) = _categories[i];
             return GestureDetector(
-              onTap: () {},
+              onTap: () => context.push(
+                '${AppRouter.providersByService}?service=${Uri.encodeComponent(label)}',
+              ),
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
