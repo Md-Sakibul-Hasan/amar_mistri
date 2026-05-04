@@ -13,6 +13,11 @@ import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
 import '../../features/auth/domain/usecases/get_providers_by_service_usecase.dart';
 import '../../features/auth/domain/usecases/get_provider_details_usecase.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
+import '../../features/customer/data/datasources/booking_remote_data_source.dart';
+import '../../features/customer/data/repositories/booking_repository_impl.dart';
+import '../../features/customer/domain/repositories/booking_repository.dart';
+import '../../features/customer/domain/usecases/create_booking_usecase.dart';
+import '../../features/customer/presentation/bloc/booking_bloc.dart';
 import '../../features/customer/presentation/bloc/providers_bloc.dart';
 import '../../features/customer/presentation/bloc/provider_details_bloc.dart';
 
@@ -29,10 +34,16 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(firebaseAuth: sl(), firestore: sl()),
   );
+  sl.registerLazySingleton<BookingRemoteDataSource>(
+    () => BookingRemoteDataSourceImpl(firebaseAuth: sl(), firestore: sl()),
+  );
 
   // Repositories
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(remoteDataSource: sl()),
+  );
+  sl.registerLazySingleton<BookingRepository>(
+    () => BookingRepositoryImpl(remoteDataSource: sl()),
   );
 
   // Use cases
@@ -42,6 +53,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
   sl.registerLazySingleton(() => GetProvidersByServiceUseCase(sl()));
   sl.registerLazySingleton(() => GetProviderDetailsUseCase(sl()));
+  sl.registerLazySingleton(() => CreateBookingUseCase(sl()));
 
   // BLoCs
   sl.registerFactory(
@@ -54,4 +66,5 @@ Future<void> initDependencies() async {
   );
   sl.registerFactory(() => ProvidersBloc(getProvidersByService: sl()));
   sl.registerFactory(() => ProviderDetailsBloc(getProviderDetails: sl()));
+  sl.registerFactory(() => BookingBloc(createBookingUseCase: sl()));
 }

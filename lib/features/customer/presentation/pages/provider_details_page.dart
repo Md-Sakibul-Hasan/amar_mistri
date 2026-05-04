@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../features/auth/domain/entities/app_user.dart';
+import 'booking_page.dart';
 import '../bloc/provider_details_bloc.dart';
 
 class ProviderDetailsPage extends StatelessWidget {
@@ -263,7 +264,13 @@ class _DetailContent extends StatelessWidget {
               ],
             ),
             child: ElevatedButton(
-              onPressed: () => _showBookingSnackbar(context),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => BookingPage(provider: provider),
+                  ),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF1A73E8),
                 foregroundColor: Colors.white,
@@ -294,17 +301,6 @@ class _DetailContent extends StatelessWidget {
   Future<void> _launch(String url) async {
     final uri = Uri.parse(url);
     await launchUrl(uri, mode: LaunchMode.externalApplication);
-  }
-
-  void _showBookingSnackbar(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Booking feature coming soon!'),
-        backgroundColor: const Color(0xFF1A73E8),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
   }
 }
 
