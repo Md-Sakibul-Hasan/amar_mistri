@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -12,8 +13,19 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await initDependencies();
+  _configureWidgetErrorUI();
   Bloc.observer = const _AppBlocObserver();
   runApp(const AmarMistriApp());
+}
+
+void _configureWidgetErrorUI() {
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    if (!kReleaseMode) {
+      return ErrorWidget(details.exception);
+    }
+
+    return const _ReleaseErrorFallback();
+  };
 }
 
 class AmarMistriApp extends StatelessWidget {
@@ -64,5 +76,52 @@ class _AppBlocObserver extends BlocObserver {
   void onError(BlocBase<dynamic> bloc, Object error, StackTrace stackTrace) {
     debugPrint('[BLoC] ${bloc.runtimeType} error: $error');
     super.onError(bloc, error, stackTrace);
+  }
+}
+
+class _ReleaseErrorFallback extends StatelessWidget {
+  const _ReleaseErrorFallback();
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: const Color(0xFFF5F7FA),
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.06),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.info_outline, color: Color(0xFF1A73E8)),
+                SizedBox(width: 10),
+                Flexible(
+                  child: Text(
+                    'Something went wrong on this screen. Please go back and try again.',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF1A1A2E),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
