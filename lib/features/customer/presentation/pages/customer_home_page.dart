@@ -7,6 +7,7 @@ import '../widgets/categories_section.dart';
 import '../widgets/home_header.dart';
 import '../widgets/how_it_works_section.dart';
 import '../widgets/top_providers_section.dart';
+import 'customer_booking_list_page.dart';
 
 class CustomerHomePage extends StatelessWidget {
   const CustomerHomePage({super.key});
@@ -31,6 +32,16 @@ class CustomerHomePage extends StatelessWidget {
                 delegate: SliverChildListDelegate([
                   const BannerCarousel(),
                   const SizedBox(height: 20),
+                  _MyBookingsEntry(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const CustomerBookingListPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 20),
                   const CategoriesSection(),
                   const SizedBox(height: 20),
                   const TopProvidersSection(),
@@ -39,6 +50,73 @@ class CustomerHomePage extends StatelessWidget {
                 ]),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _MyBookingsEntry extends StatelessWidget {
+  final VoidCallback onTap;
+
+  const _MyBookingsEntry({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: const Color(0xFFE8F0FE),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(
+                Icons.calendar_month_rounded,
+                color: Color(0xFF1A73E8),
+              ),
+            ),
+            const SizedBox(width: 12),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'My Bookings',
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF1A1A2E),
+                    ),
+                  ),
+                  SizedBox(height: 3),
+                  Text(
+                    'View all your booking requests and details',
+                    style: TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right_rounded, color: Color(0xFF1A73E8)),
           ],
         ),
       ),
