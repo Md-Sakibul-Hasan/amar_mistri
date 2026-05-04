@@ -18,6 +18,8 @@ import '../../features/customer/data/repositories/booking_repository_impl.dart';
 import '../../features/customer/domain/repositories/booking_repository.dart';
 import '../../features/customer/domain/usecases/create_booking_usecase.dart';
 import '../../features/customer/presentation/bloc/booking_bloc.dart';
+import '../../features/customer/domain/usecases/get_customer_bookings_usecase.dart';
+import '../../features/customer/presentation/bloc/customer_bookings_bloc.dart';
 import '../../features/customer/presentation/bloc/providers_bloc.dart';
 import '../../features/customer/presentation/bloc/provider_details_bloc.dart';
 
@@ -54,6 +56,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => GetProvidersByServiceUseCase(sl()));
   sl.registerLazySingleton(() => GetProviderDetailsUseCase(sl()));
   sl.registerLazySingleton(() => CreateBookingUseCase(sl()));
+  sl.registerLazySingleton(() => GetCustomerBookingsUseCase(sl()));
 
   // BLoCs
   sl.registerFactory(
@@ -67,4 +70,7 @@ Future<void> initDependencies() async {
   sl.registerFactory(() => ProvidersBloc(getProvidersByService: sl()));
   sl.registerFactory(() => ProviderDetailsBloc(getProviderDetails: sl()));
   sl.registerFactory(() => BookingBloc(createBookingUseCase: sl()));
+  sl.registerFactory(
+    () => CustomerBookingsBloc(getCustomerBookingsUseCase: sl()),
+  );
 }

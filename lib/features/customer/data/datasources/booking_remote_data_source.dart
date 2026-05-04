@@ -4,9 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../domain/entities/booking_request.dart';
+import '../../domain/entities/customer_booking.dart';
 
 abstract class BookingRemoteDataSource {
   Future<void> createBooking(BookingRequest request);
+  Future<List<CustomerBooking>> getCustomerBookings();
 }
 
 class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
@@ -45,7 +47,10 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
           ? request.provider.services!.first
           : 'AC Repair';
 
+      final bookingRef = firestore.collection(_bookingsCollection).doc();
+
       final bookingData = {
+        'bookingId': bookingRef.id,
         'customerUid': firebaseUser.uid,
         'providerUid': request.provider.uid,
         'providerName': request.provider.name,
@@ -60,11 +65,41 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
         'createdAt': FieldValue.serverTimestamp(),
       };
 
-      await firestore.collection(_bookingsCollection).add(bookingData);
+      await bookingRef.set(bookingData);
     } on AppException {
       rethrow;
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? 'Failed to create booking.');
+    }
+  }
+
+  @override
+  Future<List<CustomerBooking>> getCustomerBookings() async {
+    try {
+      final firebaseUser = firebaseAuth.currentUser;
+      if (firebaseUser == null) {
+        throw const AuthException('Please log in to continue.');
+      }
+
+      final querySnapshot = await firestore
+          .collection(_bookingsCollection)
+          .where('customerUid', isEqualTo: firebaseUser.uid)
+          .get();
+
+      final bookings = querySnapshot.docs.map(_mapBookingDoc).toList();
+      bookings.sort((a, b) {
+        final aTime = a.createdAt;
+        final bTime = b.createdAt;
+        if (aTime == null && bTime == null) return 0;
+        if (aTime == null) return 1;
+        if (bTime == null) return -1;
+        return bTime.compareTo(aTime);
+      });
+      return bookings;
+    } on AppException {
+      rethrow;
+    } on FirebaseException catch (e) {
+      throw ServerException(e.message ?? 'Failed to load bookings.');
     }
   }
 
@@ -84,5 +119,28 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
     final month = date.month.toString().padLeft(2, '0');
     final day = date.day.toString().padLeft(2, '0');
     return '${date.year}-$month-$day';
+  }
+
+  CustomerBooking _mapBookingDoc(
+    QueryDocumentSnapshot<Map<String, dynamic>> doc,
+  ) {
+    final map = doc.data();
+    final timestamp = map['createdAt'] as Timestamp?;
+    return CustomerBooking(
+      bookingId: (map['bookingId'] as String?)?.trim().isNotEmpty == true
+          ? (map['bookingId'] as String)
+          : doc.id,
+      providerUid: (map['providerUid'] as String?) ?? '',
+      providerName: (map['providerName'] as String?) ?? 'Provider',
+      customerName: (map['customerName'] as String?) ?? 'Customer',
+      phone: (map['phone'] as String?) ?? 'N/A',
+      service: (map['service'] as String?) ?? 'Service',
+      date: (map['date'] as String?) ?? '-',
+      status: (map['status'] as String?) ?? 'pending',
+      area: (map['area'] as String?) ?? '-',
+      note: (map['note'] as String?) ?? '-',
+      priority: (map['priority'] as String?) ?? 'normal',
+      createdAt: timestamp?.toDate(),
+    );
   }
 }
