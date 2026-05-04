@@ -38,16 +38,16 @@ dependencies:
   equatable: ^2.0.8
 
   # Firebase
-  firebase_core: ^4.6.0
-  firebase_auth: ^6.3.0
-  cloud_firestore: ^6.2.0
-  firebase_storage: ^13.2.0
+  firebase_core: ^4.7.0
+  firebase_auth: ^6.4.0
+  cloud_firestore: ^6.3.0
+  firebase_storage: ^13.3.0
 
   # Navigation
   go_router: ^14.6.2
 
   # DI
-  get_it: ^8.0.3
+  get_it: ^9.2.1
 
   # Utils
   dartz: ^0.10.1
