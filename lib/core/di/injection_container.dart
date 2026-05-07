@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../services/push_notification_service.dart';
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
@@ -31,10 +34,26 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<SharedPreferences>(() => prefs);
   sl.registerLazySingleton<FirebaseAuth>(() => FirebaseAuth.instance);
   sl.registerLazySingleton<FirebaseFirestore>(() => FirebaseFirestore.instance);
+  sl.registerLazySingleton<FirebaseMessaging>(() => FirebaseMessaging.instance);
+  sl.registerLazySingleton<FlutterLocalNotificationsPlugin>(
+    () => FlutterLocalNotificationsPlugin(),
+  );
+  sl.registerLazySingleton<PushNotificationService>(
+    () => PushNotificationService(
+      firebaseAuth: sl(),
+      firestore: sl(),
+      messaging: sl(),
+      localNotifications: sl(),
+    ),
+  );
 
   // Data sources
   sl.registerLazySingleton<AuthRemoteDataSource>(
-    () => AuthRemoteDataSourceImpl(firebaseAuth: sl(), firestore: sl()),
+    () => AuthRemoteDataSourceImpl(
+      firebaseAuth: sl(),
+      firestore: sl(),
+      pushNotificationService: sl(),
+    ),
   );
   sl.registerLazySingleton<BookingRemoteDataSource>(
     () => BookingRemoteDataSourceImpl(firebaseAuth: sl(), firestore: sl()),

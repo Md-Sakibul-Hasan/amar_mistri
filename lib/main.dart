@@ -1,18 +1,18 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'core/di/injection_container.dart';
+import 'core/services/push_notification_service.dart';
 import 'core/router/app_router.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
-import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await initializeFirebaseApp();
   await initDependencies();
+  await sl<PushNotificationService>().initialize();
   _configureWidgetErrorUI();
   Bloc.observer = const _AppBlocObserver();
   runApp(const AmarMistriApp());

@@ -18,10 +18,10 @@ class AppUserModel extends AppUser {
 
   factory AppUserModel.fromFirestore(Map<String, dynamic> map) {
     return AppUserModel(
-      uid: map['uid'] as String,
-      name: map['name'] as String,
-      email: map['email'] as String,
-      phone: map['phone'] as String,
+      uid: (map['uid'] as String?) ?? '',
+      name: (map['name'] as String?) ?? '',
+      email: (map['email'] as String?) ?? '',
+      phone: (map['phone'] as String?) ?? '',
       role: _roleFromString(map['role'] as String?),
       photoUrl: map['photoUrl'] as String?,
       services: (map['services'] as List<dynamic>?)?.cast<String>(),

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
+import '../../../../core/services/push_notification_service.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../models/app_user_model.dart';
@@ -31,10 +32,12 @@ abstract class AuthRemoteDataSource {
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firestore;
+  final PushNotificationService pushNotificationService;
 
   AuthRemoteDataSourceImpl({
     required this.firebaseAuth,
     required this.firestore,
+    required this.pushNotificationService,
   });
 
   @override
@@ -52,6 +55,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           .doc(credential.user!.uid)
           .get();
       if (!doc.exists) throw const AuthException('User data not found.');
+      await pushNotificationService.syncTokenForCurrentUser();
       return AppUserModel.fromFirestore(doc.data()!);
     } on FirebaseAuthException catch (e) {
       throw AuthException(e.message ?? 'Login failed.');
@@ -94,6 +98,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           .collection(AppConstants.usersCollection)
           .doc(user.uid)
           .set(user.toFirestore());
+      await pushNotificationService.syncTokenForCurrentUser();
       return user;
     } on FirebaseAuthException catch (e) {
       throw AuthException(e.message ?? 'Registration failed.');
@@ -104,6 +109,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<void> logout() async {
+    await pushNotificationService.detachTokenFromUser();
     await firebaseAuth.signOut();
   }
 
@@ -117,6 +123,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           .doc(firebaseUser.uid)
           .get();
       if (!doc.exists) throw const AuthException('User data not found.');
+      await pushNotificationService.syncTokenForCurrentUser();
       return AppUserModel.fromFirestore(doc.data()!);
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? 'A server error occurred.');

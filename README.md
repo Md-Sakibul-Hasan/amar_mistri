@@ -1,10 +1,24 @@
 # amar_mistri
 
-A new Flutter project.
+A Flutter app for the Amar Mistri marketplace.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+## Firebase Cloud Messaging
+
+Firebase Cloud Messaging is now wired into app startup.
+
+- `firebase_messaging` initializes during bootstrap in `main.dart`.
+- Foreground notifications are displayed with `flutter_local_notifications`.
+- Device tokens are saved to each logged-in user's Firestore document under `fcmTokens`.
+- Android uses the `high_importance_channel` notification channel.
+
+### Remaining Firebase Console Steps
+
+1. Add the iOS `GoogleService-Info.plist` file to `ios/Runner/`.
+2. In Firebase Console, upload an APNs authentication key or certificate for the iOS app.
+3. Enable the Push Notifications capability in the iOS Runner target inside Xcode.
+4. Send either notification messages or data messages that your backend handles explicitly.
 
 A few resources to get you started if this is your first Flutter project:
 
