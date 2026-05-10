@@ -25,6 +25,8 @@ import '../../features/customer/domain/usecases/get_customer_bookings_usecase.da
 import '../../features/customer/presentation/bloc/customer_bookings_bloc.dart';
 import '../../features/customer/presentation/bloc/providers_bloc.dart';
 import '../../features/customer/presentation/bloc/provider_details_bloc.dart';
+import '../../features/auth/domain/usecases/update_user_profile_usecase.dart';
+import '../../features/auth/presentation/bloc/profile_bloc.dart';
 
 final sl = GetIt.instance;
 
@@ -74,6 +76,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
   sl.registerLazySingleton(() => GetProvidersByServiceUseCase(sl()));
   sl.registerLazySingleton(() => GetProviderDetailsUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateUserProfileUseCase(sl()));
   sl.registerLazySingleton(() => CreateBookingUseCase(sl()));
   sl.registerLazySingleton(() => GetCustomerBookingsUseCase(sl()));
 
@@ -92,4 +95,5 @@ Future<void> initDependencies() async {
   sl.registerFactory(
     () => CustomerBookingsBloc(getCustomerBookingsUseCase: sl()),
   );
+  sl.registerFactory(() => ProfileBloc(updateUserProfile: sl()));
 }

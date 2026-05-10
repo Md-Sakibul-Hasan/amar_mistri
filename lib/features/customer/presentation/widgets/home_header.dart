@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/app_router.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 
 class HomeHeader extends StatelessWidget {
@@ -159,7 +161,9 @@ class HomeHeader extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     onSelected: (value) {
-                      if (value == 'logout') {
+                      if (value == 'profile') {
+                        context.push(AppRouter.profile);
+                      } else if (value == 'logout') {
                         showDialog<void>(
                           context: context,
                           builder: (dialogContext) => AlertDialog(

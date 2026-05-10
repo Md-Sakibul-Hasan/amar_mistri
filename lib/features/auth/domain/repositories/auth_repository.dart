@@ -29,4 +29,14 @@ abstract class AuthRepository {
   Future<Either<Failure, List<AppUser>>> getUsersByService(String service);
 
   Future<Either<Failure, AppUser>> getProviderDetails(String uid);
+
+  Future<Either<Failure, AppUser>> updateUserProfile({
+    required String name,
+    required String phone,
+    List<String>? services,
+    int? experienceYears,
+    String? skills,
+    String? serviceArea,
+    String? nidNumber,
+  });
 }

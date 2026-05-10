@@ -13,6 +13,7 @@ import '../../features/customer/presentation/pages/customer_home_page.dart';
 import '../../features/customer/presentation/pages/providers_list_page.dart';
 import '../../features/customer/presentation/pages/provider_details_page.dart';
 import '../../features/provider/presentation/pages/provider_home_page.dart';
+import '../../features/auth/presentation/pages/profile_page.dart';
 import '../constants/app_constants.dart';
 
 class AppRouter {
@@ -24,6 +25,7 @@ class AppRouter {
   static const String providerHome = '/provider/home';
   static const String providersByService = '/customer/providers';
   static const String providerDetails = '/customer/provider-details';
+  static const String profile = '/profile';
 
   static GoRouter router(BuildContext context) {
     final authBloc = context.read<AuthBloc>();
@@ -89,6 +91,7 @@ class AppRouter {
           path: providerHome,
           builder: (_, __) => const ProviderHomePage(),
         ),
+        GoRoute(path: profile, builder: (_, __) => const ProfilePage()),
       ],
     );
   }

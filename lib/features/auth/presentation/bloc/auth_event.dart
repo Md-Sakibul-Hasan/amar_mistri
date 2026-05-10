@@ -64,3 +64,11 @@ class AuthLogoutRequested extends AuthEvent {
 class AuthCheckRequested extends AuthEvent {
   const AuthCheckRequested();
 }
+
+class AuthUserUpdated extends AuthEvent {
+  final AppUser user;
+  const AuthUserUpdated(this.user);
+
+  @override
+  List<Object> get props => [user];
+}

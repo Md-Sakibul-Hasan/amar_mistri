@@ -27,6 +27,16 @@ abstract class AuthRemoteDataSource {
   Future<AppUserModel> getCurrentUser();
   Future<List<AppUserModel>> getUsersByService(String service);
   Future<AppUserModel> getProviderDetails(String uid);
+
+  Future<AppUserModel> updateUserProfile({
+    required String name,
+    required String phone,
+    List<String>? services,
+    int? experienceYears,
+    String? skills,
+    String? serviceArea,
+    String? nidNumber,
+  });
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -159,6 +169,42 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ServerException(e.message ?? 'A server error occurred.');
     }
   }
+
+  @override
+  Future<AppUserModel> updateUserProfile({
+    required String name,
+    required String phone,
+    List<String>? services,
+    int? experienceYears,
+    String? skills,
+    String? serviceArea,
+    String? nidNumber,
+  }) async {
+    try {
+      final uid = firebaseAuth.currentUser?.uid;
+      if (uid == null) throw const AuthException('No user logged in.');
+      final updateData = <String, dynamic>{
+        'name': name,
+        'phone': phone,
+        'services': services ?? [],
+        'experienceYears': experienceYears,
+        'skills': skills,
+        'serviceArea': serviceArea,
+        'nidNumber': nidNumber,
+      };
+      await firestore
+          .collection(AppConstants.usersCollection)
+          .doc(uid)
+          .update(updateData);
+      final doc = await firestore
+          .collection(AppConstants.usersCollection)
+          .doc(uid)
+          .get();
+      return AppUserModel.fromFirestore(doc.data()!);
+    } on FirebaseException catch (e) {
+      throw ServerException(e.message ?? 'A server error occurred.');
+    }
+  }
 }
 
 /// Temporary mock — replace with real implementation after Firebase is connected.
@@ -244,5 +290,37 @@ class MockAuthDataSource implements AuthRemoteDataSource {
         .firstWhere((e) => e?.user.uid == uid, orElse: () => null);
     if (entry == null) throw const AuthException('Provider not found.');
     return entry.user;
+  }
+
+  @override
+  Future<AppUserModel> updateUserProfile({
+    required String name,
+    required String phone,
+    List<String>? services,
+    int? experienceYears,
+    String? skills,
+    String? serviceArea,
+    String? nidNumber,
+  }) async {
+    if (_currentUser == null) throw const AuthException('No user logged in.');
+    final updated = AppUserModel(
+      uid: _currentUser!.uid,
+      name: name,
+      email: _currentUser!.email,
+      phone: phone,
+      role: _currentUser!.role,
+      photoUrl: _currentUser!.photoUrl,
+      services: services,
+      experienceYears: experienceYears,
+      skills: skills,
+      serviceArea: serviceArea,
+      nidNumber: nidNumber,
+    );
+    _store[_currentUser!.email] = (
+      password: _store[_currentUser!.email]!.password,
+      user: updated,
+    );
+    _currentUser = updated;
+    return _currentUser!;
   }
 }
