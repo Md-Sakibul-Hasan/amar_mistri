@@ -39,4 +39,6 @@ abstract class AuthRepository {
     String? serviceArea,
     String? nidNumber,
   });
+
+  Future<Either<Failure, AppUser>> updatePhotoUrl(String photoUrl);
 }

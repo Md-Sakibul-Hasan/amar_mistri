@@ -90,10 +90,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(const AuthUnauthenticated());
   }
 
-  void _onUserUpdated(
-    AuthUserUpdated event,
-    Emitter<AuthState> emit,
-  ) {
+  void _onUserUpdated(AuthUserUpdated event, Emitter<AuthState> emit) {
     emit(AuthAuthenticated(event.user));
   }
 }

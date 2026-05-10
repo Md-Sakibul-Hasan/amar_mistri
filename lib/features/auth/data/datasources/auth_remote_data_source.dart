@@ -37,6 +37,8 @@ abstract class AuthRemoteDataSource {
     String? serviceArea,
     String? nidNumber,
   });
+
+  Future<AppUserModel> updatePhotoUrl(String photoUrl);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -205,6 +207,24 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw ServerException(e.message ?? 'A server error occurred.');
     }
   }
+
+  @override
+  Future<AppUserModel> updatePhotoUrl(String photoUrl) async {
+    try {
+      final uid = firebaseAuth.currentUser?.uid;
+      if (uid == null) throw const AuthException('No user logged in.');
+      await firestore.collection(AppConstants.usersCollection).doc(uid).update({
+        'photoUrl': photoUrl,
+      });
+      final doc = await firestore
+          .collection(AppConstants.usersCollection)
+          .doc(uid)
+          .get();
+      return AppUserModel.fromFirestore(doc.data()!);
+    } on FirebaseException catch (e) {
+      throw ServerException(e.message ?? 'A server error occurred.');
+    }
+  }
 }
 
 /// Temporary mock — replace with real implementation after Firebase is connected.
@@ -315,6 +335,30 @@ class MockAuthDataSource implements AuthRemoteDataSource {
       skills: skills,
       serviceArea: serviceArea,
       nidNumber: nidNumber,
+    );
+    _store[_currentUser!.email] = (
+      password: _store[_currentUser!.email]!.password,
+      user: updated,
+    );
+    _currentUser = updated;
+    return _currentUser!;
+  }
+
+  @override
+  Future<AppUserModel> updatePhotoUrl(String photoUrl) async {
+    if (_currentUser == null) throw const AuthException('No user logged in.');
+    final updated = AppUserModel(
+      uid: _currentUser!.uid,
+      name: _currentUser!.name,
+      email: _currentUser!.email,
+      phone: _currentUser!.phone,
+      role: _currentUser!.role,
+      photoUrl: photoUrl,
+      services: _currentUser!.services,
+      experienceYears: _currentUser!.experienceYears,
+      skills: _currentUser!.skills,
+      serviceArea: _currentUser!.serviceArea,
+      nidNumber: _currentUser!.nidNumber,
     );
     _store[_currentUser!.email] = (
       password: _store[_currentUser!.email]!.password,

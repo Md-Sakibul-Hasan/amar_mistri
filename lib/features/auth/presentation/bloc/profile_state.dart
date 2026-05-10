@@ -15,6 +15,10 @@ class ProfileSaving extends ProfileState {
   const ProfileSaving();
 }
 
+class ProfilePhotoUploading extends ProfileState {
+  const ProfilePhotoUploading();
+}
+
 class ProfileSaved extends ProfileState {
   final AppUser user;
   const ProfileSaved(this.user);

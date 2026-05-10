@@ -1,5 +1,7 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../auth/domain/entities/app_user.dart';
@@ -49,6 +51,14 @@ class _ProfileViewState extends State<_ProfileView> {
     _initControllers(widget.user);
   }
 
+  @override
+  void didUpdateWidget(_ProfileView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.user != widget.user && !_isEditing) {
+      _resetControllers(widget.user);
+    }
+  }
+
   void _initControllers(AppUser u) {
     _nameCtrl = TextEditingController(text: u.name);
     _phoneCtrl = TextEditingController(text: u.phone);
@@ -85,6 +95,69 @@ class _ProfileViewState extends State<_ProfileView> {
       _isEditing = false;
       _resetControllers(widget.user);
     });
+  }
+
+  Future<void> _pickAndUpload(BuildContext context, ImageSource source) async {
+    Navigator.pop(context);
+    final file = await ImagePicker().pickImage(
+      source: source,
+      imageQuality: 85,
+      maxWidth: 1024,
+    );
+    if (file != null && mounted) {
+      context.read<ProfileBloc>().add(
+        ProfilePhotoUploadRequested(uid: widget.user.uid, file: file),
+      );
+    }
+  }
+
+  void _showImagePickerSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (sheetCtx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 8),
+            Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: const Color(0xFFE5E7EB),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 12),
+            ListTile(
+              leading: const CircleAvatar(
+                backgroundColor: Color(0xFFE8F0FE),
+                child: Icon(Icons.camera_alt, color: Color(0xFF1A73E8)),
+              ),
+              title: const Text(
+                'Take a photo',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+              onTap: () => _pickAndUpload(context, ImageSource.camera),
+            ),
+            ListTile(
+              leading: const CircleAvatar(
+                backgroundColor: Color(0xFFE8F0FE),
+                child: Icon(Icons.photo_library, color: Color(0xFF1A73E8)),
+              ),
+              title: const Text(
+                'Choose from gallery',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+              onTap: () => _pickAndUpload(context, ImageSource.gallery),
+            ),
+            const SizedBox(height: 8),
+          ],
+        ),
+      ),
+    );
   }
 
   void _save(BuildContext context) {
@@ -137,9 +210,14 @@ class _ProfileViewState extends State<_ProfileView> {
           context.read<AuthBloc>().add(AuthUserUpdated(state.user));
           setState(() => _isEditing = false);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Profile updated successfully'),
-              backgroundColor: Color(0xFF22C55E),
+            SnackBar(
+              content: Text(
+                state.user.photoUrl != null &&
+                        state.user.photoUrl != widget.user.photoUrl
+                    ? 'Profile photo updated'
+                    : 'Profile updated successfully',
+              ),
+              backgroundColor: const Color(0xFF22C55E),
             ),
           );
         } else if (state is ProfileError) {
@@ -164,7 +242,8 @@ class _ProfileViewState extends State<_ProfileView> {
               actions: [
                 BlocBuilder<ProfileBloc, ProfileState>(
                   builder: (context, state) {
-                    if (state is ProfileSaving) {
+                    if (state is ProfileSaving ||
+                        state is ProfilePhotoUploading) {
                       return const Padding(
                         padding: EdgeInsets.only(right: 16),
                         child: Center(
@@ -211,35 +290,102 @@ class _ProfileViewState extends State<_ProfileView> {
                 ),
               ],
               flexibleSpace: FlexibleSpaceBar(
-                background: Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xFF1A73E8), Color(0xFF0D47A1)],
+                background: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    // ── Blurred photo background (or gradient fallback) ──
+                    if (widget.user.photoUrl != null)
+                      ImageFiltered(
+                        imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                        child: Image.network(
+                          widget.user.photoUrl!,
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    else
+                      Container(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Color(0xFF1A73E8), Color(0xFF0D47A1)],
+                          ),
+                        ),
+                      ),
+                    // ── Dark shade overlay ───────────────────────────────
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black.withValues(alpha: 0.45),
+                            Colors.black.withValues(alpha: 0.60),
+                          ],
+                        ),
+                      ),
                     ),
-                  ),
-                  child: SafeArea(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
+                    // ── Avatar + name ────────────────────────────────────
+                    SafeArea(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
                         const SizedBox(height: 40),
-                        CircleAvatar(
-                          radius: 46,
-                          backgroundColor: Colors.white.withValues(alpha: 0.25),
-                          backgroundImage: widget.user.photoUrl != null
-                              ? NetworkImage(widget.user.photoUrl!)
-                              : null,
-                          child: widget.user.photoUrl == null
-                              ? Text(
-                                  initials,
-                                  style: const TextStyle(
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.white,
+                        BlocBuilder<ProfileBloc, ProfileState>(
+                          builder: (context, state) {
+                            final isUploading = state is ProfilePhotoUploading;
+                            return GestureDetector(
+                              onTap: isUploading
+                                  ? null
+                                  : () => _showImagePickerSheet(context),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  CircleAvatar(
+                                    radius: 46,
+                                    backgroundColor: Colors.white.withValues(
+                                      alpha: 0.25,
+                                    ),
+                                    backgroundImage:
+                                        widget.user.photoUrl != null
+                                        ? NetworkImage(widget.user.photoUrl!)
+                                        : null,
+                                    child: widget.user.photoUrl == null
+                                        ? Text(
+                                            initials,
+                                            style: const TextStyle(
+                                              fontSize: 28,
+                                              fontWeight: FontWeight.w800,
+                                              color: Colors.white,
+                                            ),
+                                          )
+                                        : null,
                                   ),
-                                )
-                              : null,
+                                  if (isUploading)
+                                    const CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 3,
+                                    ),
+                                  if (!isUploading)
+                                    Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      child: CircleAvatar(
+                                        radius: 14,
+                                        backgroundColor: const Color(
+                                          0xFF1A73E8,
+                                        ),
+                                        child: const Icon(
+                                          Icons.camera_alt,
+                                          size: 14,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                         const SizedBox(height: 10),
                         Text(
@@ -250,12 +396,13 @@ class _ProfileViewState extends State<_ProfileView> {
                             color: Colors.white,
                           ),
                         ),
-                        ],
+                      ],
                     ),
                   ),
-                ),
+                ],
               ),
             ),
+          ),
 
             // ── Body ────────────────────────────────────────────────
             SliverPadding(

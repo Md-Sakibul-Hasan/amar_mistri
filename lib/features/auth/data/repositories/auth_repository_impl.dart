@@ -126,4 +126,14 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(e.toFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, AppUser>> updatePhotoUrl(String photoUrl) async {
+    try {
+      final user = await remoteDataSource.updatePhotoUrl(photoUrl);
+      return Right(user);
+    } on AppException catch (e) {
+      return Left(e.toFailure());
+    }
+  }
 }

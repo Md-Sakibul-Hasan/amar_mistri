@@ -37,3 +37,13 @@ class ProfileSaveRequested extends ProfileEvent {
     nidNumber,
   ];
 }
+
+class ProfilePhotoUploadRequested extends ProfileEvent {
+  final String uid;
+  final XFile file;
+
+  const ProfilePhotoUploadRequested({required this.uid, required this.file});
+
+  @override
+  List<Object?> get props => [uid, file.path];
+}

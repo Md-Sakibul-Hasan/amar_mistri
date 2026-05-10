@@ -49,5 +49,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow Amar Mistri to access your photos to set a profile picture.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow Amar Mistri to take a photo for your profile picture.</string>
 </dict>
 </plist>

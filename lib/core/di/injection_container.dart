@@ -26,7 +26,9 @@ import '../../features/customer/presentation/bloc/customer_bookings_bloc.dart';
 import '../../features/customer/presentation/bloc/providers_bloc.dart';
 import '../../features/customer/presentation/bloc/provider_details_bloc.dart';
 import '../../features/auth/domain/usecases/update_user_profile_usecase.dart';
+import '../../features/auth/domain/usecases/upload_profile_photo_usecase.dart';
 import '../../features/auth/presentation/bloc/profile_bloc.dart';
+import '../services/cloudflare_r2_service.dart';
 
 final sl = GetIt.instance;
 
@@ -79,6 +81,10 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => UpdateUserProfileUseCase(sl()));
   sl.registerLazySingleton(() => CreateBookingUseCase(sl()));
   sl.registerLazySingleton(() => GetCustomerBookingsUseCase(sl()));
+  sl.registerLazySingleton<CloudflareR2Service>(() => CloudflareR2Service());
+  sl.registerLazySingleton(
+    () => UploadProfilePhotoUseCase(repository: sl(), r2Service: sl()),
+  );
 
   // BLoCs
   sl.registerFactory(
@@ -95,5 +101,7 @@ Future<void> initDependencies() async {
   sl.registerFactory(
     () => CustomerBookingsBloc(getCustomerBookingsUseCase: sl()),
   );
-  sl.registerFactory(() => ProfileBloc(updateUserProfile: sl()));
+  sl.registerFactory(
+    () => ProfileBloc(updateUserProfile: sl(), uploadProfilePhoto: sl()),
+  );
 }
