@@ -59,6 +59,16 @@ class _ProfileViewState extends State<_ProfileView> {
     _selectedServices = List<String>.from(u.services ?? []);
   }
 
+  void _resetControllers(AppUser u) {
+    _nameCtrl.text = u.name;
+    _phoneCtrl.text = u.phone;
+    _skillsCtrl.text = u.skills ?? '';
+    _serviceAreaCtrl.text = u.serviceArea ?? '';
+    _nidCtrl.text = u.nidNumber ?? '';
+    _expCtrl.text = u.experienceYears?.toString() ?? '';
+    _selectedServices = List<String>.from(u.services ?? []);
+  }
+
   @override
   void dispose() {
     _nameCtrl.dispose();
@@ -73,7 +83,7 @@ class _ProfileViewState extends State<_ProfileView> {
   void _cancelEdit() {
     setState(() {
       _isEditing = false;
-      _initControllers(widget.user);
+      _resetControllers(widget.user);
     });
   }
 
