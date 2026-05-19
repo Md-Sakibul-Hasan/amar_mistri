@@ -96,7 +96,7 @@ class AppRouter {
     );
   }
 }
-
+  
 class _AuthStateNotifier extends ChangeNotifier {
   _AuthStateNotifier(AuthBloc authBloc) {
     _subscription = authBloc.stream.listen((_) => notifyListeners());
