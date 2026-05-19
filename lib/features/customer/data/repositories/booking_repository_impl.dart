@@ -31,4 +31,16 @@ class BookingRepositoryImpl implements BookingRepository {
       return Left(e.toFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, List<CustomerBooking>>> getProviderBookings(
+    String providerUid,
+  ) async {
+    try {
+      final bookings = await remoteDataSource.getProviderBookings(providerUid);
+      return Right(bookings);
+    } on AppException catch (e) {
+      return Left(e.toFailure());
+    }
+  }
 }

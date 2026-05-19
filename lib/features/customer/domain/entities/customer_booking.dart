@@ -13,6 +13,7 @@ class CustomerBooking extends Equatable {
   final String note;
   final String priority;
   final DateTime? createdAt;
+  final String? customerPhotoUrl;
 
   const CustomerBooking({
     required this.bookingId,
@@ -27,6 +28,7 @@ class CustomerBooking extends Equatable {
     required this.note,
     required this.priority,
     required this.createdAt,
+    this.customerPhotoUrl,
   });
 
   @override
@@ -43,5 +45,6 @@ class CustomerBooking extends Equatable {
     note,
     priority,
     createdAt,
+    customerPhotoUrl,
   ];
 }

@@ -9,6 +9,7 @@ import '../../domain/entities/customer_booking.dart';
 abstract class BookingRemoteDataSource {
   Future<void> createBooking(BookingRequest request);
   Future<List<CustomerBooking>> getCustomerBookings();
+  Future<List<CustomerBooking>> getProviderBookings(String providerUid);
 }
 
 class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
@@ -55,6 +56,7 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
         'providerUid': request.provider.uid,
         'providerName': request.provider.name,
         'customerName': _resolveName(userData),
+        'customerPhotoUrl': (userData['photoUrl'] as String?)?.trim(),
         'phone': _resolvePhone(userData),
         'service': service,
         'date': _formatDate(now),
@@ -84,6 +86,31 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
       final querySnapshot = await firestore
           .collection(_bookingsCollection)
           .where('customerUid', isEqualTo: firebaseUser.uid)
+          .get();
+
+      final bookings = querySnapshot.docs.map(_mapBookingDoc).toList();
+      bookings.sort((a, b) {
+        final aTime = a.createdAt;
+        final bTime = b.createdAt;
+        if (aTime == null && bTime == null) return 0;
+        if (aTime == null) return 1;
+        if (bTime == null) return -1;
+        return bTime.compareTo(aTime);
+      });
+      return bookings;
+    } on AppException {
+      rethrow;
+    } on FirebaseException catch (e) {
+      throw ServerException(e.message ?? 'Failed to load bookings.');
+    }
+  }
+
+  @override
+  Future<List<CustomerBooking>> getProviderBookings(String providerUid) async {
+    try {
+      final querySnapshot = await firestore
+          .collection(_bookingsCollection)
+          .where('providerUid', isEqualTo: providerUid)
           .get();
 
       final bookings = querySnapshot.docs.map(_mapBookingDoc).toList();
@@ -133,6 +160,7 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
       providerUid: (map['providerUid'] as String?) ?? '',
       providerName: (map['providerName'] as String?) ?? 'Provider',
       customerName: (map['customerName'] as String?) ?? 'Customer',
+      customerPhotoUrl: map['customerPhotoUrl'] as String?,
       phone: (map['phone'] as String?) ?? 'N/A',
       service: (map['service'] as String?) ?? 'Service',
       date: (map['date'] as String?) ?? '-',
