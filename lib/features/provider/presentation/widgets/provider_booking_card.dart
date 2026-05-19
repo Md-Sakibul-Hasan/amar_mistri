@@ -14,6 +14,7 @@ class ProviderBookingCard extends StatelessWidget {
   static ({Color fg, Color bg}) _statusColors(String status) {
     switch (status.toLowerCase()) {
       case 'confirmed':
+      case 'accepted':
         return (fg: const Color(0xFF22C55E), bg: const Color(0xFFDCFCE7));
       case 'completed':
         return (fg: const Color(0xFF1A73E8), bg: const Color(0xFFE8F0FE));

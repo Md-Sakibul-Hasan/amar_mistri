@@ -14,6 +14,7 @@ class ProviderBookingDetailSheet extends StatelessWidget {
   static ({Color fg, Color bg}) _statusColors(String status) {
     switch (status.toLowerCase()) {
       case 'confirmed':
+      case 'accepted':
         return (fg: const Color(0xFF22C55E), bg: const Color(0xFFDCFCE7));
       case 'completed':
         return (fg: const Color(0xFF1A73E8), bg: const Color(0xFFE8F0FE));
@@ -41,13 +42,13 @@ class ProviderBookingDetailSheet extends StatelessWidget {
           state is ProviderBookingStatusUpdateFailed,
       listener: (context, state) {
         if (state is ProviderBookingStatusUpdated) {
-          final label = state.newStatus == 'confirmed'
+          final label = state.newStatus == 'accepted'
               ? 'Booking accepted'
               : 'Booking rejected';
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(label),
-              backgroundColor: state.newStatus == 'confirmed'
+              backgroundColor: state.newStatus == 'accepted'
                   ? const Color(0xFF22C55E)
                   : const Color(0xFFEF4444),
             ),
@@ -294,7 +295,7 @@ class ProviderBookingDetailSheet extends StatelessWidget {
                                       context.read<ProviderBookingsBloc>().add(
                                         ProviderBookingStatusUpdateRequested(
                                           bookingId: booking.bookingId,
-                                          status: 'confirmed',
+                                          status: 'accepted',
                                           providerUid: booking.providerUid,
                                         ),
                                       ),
