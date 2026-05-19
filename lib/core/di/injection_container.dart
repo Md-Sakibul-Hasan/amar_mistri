@@ -21,6 +21,7 @@ import '../../features/customer/data/repositories/booking_repository_impl.dart';
 import '../../features/customer/domain/repositories/booking_repository.dart';
 import '../../features/customer/domain/usecases/create_booking_usecase.dart';
 import '../../features/customer/domain/usecases/get_provider_bookings_usecase.dart';
+import '../../features/customer/domain/usecases/update_booking_status_usecase.dart';
 import '../../features/provider/presentation/bloc/provider_bookings_bloc.dart';
 import '../../features/customer/presentation/bloc/booking_bloc.dart';
 import '../../features/customer/domain/usecases/get_customer_bookings_usecase.dart';
@@ -84,6 +85,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => CreateBookingUseCase(sl()));
   sl.registerLazySingleton(() => GetCustomerBookingsUseCase(sl()));
   sl.registerLazySingleton(() => GetProviderBookingsUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateBookingStatusUseCase(sl()));
   sl.registerLazySingleton<CloudflareR2Service>(() => CloudflareR2Service());
   sl.registerLazySingleton(
     () => UploadProfilePhotoUseCase(repository: sl(), r2Service: sl()),
@@ -105,7 +107,10 @@ Future<void> initDependencies() async {
     () => CustomerBookingsBloc(getCustomerBookingsUseCase: sl()),
   );
   sl.registerFactory(
-    () => ProviderBookingsBloc(getProviderBookingsUseCase: sl()),
+    () => ProviderBookingsBloc(
+      getProviderBookingsUseCase: sl(),
+      updateBookingStatusUseCase: sl(),
+    ),
   );
   sl.registerFactory(
     () => ProfileBloc(updateUserProfile: sl(), uploadProfilePhoto: sl()),

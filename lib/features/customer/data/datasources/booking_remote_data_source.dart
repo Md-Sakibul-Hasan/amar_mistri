@@ -10,6 +10,7 @@ abstract class BookingRemoteDataSource {
   Future<void> createBooking(BookingRequest request);
   Future<List<CustomerBooking>> getCustomerBookings();
   Future<List<CustomerBooking>> getProviderBookings(String providerUid);
+  Future<void> updateBookingStatus(String bookingId, String status);
 }
 
 class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
@@ -146,6 +147,17 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
     final month = date.month.toString().padLeft(2, '0');
     final day = date.day.toString().padLeft(2, '0');
     return '${date.year}-$month-$day';
+  }
+
+  @override
+  Future<void> updateBookingStatus(String bookingId, String status) async {
+    try {
+      await firestore.collection(_bookingsCollection).doc(bookingId).update({
+        'status': status,
+      });
+    } on FirebaseException catch (e) {
+      throw ServerException(e.message ?? 'Failed to update booking status.');
+    }
   }
 
   CustomerBooking _mapBookingDoc(

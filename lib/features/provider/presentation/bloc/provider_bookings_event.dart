@@ -15,3 +15,18 @@ class ProviderBookingsRequested extends ProviderBookingsEvent {
   @override
   List<Object?> get props => [providerUid];
 }
+
+class ProviderBookingStatusUpdateRequested extends ProviderBookingsEvent {
+  final String bookingId;
+  final String status;
+  final String providerUid;
+
+  const ProviderBookingStatusUpdateRequested({
+    required this.bookingId,
+    required this.status,
+    required this.providerUid,
+  });
+
+  @override
+  List<Object?> get props => [bookingId, status, providerUid];
+}
