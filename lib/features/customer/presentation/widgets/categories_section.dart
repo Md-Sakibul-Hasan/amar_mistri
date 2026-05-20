@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class CategoriesSection extends StatelessWidget {
   const CategoriesSection({super.key});
@@ -20,17 +21,18 @@ class CategoriesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+            Text(
               'Our Services',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF1A1A2E),
+                color: c.primaryText,
               ),
             ),
             TextButton(
@@ -77,7 +79,7 @@ class CategoriesSection extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: c.cardBg,
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Column(
@@ -86,7 +88,7 @@ class CategoriesSection extends StatelessWidget {
                       width: 52,
                       height: 52,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE8F0FE),
+                        color: c.lightBlueBg,
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: Center(
@@ -99,10 +101,10 @@ class CategoriesSection extends StatelessWidget {
                     const SizedBox(height: 6),
                     Text(
                       label,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1A1A2E),
+                        color: c.primaryText,
                       ),
                       textAlign: TextAlign.center,
                       maxLines: 1,

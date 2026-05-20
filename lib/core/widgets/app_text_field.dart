@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../constants/app_theme.dart';
+import '../theme/app_colors.dart';
 
 /// A small bold label displayed above a form field.
 class AppFieldLabel extends StatelessWidget {
@@ -10,10 +11,10 @@ class AppFieldLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w600,
-        color: Color(0xFF1A1A2E),
+        color: context.colors.primaryText,
       ),
     );
   }
@@ -44,17 +45,30 @@ class AppTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return TextFormField(
       controller: controller,
       keyboardType: keyboardType,
       obscureText: obscureText,
       maxLines: obscureText ? 1 : (maxLines ?? 1),
       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-      decoration: AppTheme.inputDecoration(
-        hint: hint,
-        prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon,
-      ),
+      decoration:
+          AppTheme.inputDecoration(
+            hint: hint,
+            prefixIcon: prefixIcon,
+            suffixIcon: suffixIcon,
+          ).copyWith(
+            fillColor: c.greyInputFill,
+            hintStyle: TextStyle(color: c.inputHint, fontSize: 13),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: c.greyBorder),
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: c.greyBorder),
+            ),
+          ),
       validator: validator,
     );
   }
@@ -72,12 +86,13 @@ class AppPhoneField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color: c.greyInputFill,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
+        border: Border.all(color: c.greyBorder),
       ),
       child: Row(
         children: [
@@ -97,7 +112,7 @@ class AppPhoneField extends StatelessWidget {
           Container(
             height: 24,
             width: 1,
-            color: Colors.grey.shade300,
+            color: c.greyBorder,
             margin: const EdgeInsets.symmetric(horizontal: 8),
           ),
           Expanded(
@@ -107,7 +122,7 @@ class AppPhoneField extends StatelessWidget {
               style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               decoration: InputDecoration(
                 hintText: '01XXXXXXXXX',
-                hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
+                hintStyle: TextStyle(color: c.inputHint, fontSize: 14),
                 border: InputBorder.none,
                 isDense: true,
                 contentPadding: const EdgeInsets.symmetric(vertical: 14),

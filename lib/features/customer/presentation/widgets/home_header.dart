@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/theme_cubit.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 
 class HomeHeader extends StatelessWidget {
@@ -16,6 +18,7 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -156,13 +159,15 @@ class HomeHeader extends StatelessWidget {
                       color: Colors.white,
                       size: 22,
                     ),
-                    color: Colors.white,
+                    color: context.colors.cardBg,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     onSelected: (value) {
                       if (value == 'profile') {
                         context.push(AppRouter.profile);
+                      } else if (value == 'theme') {
+                        context.read<ThemeCubit>().toggle();
                       } else if (value == 'logout') {
                         showDialog<void>(
                           context: context,
@@ -170,16 +175,16 @@ class HomeHeader extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
                             ),
-                            title: const Text(
+                            title: Text(
                               'Logout',
                               style: TextStyle(
                                 fontWeight: FontWeight.w800,
-                                color: Color(0xFF1A1A2E),
+                                color: context.colors.primaryText,
                               ),
                             ),
-                            content: const Text(
+                            content: Text(
                               'Are you sure you want to logout?',
-                              style: TextStyle(color: Colors.grey),
+                              style: TextStyle(color: context.colors.greyText),
                             ),
                             actions: [
                               TextButton(
@@ -210,7 +215,7 @@ class HomeHeader extends StatelessWidget {
                         );
                       }
                     },
-                    itemBuilder: (_) => const [
+                    itemBuilder: (menuCtx) => [
                       PopupMenuItem(
                         value: 'profile',
                         child: Row(
@@ -218,40 +223,43 @@ class HomeHeader extends StatelessWidget {
                             Icon(
                               Icons.person_outline,
                               size: 18,
-                              color: Color(0xFF1A1A2E),
+                              color: menuCtx.colors.primaryText,
                             ),
                             SizedBox(width: 10),
                             Text(
                               'Profile',
                               style: TextStyle(
                                 fontSize: 13,
-                                color: Color(0xFF1A1A2E),
+                                color: menuCtx.colors.primaryText,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      PopupMenuItem(
-                        value: 'settings',
+                      PopupMenuItem<String>(
+                        value: 'theme',
                         child: Row(
                           children: [
                             Icon(
-                              Icons.settings_outlined,
+                              menuCtx.read<ThemeCubit>().state == ThemeMode.dark
+                                  ? Icons.light_mode_outlined
+                                  : Icons.dark_mode_outlined,
                               size: 18,
-                              color: Color(0xFF1A1A2E),
+                              color: menuCtx.colors.primaryText,
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             Text(
-                              'Settings',
+                              menuCtx.read<ThemeCubit>().state == ThemeMode.dark
+                                  ? 'Light Mode'
+                                  : 'Dark Mode',
                               style: TextStyle(
                                 fontSize: 13,
-                                color: Color(0xFF1A1A2E),
+                                color: menuCtx.colors.primaryText,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      PopupMenuDivider(),
                       PopupMenuItem(
                         value: 'logout',
                         child: Row(

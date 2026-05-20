@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/theme/app_colors.dart';
 
 import '../../../../features/customer/domain/entities/customer_booking.dart';
 import '../bloc/provider_bookings_bloc.dart';
@@ -11,25 +12,25 @@ class ProviderBookingCard extends StatelessWidget {
 
   const ProviderBookingCard({super.key, required this.booking});
 
-  static ({Color fg, Color bg}) _statusColors(String status) {
+  static ({Color fg, Color bg}) _statusColors(String status, AppColors c) {
     switch (status.toLowerCase()) {
       case 'confirmed':
       case 'accepted':
-        return (fg: const Color(0xFF22C55E), bg: const Color(0xFFDCFCE7));
+        return (fg: const Color(0xFF22C55E), bg: c.lightGreenBg);
       case 'completed':
-        return (fg: const Color(0xFF1A73E8), bg: const Color(0xFFE8F0FE));
+        return (fg: const Color(0xFF1A73E8), bg: c.lightBlueBg);
       case 'cancelled':
       case 'rejected':
-        return (fg: const Color(0xFFEF4444), bg: const Color(0xFFFEE2E2));
+        return (fg: const Color(0xFFEF4444), bg: c.lightRedBg);
       default: // pending
-        return (fg: const Color(0xFFF59E0B), bg: const Color(0xFFFEF3C7));
+        return (fg: const Color(0xFFF59E0B), bg: c.lightOrangeBg);
     }
   }
 
-  static Widget _avatarFallback() => Container(
+  static Widget _avatarFallback(Color bgColor) => Container(
     width: 42,
     height: 42,
-    decoration: const BoxDecoration(color: Color(0xFFE8F0FE)),
+    decoration: BoxDecoration(color: bgColor),
     child: const Center(
       child: Icon(Icons.person, size: 22, color: Color(0xFF1A73E8)),
     ),
@@ -37,7 +38,8 @@ class ProviderBookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = _statusColors(booking.status);
+    final c = context.colors;
+    final colors = _statusColors(booking.status, c);
     final statusLabel =
         booking.status[0].toUpperCase() + booking.status.substring(1);
 
@@ -59,11 +61,11 @@ class ProviderBookingCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: c.cardBg,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withAlpha(13),
+              color: c.shadow,
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -81,10 +83,11 @@ class ProviderBookingCard extends StatelessWidget {
                       width: 42,
                       height: 42,
                       fit: BoxFit.cover,
-                      placeholder: (_, __) => _avatarFallback(),
-                      errorWidget: (_, __, ___) => _avatarFallback(),
+                      placeholder: (_, __) => _avatarFallback(c.lightBlueBg),
+                      errorWidget: (_, __, ___) =>
+                          _avatarFallback(c.lightBlueBg),
                     )
-                  : _avatarFallback(),
+                  : _avatarFallback(c.lightBlueBg),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -93,48 +96,42 @@ class ProviderBookingCard extends StatelessWidget {
                 children: [
                   Text(
                     booking.customerName,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF1A1A2E),
+                      color: c.primaryText,
                     ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     'Service: ${booking.service}',
-                    style: const TextStyle(fontSize: 11, color: Colors.grey),
+                    style: TextStyle(fontSize: 11, color: c.greyText),
                   ),
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.calendar_today_outlined,
                         size: 11,
-                        color: Colors.grey,
+                        color: c.greyText,
                       ),
                       const SizedBox(width: 3),
                       Text(
                         booking.date,
-                        style: const TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey,
-                        ),
+                        style: TextStyle(fontSize: 10, color: c.greyText),
                       ),
                       if (booking.area.isNotEmpty && booking.area != '-') ...[
                         const SizedBox(width: 8),
-                        const Icon(
+                        Icon(
                           Icons.location_on_outlined,
                           size: 11,
-                          color: Colors.grey,
+                          color: c.greyText,
                         ),
                         const SizedBox(width: 2),
                         Flexible(
                           child: Text(
                             booking.area,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              color: Colors.grey,
-                            ),
+                            style: TextStyle(fontSize: 10, color: c.greyText),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),

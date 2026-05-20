@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class ProviderStatsRow extends StatelessWidget {
   final dynamic user;
@@ -7,27 +8,28 @@ class ProviderStatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     final stats = [
       (
         label: 'Total Jobs',
         value: '0',
         icon: Icons.handyman_outlined,
         color: const Color(0xFF1A73E8),
-        bg: const Color(0xFFE8F0FE),
+        bg: c.lightBlueBg,
       ),
       (
         label: 'This Month',
         value: '৳0',
         icon: Icons.account_balance_wallet_outlined,
         color: const Color(0xFF22C55E),
-        bg: const Color(0xFFDCFCE7),
+        bg: c.lightGreenBg,
       ),
       (
         label: 'Rating',
         value: '—',
         icon: Icons.star_rounded,
         color: const Color(0xFFFACC15),
-        bg: const Color(0xFFFEF9C3),
+        bg: c.lightYellowBg,
       ),
     ];
 
@@ -38,11 +40,11 @@ class ProviderStatsRow extends StatelessWidget {
             margin: EdgeInsets.only(right: s == stats.last ? 0 : 10),
             padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: c.cardBg,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withAlpha(13),
+                  color: c.shadow,
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -62,16 +64,16 @@ class ProviderStatsRow extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   s.value,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w900,
-                    color: Color(0xFF1A1A2E),
+                    color: c.primaryText,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   s.label,
-                  style: const TextStyle(fontSize: 10, color: Colors.grey),
+                  style: TextStyle(fontSize: 10, color: c.greyText),
                   textAlign: TextAlign.center,
                 ),
               ],

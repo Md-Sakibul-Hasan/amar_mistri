@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../features/auth/domain/entities/app_user.dart';
 import 'booking_page.dart';
 import '../bloc/provider_details_bloc.dart';
@@ -27,7 +28,7 @@ class _ProviderDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: context.colors.scaffoldBg,
       body: BlocBuilder<ProviderDetailsBloc, ProviderDetailsState>(
         builder: (context, state) {
           if (state is ProviderDetailsLoading) {
@@ -208,12 +209,12 @@ class _DetailContent extends StatelessWidget {
                   const SizedBox(height: 16),
 
                   // ── Contact grid ────────────────────────────────────
-                  const Text(
+                  Text(
                     'Contact',
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF1A1A2E),
+                      color: context.colors.primaryText,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -254,10 +255,10 @@ class _DetailContent extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.colors.cardBg,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.08),
+                  color: context.colors.shadowHeavy,
                   blurRadius: 16,
                   offset: const Offset(0, -4),
                 ),
@@ -312,15 +313,16 @@ class _InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     if (children.isEmpty) return const SizedBox.shrink();
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: c.cardBg,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: c.shadowMedium,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -346,6 +348,7 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -357,20 +360,20 @@ class _InfoRow extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF6B7280),
+                  color: c.secondaryText,
                   letterSpacing: 0.4,
                 ),
               ),
               const SizedBox(height: 2),
               Text(
                 value,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF1A1A2E),
+                  color: c.primaryText,
                 ),
               ),
             ],

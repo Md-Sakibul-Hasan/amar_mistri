@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../features/auth/domain/entities/app_user.dart';
 import '../bloc/providers_bloc.dart';
 
@@ -16,7 +17,7 @@ class ProvidersListPage extends StatelessWidget {
       create: (_) =>
           sl<ProvidersBloc>()..add(ProvidersLoadRequested(service: service)),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F7FA),
+        backgroundColor: context.colors.scaffoldBg,
         appBar: AppBar(
           backgroundColor: const Color(0xFF1A73E8),
           foregroundColor: Colors.white,
@@ -70,6 +71,7 @@ class _ProviderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     final initials = provider.name
         .split(' ')
         .take(2)
@@ -83,11 +85,11 @@ class _ProviderCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: c.cardBg,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: c.shadowMedium,
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -119,10 +121,10 @@ class _ProviderCard extends StatelessWidget {
                 children: [
                   Text(
                     provider.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF1A1A2E),
+                      color: c.primaryText,
                     ),
                   ),
                   if (provider.serviceArea != null &&
@@ -130,17 +132,17 @@ class _ProviderCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.location_on_outlined,
                           size: 14,
-                          color: Color(0xFF6B7280),
+                          color: c.secondaryText,
                         ),
                         const SizedBox(width: 2),
                         Text(
                           provider.serviceArea!,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: Color(0xFF6B7280),
+                            color: c.secondaryText,
                           ),
                         ),
                       ],
@@ -150,10 +152,7 @@ class _ProviderCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       '${provider.experienceYears} yrs experience',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF6B7280),
-                      ),
+                      style: TextStyle(fontSize: 12, color: c.secondaryText),
                     ),
                   ],
                 ],
@@ -187,6 +186,7 @@ class _EmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -195,16 +195,16 @@ class _EmptyView extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'No $service providers found',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
-              color: Color(0xFF1A1A2E),
+              color: c.primaryText,
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Check back soon — more are joining!',
-            style: TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
+            style: TextStyle(fontSize: 14, color: c.secondaryText),
           ),
         ],
       ),
@@ -219,6 +219,7 @@ class _ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -227,19 +228,19 @@ class _ErrorView extends StatelessWidget {
           children: [
             const Icon(Icons.error_outline, size: 56, color: Color(0xFFEF4444)),
             const SizedBox(height: 16),
-            const Text(
+            Text(
               'Something went wrong',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-                color: Color(0xFF1A1A2E),
+                color: c.primaryText,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 14, color: Color(0xFF6B7280)),
+              style: TextStyle(fontSize: 14, color: c.secondaryText),
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(

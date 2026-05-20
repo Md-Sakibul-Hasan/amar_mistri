@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/greeting_utils.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../widgets/banner_carousel.dart';
@@ -19,7 +20,7 @@ class CustomerHomePage extends StatelessWidget {
     final firstName = authState.user.name.split(' ').first;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: context.colors.scaffoldBg,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -64,6 +65,7 @@ class _MyBookingsEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(16),
@@ -71,11 +73,11 @@ class _MyBookingsEntry extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: c.cardBg,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: c.shadowMedium,
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -87,7 +89,7 @@ class _MyBookingsEntry extends StatelessWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: const Color(0xFFE8F0FE),
+                color: c.lightBlueBg,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
@@ -96,7 +98,7 @@ class _MyBookingsEntry extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            const Expanded(
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -105,13 +107,13 @@ class _MyBookingsEntry extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
-                      color: Color(0xFF1A1A2E),
+                      color: c.primaryText,
                     ),
                   ),
-                  SizedBox(height: 3),
+                  const SizedBox(height: 3),
                   Text(
                     'View all your booking requests and details',
-                    style: TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
+                    style: TextStyle(fontSize: 12, color: c.secondaryText),
                   ),
                 ],
               ),

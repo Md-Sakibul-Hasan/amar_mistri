@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../features/auth/domain/entities/app_user.dart';
 import '../bloc/booking_bloc.dart';
 import 'booking_confirm_page.dart';
@@ -59,7 +60,7 @@ class _BookingPageViewState extends State<_BookingPageView> {
         }
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F7FA),
+        backgroundColor: context.colors.scaffoldBg,
         body: Stack(
           children: [
             CustomScrollView(
@@ -141,14 +142,15 @@ class _BookingPageViewState extends State<_BookingPageView> {
                   sliver: SliverList(
                     delegate: SliverChildListDelegate([
                       _infoCard(
+                        c: context.colors,
                         children: [
                           _serviceTag(widget.provider),
                           const SizedBox(height: 12),
-                          const Text(
+                          Text(
                             'Provide job details so the provider can prepare properly.',
                             style: TextStyle(
                               fontSize: 13,
-                              color: Color(0xFF6B7280),
+                              color: context.colors.secondaryText,
                             ),
                           ),
                         ],
@@ -167,10 +169,10 @@ class _BookingPageViewState extends State<_BookingPageView> {
               child: Container(
                 padding: const EdgeInsets.fromLTRB(16, 10, 16, 24),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: context.colors.cardBg,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.08),
+                      color: context.colors.shadowHeavy,
                       blurRadius: 16,
                       offset: const Offset(0, -4),
                     ),
@@ -221,14 +223,16 @@ class _BookingPageViewState extends State<_BookingPageView> {
   }
 
   Widget _formCard(BuildContext context) {
+    final c = context.colors;
     return _infoCard(
+      c: c,
       children: [
-        const Text(
+        Text(
           'Booking Form',
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w700,
-            color: Color(0xFF1A1A2E),
+            color: c.primaryText,
           ),
         ),
         const SizedBox(height: 12),
@@ -241,6 +245,7 @@ class _BookingPageViewState extends State<_BookingPageView> {
                 controller: _areaController,
                 textInputAction: TextInputAction.next,
                 decoration: _inputDecoration(
+                  c: c,
                   label: 'Area',
                   hint: 'Ex: Mirpur-10, Dhaka',
                 ),
@@ -257,6 +262,7 @@ class _BookingPageViewState extends State<_BookingPageView> {
                 minLines: 3,
                 maxLines: 5,
                 decoration: _inputDecoration(
+                  c: c,
                   label: 'Note / Description',
                   hint: 'Describe the problem clearly',
                 ),
@@ -268,12 +274,12 @@ class _BookingPageViewState extends State<_BookingPageView> {
                 },
               ),
               const SizedBox(height: 14),
-              const Text(
+              Text(
                 'Priority',
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF374151),
+                  color: c.tertiaryText,
                 ),
               ),
               const SizedBox(height: 8),
@@ -354,6 +360,7 @@ class _BookingPageViewState extends State<_BookingPageView> {
     String label,
   ) {
     final selected = selectedPriority == value;
+    final c = context.colors;
     return ChoiceChip(
       label: Text(label),
       selected: selected,
@@ -364,26 +371,26 @@ class _BookingPageViewState extends State<_BookingPageView> {
       },
       selectedColor: const Color(0xFF1A73E8).withValues(alpha: 0.2),
       labelStyle: TextStyle(
-        color: selected ? const Color(0xFF1A73E8) : const Color(0xFF374151),
+        color: selected ? const Color(0xFF1A73E8) : c.tertiaryText,
         fontWeight: FontWeight.w700,
       ),
       side: BorderSide(
-        color: selected ? const Color(0xFF1A73E8) : const Color(0xFFE5E7EB),
+        color: selected ? const Color(0xFF1A73E8) : c.inputBorder,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: c.cardBg,
     );
   }
 
-  Widget _infoCard({required List<Widget> children}) {
+  Widget _infoCard({required AppColors c, required List<Widget> children}) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: c.cardBg,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: c.shadowMedium,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -397,6 +404,7 @@ class _BookingPageViewState extends State<_BookingPageView> {
   }
 
   InputDecoration _inputDecoration({
+    required AppColors c,
     required String label,
     required String hint,
   }) {
@@ -404,14 +412,14 @@ class _BookingPageViewState extends State<_BookingPageView> {
       labelText: label,
       hintText: hint,
       filled: true,
-      fillColor: const Color(0xFFF9FAFB),
+      fillColor: c.inputFill,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+        borderSide: BorderSide(color: c.inputBorder),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+        borderSide: BorderSide(color: c.inputBorder),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),

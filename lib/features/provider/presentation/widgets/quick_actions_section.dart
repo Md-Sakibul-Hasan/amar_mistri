@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +13,13 @@ class QuickActionsSection extends StatelessWidget {
     ('Bookings', '📅', Color(0xFFE8F0FE), Color(0xFF1A73E8)),
     ('Reviews', '⭐', Color(0xFFFEF9C3), Color(0xFFCA8A04)),
     ('Profile', '👤', Color(0xFFFCE7F3), Color(0xFFEC4899)),
+  ];
+
+  // Darker tinted backgrounds for dark mode
+  static const _darkBgs = [
+    Color(0xFF1A2744), // Bookings
+    Color(0xFF2A270E), // Reviews
+    Color(0xFF2D1020), // Profile
   ];
 
   void _onTap(BuildContext context, String label) {
@@ -35,17 +40,24 @@ class QuickActionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardBg = isDark ? const Color(0xFF1E1E2E) : Colors.white;
+    final titleColor = isDark
+        ? const Color(0xFFE2E2F0)
+        : const Color(0xFF1A1A2E);
+    final shadowColor = Colors.black.withAlpha(isDark ? 40 : 10);
+
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Quick Actions',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF1A1A2E),
+                color: titleColor,
               ),
             ),
             // TextButton(
@@ -84,16 +96,17 @@ class QuickActionsSection extends StatelessWidget {
           ),
           itemCount: _actions.length,
           itemBuilder: (_, i) {
-            final (label, emoji, bg, fg) = _actions[i];
+            final (label, emoji, _, fg) = _actions[i];
+            final bg = isDark ? _darkBgs[i] : _actions[i].$3;
             return GestureDetector(
               onTap: () => _onTap(context, label),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: cardBg,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withAlpha(10),
+                      color: shadowColor,
                       blurRadius: 6,
                       offset: const Offset(0, 2),
                     ),

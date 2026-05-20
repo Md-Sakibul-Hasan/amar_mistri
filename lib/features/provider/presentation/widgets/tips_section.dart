@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class TipsSection extends StatelessWidget {
   const TipsSection({super.key});
@@ -11,40 +12,33 @@ class TipsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: c.cardBg,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(13),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
+          BoxShadow(color: c.shadow, blurRadius: 8, offset: const Offset(0, 2)),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Tips to Earn More',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w800,
-              color: Color(0xFF1A1A2E),
+              color: c.primaryText,
             ),
           ),
           const SizedBox(height: 12),
           Row(
             children: List.generate(_steps.length * 2 - 1, (i) {
               if (i.isOdd) {
-                return const Expanded(
-                  child: Divider(
-                    color: Color(0xFFE8F0FE),
-                    thickness: 2,
-                    height: 2,
-                  ),
+                return Expanded(
+                  child: Divider(color: c.lightBlueBg, thickness: 2, height: 2),
                 );
               }
               final s = _steps[i ~/ 2];
@@ -56,7 +50,7 @@ class TipsSection extends StatelessWidget {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE8F0FE),
+                        color: c.lightBlueBg,
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: Center(
@@ -66,10 +60,10 @@ class TipsSection extends StatelessWidget {
                     const SizedBox(height: 6),
                     Text(
                       s.$1,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1A1A2E),
+                        color: c.primaryText,
                       ),
                       textAlign: TextAlign.center,
                     ),

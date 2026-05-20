@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'core/di/injection_container.dart';
 import 'core/services/push_notification_service.dart';
 import 'core/router/app_router.dart';
+import 'core/theme/theme_cubit.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 
 void main() async {
@@ -33,20 +34,35 @@ class AmarMistriApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<AuthBloc>(
-      create: (_) => sl<AuthBloc>()..add(const AuthCheckRequested()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<AuthBloc>(
+          create: (_) => sl<AuthBloc>()..add(const AuthCheckRequested()),
+        ),
+        BlocProvider<ThemeCubit>(create: (_) => sl<ThemeCubit>()),
+      ],
       child: Builder(
         builder: (context) {
           final router = AppRouter.router(context);
-          return MaterialApp.router(
-            title: 'Amar Mistri',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
-              useMaterial3: true,
+          return BlocBuilder<ThemeCubit, ThemeMode>(
+            builder: (context, themeMode) => MaterialApp.router(
+              title: 'Amar Mistri',
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+                useMaterial3: true,
+              ),
+              darkTheme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(
+                  seedColor: Colors.deepOrange,
+                  brightness: Brightness.dark,
+                ),
+                useMaterial3: true,
+              ),
+              themeMode: themeMode,
+              routerConfig: router,
+              builder: EasyLoading.init(),
             ),
-            routerConfig: router,
-            builder: EasyLoading.init(),
           );
         },
       ),

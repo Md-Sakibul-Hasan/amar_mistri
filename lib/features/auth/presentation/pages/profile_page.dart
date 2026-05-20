@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../auth/domain/entities/app_user.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../../../auth/presentation/bloc/profile_bloc.dart';
@@ -230,7 +231,7 @@ class _ProfileViewState extends State<_ProfileView> {
         }
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F7FA),
+        backgroundColor: context.colors.scaffoldBg,
         body: CustomScrollView(
           slivers: [
             // ── Header ──────────────────────────────────────────────
@@ -330,79 +331,80 @@ class _ProfileViewState extends State<_ProfileView> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                        const SizedBox(height: 40),
-                        BlocBuilder<ProfileBloc, ProfileState>(
-                          builder: (context, state) {
-                            final isUploading = state is ProfilePhotoUploading;
-                            return GestureDetector(
-                              onTap: isUploading
-                                  ? null
-                                  : () => _showImagePickerSheet(context),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  CircleAvatar(
-                                    radius: 46,
-                                    backgroundColor: Colors.white.withValues(
-                                      alpha: 0.25,
+                          const SizedBox(height: 40),
+                          BlocBuilder<ProfileBloc, ProfileState>(
+                            builder: (context, state) {
+                              final isUploading =
+                                  state is ProfilePhotoUploading;
+                              return GestureDetector(
+                                onTap: isUploading
+                                    ? null
+                                    : () => _showImagePickerSheet(context),
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 46,
+                                      backgroundColor: Colors.white.withValues(
+                                        alpha: 0.25,
+                                      ),
+                                      backgroundImage:
+                                          widget.user.photoUrl != null
+                                          ? NetworkImage(widget.user.photoUrl!)
+                                          : null,
+                                      child: widget.user.photoUrl == null
+                                          ? Text(
+                                              initials,
+                                              style: const TextStyle(
+                                                fontSize: 28,
+                                                fontWeight: FontWeight.w800,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : null,
                                     ),
-                                    backgroundImage:
-                                        widget.user.photoUrl != null
-                                        ? NetworkImage(widget.user.photoUrl!)
-                                        : null,
-                                    child: widget.user.photoUrl == null
-                                        ? Text(
-                                            initials,
-                                            style: const TextStyle(
-                                              fontSize: 28,
-                                              fontWeight: FontWeight.w800,
-                                              color: Colors.white,
-                                            ),
-                                          )
-                                        : null,
-                                  ),
-                                  if (isUploading)
-                                    const CircularProgressIndicator(
-                                      color: Colors.white,
-                                      strokeWidth: 3,
-                                    ),
-                                  if (!isUploading)
-                                    Positioned(
-                                      bottom: 0,
-                                      right: 0,
-                                      child: CircleAvatar(
-                                        radius: 14,
-                                        backgroundColor: const Color(
-                                          0xFF1A73E8,
-                                        ),
-                                        child: const Icon(
-                                          Icons.camera_alt,
-                                          size: 14,
-                                          color: Colors.white,
+                                    if (isUploading)
+                                      const CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 3,
+                                      ),
+                                    if (!isUploading)
+                                      Positioned(
+                                        bottom: 0,
+                                        right: 0,
+                                        child: CircleAvatar(
+                                          radius: 14,
+                                          backgroundColor: const Color(
+                                            0xFF1A73E8,
+                                          ),
+                                          child: const Icon(
+                                            Icons.camera_alt,
+                                            size: 14,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          widget.user.name,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
-                            color: Colors.white,
+                                  ],
+                                ),
+                              );
+                            },
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 10),
+                          Text(
+                            widget.user.name,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
 
             // ── Body ────────────────────────────────────────────────
             SliverPadding(
@@ -541,14 +543,15 @@ class _SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: c.cardBg,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: c.shadowMedium,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -563,16 +566,16 @@ class _SectionCard extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w800,
-                  color: Color(0xFF1A1A2E),
+                  color: c.primaryText,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          const Divider(height: 1, color: Color(0xFFF0F0F0)),
+          Divider(height: 1, color: c.divider),
           const SizedBox(height: 16),
           ...children,
         ],
@@ -604,15 +607,16 @@ class _ProfileField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 11,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF6B7280),
+            color: c.secondaryText,
             letterSpacing: 0.4,
           ),
         ),
@@ -623,30 +627,28 @@ class _ProfileField extends StatelessWidget {
           keyboardType: keyboardType,
           maxLines: maxLines,
           validator: validator,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF1A1A2E),
+            color: c.primaryText,
           ),
           decoration: InputDecoration(
             prefixIcon: Icon(icon, size: 18, color: const Color(0xFF1A73E8)),
             hintText: hint,
-            hintStyle: const TextStyle(fontSize: 13, color: Color(0xFF9CA3AF)),
+            hintStyle: TextStyle(fontSize: 13, color: c.inputHint),
             filled: true,
-            fillColor: enabled
-                ? const Color(0xFFF9FAFB)
-                : const Color(0xFFF3F4F6),
+            fillColor: enabled ? c.inputFill : c.inputFillDisabled,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 14,
               vertical: 12,
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+              borderSide: BorderSide(color: c.inputBorder),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+              borderSide: BorderSide(color: c.inputBorder),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -657,7 +659,7 @@ class _ProfileField extends StatelessWidget {
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: Color(0xFFF0F0F0)),
+              borderSide: BorderSide(color: c.divider),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
@@ -683,6 +685,7 @@ class _ServicesSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Wrap(
       spacing: 8,
       runSpacing: 8,
@@ -705,17 +708,13 @@ class _ServicesSelector extends StatelessWidget {
           labelStyle: TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w600,
-            color: isSelected
-                ? const Color(0xFF1A73E8)
-                : const Color(0xFF6B7280),
+            color: isSelected ? const Color(0xFF1A73E8) : c.secondaryText,
           ),
-          backgroundColor: const Color(0xFFF9FAFB),
-          selectedColor: const Color(0xFFE8F0FE),
+          backgroundColor: c.inputFill,
+          selectedColor: c.lightBlueBg,
           checkmarkColor: const Color(0xFF1A73E8),
           side: BorderSide(
-            color: isSelected
-                ? const Color(0xFF1A73E8)
-                : const Color(0xFFE5E7EB),
+            color: isSelected ? const Color(0xFF1A73E8) : c.inputBorder,
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),

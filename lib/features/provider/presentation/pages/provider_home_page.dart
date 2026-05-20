@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/theme_cubit.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../bloc/provider_bookings_bloc.dart';
 import '../widgets/quick_actions_section.dart';
@@ -29,7 +31,7 @@ class ProviderHomePage extends StatelessWidget {
       create: (_) =>
           sl<ProviderBookingsBloc>()..add(ProviderBookingsRequested(user.uid)),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF5F7FA),
+        backgroundColor: context.colors.scaffoldBg,
         body: SafeArea(
           child: CustomScrollView(
             slivers: [
@@ -213,13 +215,15 @@ class _ProviderHeader extends StatelessWidget {
                       color: Colors.white,
                       size: 22,
                     ),
-                    color: Colors.white,
+                    color: context.colors.cardBg,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                     onSelected: (value) {
                       if (value == 'profile') {
                         context.push(AppRouter.profile);
+                      } else if (value == 'theme') {
+                        context.read<ThemeCubit>().toggle();
                       } else if (value == 'logout') {
                         showDialog<void>(
                           context: context,
@@ -227,16 +231,16 @@ class _ProviderHeader extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
                             ),
-                            title: const Text(
+                            title: Text(
                               'Logout',
                               style: TextStyle(
                                 fontWeight: FontWeight.w800,
-                                color: Color(0xFF1A1A2E),
+                                color: context.colors.primaryText,
                               ),
                             ),
-                            content: const Text(
+                            content: Text(
                               'Are you sure you want to logout?',
-                              style: TextStyle(color: Colors.grey),
+                              style: TextStyle(color: context.colors.greyText),
                             ),
                             actions: [
                               TextButton(
@@ -267,7 +271,7 @@ class _ProviderHeader extends StatelessWidget {
                         );
                       }
                     },
-                    itemBuilder: (_) => const [
+                    itemBuilder: (menuCtx) => [
                       PopupMenuItem(
                         value: 'profile',
                         child: Row(
@@ -275,40 +279,43 @@ class _ProviderHeader extends StatelessWidget {
                             Icon(
                               Icons.person_outline,
                               size: 18,
-                              color: Color(0xFF1A1A2E),
+                              color: menuCtx.colors.primaryText,
                             ),
                             SizedBox(width: 10),
                             Text(
                               'Profile',
                               style: TextStyle(
                                 fontSize: 13,
-                                color: Color(0xFF1A1A2E),
+                                color: menuCtx.colors.primaryText,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      PopupMenuItem(
-                        value: 'settings',
+                      PopupMenuItem<String>(
+                        value: 'theme',
                         child: Row(
                           children: [
                             Icon(
-                              Icons.settings_outlined,
+                              menuCtx.read<ThemeCubit>().state == ThemeMode.dark
+                                  ? Icons.light_mode_outlined
+                                  : Icons.dark_mode_outlined,
                               size: 18,
-                              color: Color(0xFF1A1A2E),
+                              color: menuCtx.colors.primaryText,
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             Text(
-                              'Settings',
+                              menuCtx.read<ThemeCubit>().state == ThemeMode.dark
+                                  ? 'Light Mode'
+                                  : 'Dark Mode',
                               style: TextStyle(
                                 fontSize: 13,
-                                color: Color(0xFF1A1A2E),
+                                color: menuCtx.colors.primaryText,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      PopupMenuDivider(),
                       PopupMenuItem(
                         value: 'logout',
                         child: Row(
@@ -420,27 +427,28 @@ class _StatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     final stats = [
       (
         label: 'Total Jobs',
         value: '0',
         icon: Icons.handyman_outlined,
         color: const Color(0xFF1A73E8),
-        bg: const Color(0xFFE8F0FE),
+        bg: c.lightBlueBg,
       ),
       (
         label: 'This Month',
         value: '৳0',
         icon: Icons.account_balance_wallet_outlined,
         color: const Color(0xFF22C55E),
-        bg: const Color(0xFFDCFCE7),
+        bg: c.lightGreenBg,
       ),
       (
         label: 'Rating',
         value: '—',
         icon: Icons.star_rounded,
         color: const Color(0xFFFACC15),
-        bg: const Color(0xFFFEF9C3),
+        bg: c.lightYellowBg,
       ),
     ];
 
@@ -451,11 +459,11 @@ class _StatsRow extends StatelessWidget {
             margin: EdgeInsets.only(right: s == stats.last ? 0 : 10),
             padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: c.cardBg,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withAlpha(13),
+                  color: c.shadow,
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -475,16 +483,16 @@ class _StatsRow extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   s.value,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w900,
-                    color: Color(0xFF1A1A2E),
+                    color: c.primaryText,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   s.label,
-                  style: const TextStyle(fontSize: 10, color: Colors.grey),
+                  style: TextStyle(fontSize: 10, color: c.greyText),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -620,40 +628,33 @@ class _TipsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: c.cardBg,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(13),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
+          BoxShadow(color: c.shadow, blurRadius: 8, offset: const Offset(0, 2)),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             'Tips to Earn More',
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w800,
-              color: Color(0xFF1A1A2E),
+              color: c.primaryText,
             ),
           ),
           const SizedBox(height: 12),
           Row(
             children: List.generate(_steps.length * 2 - 1, (i) {
               if (i.isOdd) {
-                return const Expanded(
-                  child: Divider(
-                    color: Color(0xFFE8F0FE),
-                    thickness: 2,
-                    height: 2,
-                  ),
+                return Expanded(
+                  child: Divider(color: c.lightBlueBg, thickness: 2, height: 2),
                 );
               }
               final s = _steps[i ~/ 2];
@@ -665,7 +666,7 @@ class _TipsSection extends StatelessWidget {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: const Color(0xFFE8F0FE),
+                        color: c.lightBlueBg,
                         borderRadius: BorderRadius.circular(14),
                       ),
                       child: Center(
@@ -675,10 +676,10 @@ class _TipsSection extends StatelessWidget {
                     const SizedBox(height: 6),
                     Text(
                       s.$1,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF1A1A2E),
+                        color: c.primaryText,
                       ),
                       textAlign: TextAlign.center,
                     ),

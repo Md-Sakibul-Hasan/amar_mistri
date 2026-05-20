@@ -32,6 +32,7 @@ import '../../features/auth/domain/usecases/update_user_profile_usecase.dart';
 import '../../features/auth/domain/usecases/upload_profile_photo_usecase.dart';
 import '../../features/auth/presentation/bloc/profile_bloc.dart';
 import '../services/cloudflare_r2_service.dart';
+import '../theme/theme_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -115,4 +116,5 @@ Future<void> initDependencies() async {
   sl.registerFactory(
     () => ProfileBloc(updateUserProfile: sl(), uploadProfilePhoto: sl()),
   );
+  sl.registerLazySingleton<ThemeCubit>(() => ThemeCubit(sl()));
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import 'customer_booking_list_page.dart';
 
 class BookingConfirmPage extends StatelessWidget {
@@ -7,8 +8,9 @@ class BookingConfirmPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: c.scaffoldBg,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(24, 48, 24, 32),
@@ -32,22 +34,22 @@ class BookingConfirmPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 28),
-                    const Text(
+                    Text(
                       'Booking Confirmed!',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w800,
-                        color: Color(0xFF1A1A2E),
+                        color: c.primaryText,
                       ),
                     ),
                     const SizedBox(height: 12),
-                    const Text(
+                    Text(
                       'Your booking request has been submitted successfully. '
                       'The provider will review it and get back to you soon.',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14,
-                        color: Color(0xFF6B7280),
+                        color: c.secondaryText,
                         height: 1.5,
                       ),
                     ),
@@ -101,12 +103,12 @@ class BookingConfirmPage extends StatelessWidget {
                     onPressed: () {
                       Navigator.of(context).popUntil((route) => route.isFirst);
                     },
-                    child: const Text(
+                    child: Text(
                       'Back to Home',
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF374151),
+                        color: c.tertiaryText,
                       ),
                     ),
                   ),
@@ -133,15 +135,16 @@ class _InfoTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: c.cardBg,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: c.shadowMedium,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -165,18 +168,18 @@ class _InfoTile extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF1A1A2E),
+                    color: c.primaryText,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   description,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 12,
-                    color: Color(0xFF6B7280),
+                    color: c.secondaryText,
                     height: 1.4,
                   ),
                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/customer_booking.dart';
 
 class CustomerBookingDetailsPage extends StatelessWidget {
@@ -9,11 +10,12 @@ class CustomerBookingDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: c.scaffoldBg,
       appBar: AppBar(
         title: const Text('Booking Details'),
-        backgroundColor: const Color(0xFFF5F7FA),
+        backgroundColor: c.scaffoldBg,
         elevation: 0,
       ),
       body: SingleChildScrollView(
@@ -21,73 +23,77 @@ class CustomerBookingDetailsPage extends StatelessWidget {
         child: Column(
           children: [
             _card(
+              c: c,
               children: [
-                const Text(
+                Text(
                   'Summary',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF1A1A2E),
+                    color: c.primaryText,
                   ),
                 ),
                 const SizedBox(height: 12),
-                _row('Booking ID', booking.bookingId),
-                _row('Status', booking.status),
-                _row('Date', booking.date),
-                _row('Created', _formatCreatedAt(booking.createdAt)),
+                _row('Booking ID', booking.bookingId, c),
+                _row('Status', booking.status, c),
+                _row('Date', booking.date, c),
+                _row('Created', _formatCreatedAt(booking.createdAt), c),
               ],
             ),
             const SizedBox(height: 12),
             _card(
+              c: c,
               children: [
-                const Text(
+                Text(
                   'Service Info',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF1A1A2E),
+                    color: c.primaryText,
                   ),
                 ),
                 const SizedBox(height: 12),
-                _row('Service', booking.service),
-                _row('Provider', booking.providerName),
-                _row('Area', booking.area),
-                _row('Priority', booking.priority),
+                _row('Service', booking.service, c),
+                _row('Provider', booking.providerName, c),
+                _row('Area', booking.area, c),
+                _row('Priority', booking.priority, c),
               ],
             ),
             const SizedBox(height: 12),
             _card(
+              c: c,
               children: [
-                const Text(
+                Text(
                   'Customer Info',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF1A1A2E),
+                    color: c.primaryText,
                   ),
                 ),
                 const SizedBox(height: 12),
-                _row('Name', booking.customerName),
-                _row('Phone', booking.phone),
+                _row('Name', booking.customerName, c),
+                _row('Phone', booking.phone, c),
               ],
             ),
             const SizedBox(height: 12),
             _card(
+              c: c,
               children: [
-                const Text(
+                Text(
                   'Description',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
-                    color: Color(0xFF1A1A2E),
+                    color: c.primaryText,
                   ),
                 ),
                 const SizedBox(height: 10),
                 Text(
                   booking.note,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
-                    color: Color(0xFF374151),
+                    color: c.tertiaryText,
                     height: 1.45,
                   ),
                 ),
@@ -99,16 +105,16 @@ class CustomerBookingDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _card({required List<Widget> children}) {
+  Widget _card({required AppColors c, required List<Widget> children}) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: c.cardBg,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: c.shadowMedium,
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -121,7 +127,7 @@ class CustomerBookingDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _row(String label, String value) {
+  Widget _row(String label, String value, AppColors c) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -129,17 +135,17 @@ class CustomerBookingDetailsPage extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
+              style: TextStyle(fontSize: 12, color: c.secondaryText),
             ),
           ),
           Expanded(
             child: Text(
               value,
               textAlign: TextAlign.right,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: Color(0xFF1A1A2E),
+                color: c.primaryText,
               ),
             ),
           ),

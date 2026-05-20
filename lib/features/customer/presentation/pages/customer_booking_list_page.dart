@@ -1,3 +1,4 @@
+import 'package:amar_mistri/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,10 +26,10 @@ class _CustomerBookingListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: context.colors.scaffoldBg,
       appBar: AppBar(
         title: const Text('My Bookings'),
-        backgroundColor: const Color(0xFFF5F7FA),
+        backgroundColor: context.colors.scaffoldBg,
         elevation: 0,
       ),
       body: BlocBuilder<CustomerBookingsBloc, CustomerBookingsState>(
@@ -69,6 +70,7 @@ class _BookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return InkWell(
       borderRadius: BorderRadius.circular(16),
       onTap: () {
@@ -81,11 +83,11 @@ class _BookingCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: c.cardBg,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
+              color: c.shadowMedium,
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -97,7 +99,7 @@ class _BookingCard extends StatelessWidget {
               width: 44,
               height: 44,
               decoration: BoxDecoration(
-                color: const Color(0xFFE8F0FE),
+                color: c.lightBlueBg,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Icon(
@@ -112,35 +114,29 @@ class _BookingCard extends StatelessWidget {
                 children: [
                   Text(
                     booking.service,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF1A1A2E),
+                      color: c.primaryText,
                     ),
                   ),
                   const SizedBox(height: 3),
                   Text(
                     booking.providerName,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFF6B7280),
-                    ),
+                    style: TextStyle(fontSize: 12, color: c.secondaryText),
                   ),
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.calendar_today_rounded,
                         size: 12,
-                        color: Color(0xFF6B7280),
+                        color: c.secondaryText,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         booking.date,
-                        style: const TextStyle(
-                          fontSize: 11,
-                          color: Color(0xFF6B7280),
-                        ),
+                        style: TextStyle(fontSize: 11, color: c.secondaryText),
                       ),
                     ],
                   ),
@@ -150,7 +146,7 @@ class _BookingCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
               decoration: BoxDecoration(
-                color: _statusBg(booking.status),
+                color: _statusBg(booking.status, c),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
@@ -180,15 +176,15 @@ class _BookingCard extends StatelessWidget {
     }
   }
 
-  Color _statusBg(String status) {
+  Color _statusBg(String status, AppColors c) {
     switch (status.toLowerCase()) {
       case 'completed':
-        return const Color(0xFFE8F0FE);
+        return c.lightBlueBg;
       case 'confirmed':
-        return const Color(0xFFDCFCE7);
+        return c.lightGreenBg;
       case 'pending':
       default:
-        return const Color(0xFFFEF3C7);
+        return c.lightOrangeBg;
     }
   }
 }
@@ -198,27 +194,28 @@ class _EmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    final c = context.colors;
+    return Center(
       child: Padding(
-        padding: EdgeInsets.all(24),
+        padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.inbox_rounded, size: 56, color: Color(0xFF9CA3AF)),
-            SizedBox(height: 12),
+            Icon(Icons.inbox_rounded, size: 56, color: c.greyText),
+            const SizedBox(height: 12),
             Text(
               'No bookings yet',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-                color: Color(0xFF1A1A2E),
+                color: c.primaryText,
               ),
             ),
-            SizedBox(height: 6),
+            const SizedBox(height: 6),
             Text(
               'Your bookings will appear here after you place one.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
+              style: TextStyle(fontSize: 13, color: c.secondaryText),
             ),
           ],
         ),
@@ -234,6 +231,7 @@ class _ErrorView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
@@ -242,19 +240,19 @@ class _ErrorView extends StatelessWidget {
           children: [
             const Icon(Icons.error_outline, size: 56, color: Color(0xFFEF4444)),
             const SizedBox(height: 12),
-            const Text(
+            Text(
               'Could not load bookings',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
-                color: Color(0xFF1A1A2E),
+                color: c.primaryText,
               ),
             ),
             const SizedBox(height: 6),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280)),
+              style: TextStyle(fontSize: 13, color: c.secondaryText),
             ),
             const SizedBox(height: 14),
             ElevatedButton(

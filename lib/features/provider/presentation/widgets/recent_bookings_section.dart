@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/theme/app_colors.dart';
 
 import '../bloc/provider_bookings_bloc.dart';
 import '../pages/provider_all_bookings_page.dart';
@@ -17,12 +18,12 @@ class RecentBookingsSection extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'Recent Bookings',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
-                    color: Color(0xFF1A1A2E),
+                    color: context.colors.primaryText,
                   ),
                 ),
                 if (state is ProviderBookingsLoaded &&
@@ -63,14 +64,15 @@ class RecentBookingsSection extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            _buildBody(state),
+            _buildBody(state, context),
           ],
         );
       },
     );
   }
 
-  Widget _buildBody(ProviderBookingsState state) {
+  Widget _buildBody(ProviderBookingsState state, BuildContext context) {
+    final c = context.colors;
     if (state is ProviderBookingsLoading) {
       return const Padding(
         padding: EdgeInsets.symmetric(vertical: 24),
@@ -83,7 +85,7 @@ class RecentBookingsSection extends StatelessWidget {
         child: Center(
           child: Text(
             state.message,
-            style: const TextStyle(fontSize: 13, color: Colors.grey),
+            style: TextStyle(fontSize: 13, color: c.greyText),
             textAlign: TextAlign.center,
           ),
         ),
@@ -91,12 +93,12 @@ class RecentBookingsSection extends StatelessWidget {
     }
     if (state is ProviderBookingsLoaded) {
       if (state.bookings.isEmpty) {
-        return const Padding(
-          padding: EdgeInsets.symmetric(vertical: 24),
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 24),
           child: Center(
             child: Text(
               'No bookings yet.',
-              style: TextStyle(fontSize: 13, color: Colors.grey),
+              style: TextStyle(fontSize: 13, color: c.greyText),
             ),
           ),
         );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class TopProvidersSection extends StatelessWidget {
   const TopProvidersSection({super.key});
@@ -32,17 +33,18 @@ class TopProvidersSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+            Text(
               'Top Providers',
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF1A1A2E),
+                color: c.primaryText,
               ),
             ),
             TextButton(
@@ -82,11 +84,11 @@ class TopProvidersSection extends StatelessWidget {
                 width: 140,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: c.cardBg,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withAlpha(13),
+                      color: c.shadow,
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -103,7 +105,7 @@ class TopProvidersSection extends StatelessWidget {
                           width: 44,
                           height: 44,
                           decoration: BoxDecoration(
-                            color: const Color(0xFFE8F0FE),
+                            color: c.lightBlueBg,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Center(
@@ -136,10 +138,10 @@ class TopProvidersSection extends StatelessWidget {
                     const SizedBox(height: 8),
                     Text(
                       p.name,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF1A1A2E),
+                        color: c.primaryText,
                         height: 1.2,
                       ),
                       maxLines: 2,
@@ -148,7 +150,7 @@ class TopProvidersSection extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       p.type,
-                      style: const TextStyle(fontSize: 10, color: Colors.grey),
+                      style: TextStyle(fontSize: 10, color: c.greyText),
                     ),
                     const Spacer(),
                     Row(
@@ -161,19 +163,16 @@ class TopProvidersSection extends StatelessWidget {
                         const SizedBox(width: 3),
                         Text(
                           p.rating.toString(),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF1A1A2E),
+                            color: c.primaryText,
                           ),
                         ),
                         const SizedBox(width: 3),
                         Text(
                           '(${p.jobs})',
-                          style: const TextStyle(
-                            fontSize: 10,
-                            color: Colors.grey,
-                          ),
+                          style: TextStyle(fontSize: 10, color: c.greyText),
                         ),
                       ],
                     ),

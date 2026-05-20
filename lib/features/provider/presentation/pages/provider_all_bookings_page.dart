@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/theme/app_colors.dart';
 
 import '../bloc/provider_bookings_bloc.dart';
 import '../widgets/provider_booking_card.dart';
@@ -9,22 +10,23 @@ class ProviderAllBookingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F7FA),
+      backgroundColor: c.scaffoldBg,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF5F7FA),
+        backgroundColor: c.scaffoldBg,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text(
+        title: Text(
           'All Bookings',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w800,
-            color: Color(0xFF1A1A2E),
+            color: c.primaryText,
           ),
         ),
       ),
@@ -40,7 +42,7 @@ class ProviderAllBookingsPage extends StatelessWidget {
                 padding: const EdgeInsets.all(24),
                 child: Text(
                   state.message,
-                  style: const TextStyle(fontSize: 13, color: Colors.grey),
+                  style: TextStyle(fontSize: 13, color: c.greyText),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -49,10 +51,10 @@ class ProviderAllBookingsPage extends StatelessWidget {
 
           if (state is ProviderBookingsLoaded) {
             if (state.bookings.isEmpty) {
-              return const Center(
+              return Center(
                 child: Text(
                   'No bookings yet.',
-                  style: TextStyle(fontSize: 13, color: Colors.grey),
+                  style: TextStyle(fontSize: 13, color: c.greyText),
                 ),
               );
             }

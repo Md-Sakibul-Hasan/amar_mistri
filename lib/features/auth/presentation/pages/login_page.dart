@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_theme.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_text_field.dart';
 import '../bloc/auth_bloc.dart';
 
@@ -44,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
     final isProvider = widget.role == 'provider';
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: context.colors.scaffoldBg,
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthLoading) {
@@ -164,18 +165,18 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Title
-            const Text(
+            Text(
               'Welcome Back!',
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w800,
-                color: Color(0xFF1A1A2E),
+                color: context.colors.primaryText,
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
+            Text(
               'Login to continue',
-              style: TextStyle(fontSize: 13, color: Colors.grey),
+              style: TextStyle(fontSize: 13, color: context.colors.greyText),
             ),
             const SizedBox(height: 20),
 
@@ -281,15 +282,18 @@ class _LoginPageState extends State<LoginPage> {
             // Divider
             Row(
               children: [
-                Expanded(child: Divider(color: Colors.grey.shade300)),
+                Expanded(child: Divider(color: context.colors.greyBorder)),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
                     'or continue with',
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade500),
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: context.colors.secondaryText,
+                    ),
                   ),
                 ),
-                Expanded(child: Divider(color: Colors.grey.shade300)),
+                Expanded(child: Divider(color: context.colors.greyBorder)),
               ],
             ),
             const SizedBox(height: 16),
@@ -320,9 +324,12 @@ class _LoginPageState extends State<LoginPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
+                Text(
                   "Don't have an account? ",
-                  style: TextStyle(fontSize: 13, color: Colors.grey),
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: context.colors.greyText,
+                  ),
                 ),
                 GestureDetector(
                   onTap: () =>
@@ -404,6 +411,7 @@ class _SocialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -412,9 +420,9 @@ class _SocialButton extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 14),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: c.cardBg,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.shade300),
+            border: Border.all(color: c.greyBorder),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -423,10 +431,10 @@ class _SocialButton extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF1A1A2E),
+                  color: c.primaryText,
                 ),
               ),
             ],

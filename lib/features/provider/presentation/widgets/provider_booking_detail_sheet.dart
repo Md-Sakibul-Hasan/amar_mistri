@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/theme/app_colors.dart';
 
 import '../../../../features/customer/domain/entities/customer_booking.dart';
 import '../bloc/provider_bookings_bloc.dart';
@@ -11,18 +12,18 @@ class ProviderBookingDetailSheet extends StatelessWidget {
 
   const ProviderBookingDetailSheet({super.key, required this.booking});
 
-  static ({Color fg, Color bg}) _statusColors(String status) {
+  static ({Color fg, Color bg}) _statusColors(String status, AppColors c) {
     switch (status.toLowerCase()) {
       case 'confirmed':
       case 'accepted':
-        return (fg: const Color(0xFF22C55E), bg: const Color(0xFFDCFCE7));
+        return (fg: const Color(0xFF22C55E), bg: c.lightGreenBg);
       case 'completed':
-        return (fg: const Color(0xFF1A73E8), bg: const Color(0xFFE8F0FE));
+        return (fg: const Color(0xFF1A73E8), bg: c.lightBlueBg);
       case 'cancelled':
       case 'rejected':
-        return (fg: const Color(0xFFEF4444), bg: const Color(0xFFFEE2E2));
+        return (fg: const Color(0xFFEF4444), bg: c.lightRedBg);
       default: // pending
-        return (fg: const Color(0xFFF59E0B), bg: const Color(0xFFFEF3C7));
+        return (fg: const Color(0xFFF59E0B), bg: c.lightOrangeBg);
     }
   }
 
@@ -73,7 +74,8 @@ class ProviderBookingDetailSheet extends StatelessWidget {
         final displayStatus = state is ProviderBookingStatusUpdated
             ? state.newStatus
             : booking.status;
-        final colors = _statusColors(displayStatus);
+        final c = context.colors;
+        final colors = _statusColors(displayStatus, c);
         final statusLabel =
             displayStatus[0].toUpperCase() + displayStatus.substring(1);
         final isPending = displayStatus.toLowerCase() == 'pending';
@@ -85,8 +87,8 @@ class ProviderBookingDetailSheet extends StatelessWidget {
           maxChildSize: 0.95,
           expand: false,
           builder: (_, controller) => Container(
-            decoration: const BoxDecoration(
-              color: Color(0xFFF5F7FA),
+            decoration: BoxDecoration(
+              color: c.sheetBg,
               borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
             ),
             child: Column(
@@ -97,7 +99,7 @@ class ProviderBookingDetailSheet extends StatelessWidget {
                   width: 40,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade300,
+                    color: c.dragHandle,
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
@@ -118,10 +120,12 @@ class ProviderBookingDetailSheet extends StatelessWidget {
                                 width: 52,
                                 height: 52,
                                 fit: BoxFit.cover,
-                                placeholder: (_, __) => _avatarFallback(),
-                                errorWidget: (_, __, ___) => _avatarFallback(),
+                                placeholder: (_, __) =>
+                                    _avatarFallback(c.lightBlueBg),
+                                errorWidget: (_, __, ___) =>
+                                    _avatarFallback(c.lightBlueBg),
                               )
-                            : _avatarFallback(),
+                            : _avatarFallback(c.lightBlueBg),
                       ),
                       const SizedBox(width: 14),
                       Expanded(
@@ -130,10 +134,10 @@ class ProviderBookingDetailSheet extends StatelessWidget {
                           children: [
                             Text(
                               booking.customerName,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
-                                color: Color(0xFF1A1A2E),
+                                color: c.primaryText,
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -151,25 +155,21 @@ class ProviderBookingDetailSheet extends StatelessWidget {
                               },
                               child: Row(
                                 children: [
-                                  const Icon(
+                                  Icon(
                                     Icons.phone_outlined,
                                     size: 13,
-                                    color: Colors.grey,
+                                    color: c.greyText,
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
                                     booking.phone,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 12,
-                                      color: Colors.grey,
+                                      color: c.greyText,
                                     ),
                                   ),
                                   const SizedBox(width: 4),
-                                  const Icon(
-                                    Icons.copy,
-                                    size: 11,
-                                    color: Colors.grey,
-                                  ),
+                                  Icon(Icons.copy, size: 11, color: c.greyText),
                                 ],
                               ),
                             ),
@@ -210,6 +210,7 @@ class ProviderBookingDetailSheet extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
                     children: [
                       _card(
+                        c: c,
                         icon: Icons.build_outlined,
                         title: 'Service Info',
                         rows: [
@@ -227,6 +228,7 @@ class ProviderBookingDetailSheet extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       _card(
+                        c: c,
                         icon: Icons.receipt_long_outlined,
                         title: 'Booking Summary',
                         rows: [
@@ -243,7 +245,7 @@ class ProviderBookingDetailSheet extends StatelessWidget {
                       ),
                       if (booking.note.isNotEmpty && booking.note != '-') ...[
                         const SizedBox(height: 12),
-                        _noteCard(booking.note),
+                        _noteCard(booking.note, c),
                       ],
                     ],
                   ),
@@ -325,16 +327,17 @@ class ProviderBookingDetailSheet extends StatelessWidget {
     );
   }
 
-  static Widget _avatarFallback() => Container(
+  static Widget _avatarFallback(Color bgColor) => Container(
     width: 52,
     height: 52,
-    color: const Color(0xFFE8F0FE),
+    color: bgColor,
     child: const Center(
       child: Icon(Icons.person, size: 26, color: Color(0xFF1A73E8)),
     ),
   );
 
   Widget _card({
+    required AppColors c,
     required IconData icon,
     required String title,
     required List<_InfoRow> rows,
@@ -343,14 +346,10 @@ class ProviderBookingDetailSheet extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: c.cardBg,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(13),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
+          BoxShadow(color: c.shadow, blurRadius: 8, offset: const Offset(0, 2)),
         ],
       ),
       child: Column(
@@ -362,10 +361,10 @@ class ProviderBookingDetailSheet extends StatelessWidget {
               const SizedBox(width: 6),
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF1A1A2E),
+                  color: c.primaryText,
                 ),
               ),
             ],
@@ -377,34 +376,34 @@ class ProviderBookingDetailSheet extends StatelessWidget {
     );
   }
 
-  Widget _noteCard(String note) {
+  Widget _noteCard(String note, AppColors c) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: c.cardBg,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(13),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
+          BoxShadow(color: c.shadow, blurRadius: 8, offset: const Offset(0, 2)),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.notes_outlined, size: 16, color: Color(0xFF1A73E8)),
-              SizedBox(width: 6),
+              const Icon(
+                Icons.notes_outlined,
+                size: 16,
+                color: Color(0xFF1A73E8),
+              ),
+              const SizedBox(width: 6),
               Text(
                 'Note',
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xFF1A1A2E),
+                  color: c.primaryText,
                 ),
               ),
             ],
@@ -412,11 +411,7 @@ class ProviderBookingDetailSheet extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             note,
-            style: const TextStyle(
-              fontSize: 13,
-              color: Color(0xFF374151),
-              height: 1.5,
-            ),
+            style: TextStyle(fontSize: 13, color: c.tertiaryText, height: 1.5),
           ),
         ],
       ),
@@ -433,6 +428,7 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final c = context.colors;
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -440,7 +436,7 @@ class _InfoRow extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
+              style: TextStyle(fontSize: 12, color: c.secondaryText),
             ),
           ),
           Expanded(
@@ -450,7 +446,7 @@ class _InfoRow extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
-                color: const Color(0xFF1A1A2E),
+                color: c.primaryText,
                 fontFamily: mono ? 'monospace' : null,
               ),
             ),
