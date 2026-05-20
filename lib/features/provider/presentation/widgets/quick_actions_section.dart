@@ -1,4 +1,12 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../../core/router/app_router.dart';
+import '../bloc/provider_bookings_bloc.dart';
+import '../pages/provider_all_bookings_page.dart';
 
 class QuickActionsSection extends StatelessWidget {
   const QuickActionsSection({super.key});
@@ -11,6 +19,22 @@ class QuickActionsSection extends StatelessWidget {
     ('Schedule', '🗓️', Color(0xFFEDE9FE), Color(0xFF7C3AED)),
     ('Support', '💬', Color(0xFFFFEDD5), Color(0xFFEA580C)),
   ];
+
+  void _onTap(BuildContext context, String label) {
+    switch (label) {
+      case 'Bookings':
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => BlocProvider.value(
+              value: context.read<ProviderBookingsBloc>(),
+              child: const ProviderAllBookingsPage(),
+            ),
+          ),
+        );
+      case 'Profile':
+        context.push(AppRouter.profile);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +89,7 @@ class QuickActionsSection extends StatelessWidget {
           itemBuilder: (_, i) {
             final (label, emoji, bg, fg) = _actions[i];
             return GestureDetector(
-              onTap: () {},
+              onTap: () => _onTap(context, label),
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
