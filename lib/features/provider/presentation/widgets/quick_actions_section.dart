@@ -13,11 +13,8 @@ class QuickActionsSection extends StatelessWidget {
 
   static const _actions = [
     ('Bookings', '📅', Color(0xFFE8F0FE), Color(0xFF1A73E8)),
-    ('Earnings', '💰', Color(0xFFDCFCE7), Color(0xFF22C55E)),
     ('Reviews', '⭐', Color(0xFFFEF9C3), Color(0xFFCA8A04)),
     ('Profile', '👤', Color(0xFFFCE7F3), Color(0xFFEC4899)),
-    ('Schedule', '🗓️', Color(0xFFEDE9FE), Color(0xFF7C3AED)),
-    ('Support', '💬', Color(0xFFFFEDD5), Color(0xFFEA580C)),
   ];
 
   void _onTap(BuildContext context, String label) {
@@ -41,7 +38,7 @@ class QuickActionsSection extends StatelessWidget {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Text(
               'Quick Actions',
@@ -51,28 +48,28 @@ class QuickActionsSection extends StatelessWidget {
                 color: Color(0xFF1A1A2E),
               ),
             ),
-            TextButton(
-              onPressed: () {},
-              style: TextButton.styleFrom(
-                minimumSize: Size.zero,
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: const Row(
-                children: [
-                  Text(
-                    'See all',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF1A73E8),
-                    ),
-                  ),
-                  SizedBox(width: 2),
-                  Icon(Icons.chevron_right, size: 14, color: Color(0xFF1A73E8)),
-                ],
-              ),
-            ),
+            // TextButton(
+            //   onPressed: () {},
+            //   style: TextButton.styleFrom(
+            //     minimumSize: Size.zero,
+            //     padding: const EdgeInsets.symmetric(horizontal: 4),
+            //     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            //   ),
+            //   child: const Row(
+            //     children: [
+            //       Text(
+            //         'See all',
+            //         style: TextStyle(
+            //           fontSize: 12,
+            //           fontWeight: FontWeight.w600,
+            //           color: Color(0xFF1A73E8),
+            //         ),
+            //       ),
+            //       SizedBox(width: 2),
+            //       Icon(Icons.chevron_right, size: 14, color: Color(0xFF1A73E8)),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
         const SizedBox(height: 12),
