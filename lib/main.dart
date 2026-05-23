@@ -6,7 +6,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'core/di/injection_container.dart';
 import 'core/services/push_notification_service.dart';
 import 'core/router/app_router.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'core/theme/theme_cubit.dart';
+import 'core/locale/locale_cubit.dart';
 import 'features/auth/presentation/bloc/auth_bloc.dart';
 
 void main() async {
@@ -40,29 +42,42 @@ class AmarMistriApp extends StatelessWidget {
           create: (_) => sl<AuthBloc>()..add(const AuthCheckRequested()),
         ),
         BlocProvider<ThemeCubit>(create: (_) => sl<ThemeCubit>()),
+        BlocProvider<LocaleCubit>(create: (_) => sl<LocaleCubit>()),
       ],
       child: Builder(
         builder: (context) {
           final router = AppRouter.router(context);
           return BlocBuilder<ThemeCubit, ThemeMode>(
-            builder: (context, themeMode) => MaterialApp.router(
-              title: 'Amar Mistri',
-              debugShowCheckedModeBanner: false,
-              theme: ThemeData(
-                colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
-                useMaterial3: true,
-              ),
-              darkTheme: ThemeData(
-                colorScheme: ColorScheme.fromSeed(
-                  seedColor: Colors.deepOrange,
-                  brightness: Brightness.dark,
+            builder: (context, themeMode) {
+              final locale = context.watch<LocaleCubit>().state;
+              return MaterialApp.router(
+                title: 'Amar Mistri',
+                debugShowCheckedModeBanner: false,
+                locale: locale,
+                supportedLocales: const [Locale('en'), Locale('bn')],
+                localizationsDelegates: const [
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                theme: ThemeData(
+                  colorScheme: ColorScheme.fromSeed(
+                    seedColor: Colors.deepOrange,
+                  ),
+                  useMaterial3: true,
                 ),
-                useMaterial3: true,
-              ),
-              themeMode: themeMode,
-              routerConfig: router,
-              builder: EasyLoading.init(),
-            ),
+                darkTheme: ThemeData(
+                  colorScheme: ColorScheme.fromSeed(
+                    seedColor: Colors.deepOrange,
+                    brightness: Brightness.dark,
+                  ),
+                  useMaterial3: true,
+                ),
+                themeMode: themeMode,
+                routerConfig: router,
+                builder: EasyLoading.init(),
+              );
+            },
           );
         },
       ),

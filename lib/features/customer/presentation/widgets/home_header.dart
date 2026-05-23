@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/locale/locale_cubit.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -168,6 +169,8 @@ class HomeHeader extends StatelessWidget {
                         context.push(AppRouter.profile);
                       } else if (value == 'theme') {
                         context.read<ThemeCubit>().toggle();
+                      } else if (value == 'language') {
+                        _showLanguageDialog(context);
                       } else if (value == 'logout') {
                         showDialog<void>(
                           context: context,
@@ -261,6 +264,29 @@ class HomeHeader extends StatelessWidget {
                         ),
                       ),
                       PopupMenuItem(
+                        value: 'language',
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.language,
+                              size: 18,
+                              color: menuCtx.colors.primaryText,
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              menuCtx.read<LocaleCubit>().state.languageCode ==
+                                      'bn'
+                                  ? 'ভাষা'
+                                  : 'Language',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: menuCtx.colors.primaryText,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
                         value: 'logout',
                         child: Row(
                           children: [
@@ -311,6 +337,93 @@ class HomeHeader extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  void _showLanguageDialog(BuildContext context) {
+    final localeCubit = context.read<LocaleCubit>();
+    final currentCode = localeCubit.state.languageCode;
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(
+          currentCode == 'bn' ? 'ভাষা নির্বাচন করুন' : 'Select Language',
+          style: TextStyle(
+            fontWeight: FontWeight.w800,
+            color: context.colors.primaryText,
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _LanguageOption(
+              label: 'English',
+              selected: currentCode == 'en',
+              onTap: () {
+                localeCubit.setEnglish();
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+            const SizedBox(height: 8),
+            _LanguageOption(
+              label: 'বাংলা',
+              selected: currentCode == 'bn',
+              onTap: () {
+                localeCubit.setBangla();
+                Navigator.of(dialogContext).pop();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LanguageOption extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  const _LanguageOption({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: selected ? const Color(0xFF1A73E8).withOpacity(0.1) : null,
+          border: Border.all(
+            color: selected ? const Color(0xFF1A73E8) : Colors.grey.shade300,
+          ),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                  color: selected
+                      ? const Color(0xFF1A73E8)
+                      : context.colors.primaryText,
+                ),
+              ),
+            ),
+            if (selected)
+              const Icon(Icons.check, size: 18, color: Color(0xFF1A73E8)),
+          ],
         ),
       ),
     );
