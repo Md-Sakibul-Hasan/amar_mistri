@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../features/auth/domain/entities/app_user.dart';
@@ -164,8 +165,8 @@ class _ProviderCard extends StatelessWidget {
                 color: const Color(0xFF22C55E).withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Text(
-                'See Details',
+              child: Text(
+                context.l10n.seeDetails,
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
@@ -194,7 +195,7 @@ class _EmptyView extends StatelessWidget {
           const Text('😔', style: TextStyle(fontSize: 64)),
           const SizedBox(height: 16),
           Text(
-            'No $service providers found',
+            context.l10n.noProvidersFound(service),
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
@@ -203,7 +204,7 @@ class _EmptyView extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Check back soon — more are joining!',
+            context.l10n.checkBackSoon,
             style: TextStyle(fontSize: 14, color: c.secondaryText),
           ),
         ],
@@ -229,7 +230,7 @@ class _ErrorView extends StatelessWidget {
             const Icon(Icons.error_outline, size: 56, color: Color(0xFFEF4444)),
             const SizedBox(height: 16),
             Text(
-              'Something went wrong',
+              context.l10n.somethingWentWrong,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
@@ -248,7 +249,7 @@ class _ErrorView extends StatelessWidget {
                 ProvidersLoadRequested(service: service),
               ),
               icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
+              label: Text(context.l10n.retry),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF1A73E8),
                 foregroundColor: Colors.white,

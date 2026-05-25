@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'customer_booking_list_page.dart';
 
@@ -9,6 +10,7 @@ class BookingConfirmPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: c.scaffoldBg,
       body: SafeArea(
@@ -35,7 +37,7 @@ class BookingConfirmPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 28),
                     Text(
-                      'Booking Confirmed!',
+                      l10n.bookingConfirmed,
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w800,
@@ -44,8 +46,7 @@ class BookingConfirmPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Your booking request has been submitted successfully. '
-                      'The provider will review it and get back to you soon.',
+                      l10n.bookingConfirmedBody,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14,
@@ -56,16 +57,14 @@ class BookingConfirmPage extends StatelessWidget {
                     const SizedBox(height: 36),
                     _InfoTile(
                       icon: Icons.access_time_rounded,
-                      title: 'What happens next?',
-                      description:
-                          'The provider will confirm your request and contact you to schedule a visit.',
+                      title: l10n.whatHappensNext,
+                      description: l10n.whatHappensNextBody,
                     ),
                     const SizedBox(height: 12),
                     _InfoTile(
                       icon: Icons.notifications_active_outlined,
-                      title: 'Stay notified',
-                      description:
-                          'You will receive a notification once the provider accepts your booking.',
+                      title: l10n.stayNotified,
+                      description: l10n.stayNotifiedBody,
                     ),
                   ],
                 ),
@@ -90,9 +89,9 @@ class BookingConfirmPage extends StatelessWidget {
                       ),
                       elevation: 0,
                     ),
-                    child: const Text(
-                      'View My Bookings',
-                      style: TextStyle(
+                    child: Text(
+                      l10n.viewMyBookings,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                       ),
@@ -104,7 +103,7 @@ class BookingConfirmPage extends StatelessWidget {
                       Navigator.of(context).popUntil((route) => route.isFirst);
                     },
                     child: Text(
-                      'Back to Home',
+                      l10n.backToHome,
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w600,

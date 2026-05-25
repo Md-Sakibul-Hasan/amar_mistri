@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../features/auth/domain/entities/app_user.dart';
 import 'booking_page.dart';
@@ -157,14 +158,14 @@ class _DetailContent extends StatelessWidget {
                           color: const Color(0xFF22C55E).withValues(alpha: 0.4),
                         ),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.circle, size: 8, color: Color(0xFF16A34A)),
-                          SizedBox(width: 6),
+                          const Icon(Icons.circle, size: 8, color: Color(0xFF16A34A)),
+                          const SizedBox(width: 6),
                           Text(
-                            'Available',
-                            style: TextStyle(
+                            context.l10n.available,
+                            style: const TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
                               color: Color(0xFF16A34A),
@@ -182,8 +183,8 @@ class _DetailContent extends StatelessWidget {
                       if (provider.experienceYears != null)
                         _InfoRow(
                           icon: Icons.workspace_premium_outlined,
-                          label: 'Experience',
-                          value: '${provider.experienceYears} years',
+                          label: context.l10n.experience,
+                          value: context.l10n.experienceYearsValue(provider.experienceYears!),
                         ),
                       if (provider.services != null &&
                           provider.services!.isNotEmpty) ...[
@@ -191,7 +192,7 @@ class _DetailContent extends StatelessWidget {
                           const Divider(height: 20),
                         _InfoRow(
                           icon: Icons.build_circle_outlined,
-                          label: 'Services',
+                          label: context.l10n.services,
                           value: provider.services!.join(', '),
                         ),
                       ],
@@ -200,7 +201,7 @@ class _DetailContent extends StatelessWidget {
                         const Divider(height: 20),
                         _InfoRow(
                           icon: Icons.star_border_rounded,
-                          label: 'Skills',
+                          label: context.l10n.skills,
                           value: provider.skills!,
                         ),
                       ],
@@ -210,7 +211,7 @@ class _DetailContent extends StatelessWidget {
 
                   // ── Contact grid ────────────────────────────────────
                   Text(
-                    'Contact',
+                    context.l10n.contact,
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
@@ -223,7 +224,7 @@ class _DetailContent extends StatelessWidget {
                       Expanded(
                         child: _ContactButton(
                           icon: Icons.phone_outlined,
-                          label: 'Call',
+                          label: context.l10n.call,
                           color: const Color(0xFF1A73E8),
                           onTap: () => _launch('tel:${provider.phone}'),
                         ),
@@ -232,7 +233,7 @@ class _DetailContent extends StatelessWidget {
                       Expanded(
                         child: _ContactButton(
                           icon: Icons.chat_outlined,
-                          label: 'WhatsApp',
+                          label: context.l10n.whatsapp,
                           color: const Color(0xFF25D366),
                           onTap: () => _launch(
                             'https://wa.me/${_sanitizePhone(provider.phone)}',
@@ -281,9 +282,9 @@ class _DetailContent extends StatelessWidget {
                 ),
                 elevation: 0,
               ),
-              child: const Text(
-                'Book Now',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+              child: Text(
+                context.l10n.bookNow,
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
               ),
             ),
           ),

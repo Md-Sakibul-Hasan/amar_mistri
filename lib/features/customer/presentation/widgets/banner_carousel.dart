@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
+import '../../../../core/l10n/app_localizations.dart';
 
 class BannerCarousel extends StatelessWidget {
   const BannerCarousel({super.key});
 
-  static const _banners = [
-    (
-      title: '50% OFF',
-      subtitle: 'First booking discount',
-      emoji: '🎉',
-      colors: [Color(0xFF1A73E8), Color(0xFF00A2D2)],
-    ),
-    (
-      title: 'AC Special',
-      subtitle: 'Summer service package',
-      emoji: '❄️',
-      colors: [Color(0xFF00A2D2), Color(0xFF00BFA5)],
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final banners = [
+      (
+        title: l10n.banner1Title,
+        subtitle: l10n.banner1Sub,
+        emoji: '🎉',
+        colors: const [Color(0xFF1A73E8), Color(0xFF00A2D2)],
+      ),
+      (
+        title: l10n.banner2Title,
+        subtitle: l10n.banner2Sub,
+        emoji: '❄️',
+        colors: const [Color(0xFF00A2D2), Color(0xFF00BFA5)],
+      ),
+    ];
     return SizedBox(
       height: 100,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: _banners.length,
+        itemCount: banners.length,
         separatorBuilder: (_, __) => const SizedBox(width: 12),
         itemBuilder: (_, i) {
-          final b = _banners[i];
+          final b = banners[i];
           return Container(
             width: 220,
             decoration: BoxDecoration(
@@ -78,18 +79,18 @@ class BannerCarousel extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Row(
+                      Row(
                         children: [
                           Text(
-                            'Book Now',
-                            style: TextStyle(
+                            l10n.bannerBookNow,
+                            style: const TextStyle(
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
-                          SizedBox(width: 4),
-                          Icon(
+                          const SizedBox(width: 4),
+                          const Icon(
                             Icons.arrow_forward,
                             size: 11,
                             color: Colors.white,

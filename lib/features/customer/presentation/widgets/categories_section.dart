@@ -1,34 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
-
 class CategoriesSection extends StatelessWidget {
   const CategoriesSection({super.key});
-
-  static const _categories = [
-    ('Electrician', '⚡'),
-    ('Plumber', '🔧'),
-    ('AC Repair', '❄️'),
-    ('Painter', '🎨'),
-    ('Carpenter', '🪚'),
-    ('Home Cleaner', '🧹'),
-    ('Mason / Civil', '🧱'),
-    ('Gas Technician', '🔥'),
-    ('Welder', '⚙️'),
-    ('CCTV / Security', '📹'),
-  ];
 
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final l10n = context.l10n;
+    final categories = l10n.categories;
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Our Services',
+              l10n.ourServices,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w800,
@@ -42,18 +31,18 @@ class CategoriesSection extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              child: const Row(
+              child: Row(
                 children: [
                   Text(
-                    'See all',
-                    style: TextStyle(
+                    l10n.seeAll,
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF1A73E8),
                     ),
                   ),
-                  SizedBox(width: 2),
-                  Icon(Icons.chevron_right, size: 14, color: Color(0xFF1A73E8)),
+                  const SizedBox(width: 2),
+                  const Icon(Icons.chevron_right, size: 14, color: Color(0xFF1A73E8)),
                 ],
               ),
             ),
@@ -69,9 +58,9 @@ class CategoriesSection extends StatelessWidget {
             crossAxisSpacing: 12,
             childAspectRatio: 0.85,
           ),
-          itemCount: _categories.length,
+          itemCount: categories.length,
           itemBuilder: (_, i) {
-            final (label, emoji) = _categories[i];
+            final (label, emoji) = categories[i];
             return GestureDetector(
               onTap: () => context.push(
                 '${AppRouter.providersByService}?service=${Uri.encodeComponent(label)}',

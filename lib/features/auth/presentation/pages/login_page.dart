@@ -4,6 +4,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_theme.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_text_field.dart';
@@ -49,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthLoading) {
-            EasyLoading.show(status: 'Please wait...');
+            EasyLoading.show(status: context.l10n.pleaseWait);
           } else {
             EasyLoading.dismiss();
           }
@@ -135,8 +136,8 @@ class _LoginPageState extends State<LoginPage> {
                             AppTheme.brandName(fontSize: 22),
                             Text(
                               isProvider
-                                  ? 'Provider Portal'
-                                  : 'Your local service partner',
+                                  ? context.l10n.providerPortal
+                                  : context.l10n.localServicePartner,
                               style: const TextStyle(
                                 fontSize: 12,
                                 color: Colors.white70,
@@ -166,7 +167,7 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             // Title
             Text(
-              'Welcome Back!',
+              context.l10n.welcomeBack,
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w800,
@@ -175,18 +176,18 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 4),
             Text(
-              'Login to continue',
+              context.l10n.loginToContinue,
               style: TextStyle(fontSize: 13, color: context.colors.greyText),
             ),
             const SizedBox(height: 20),
 
             const SizedBox(height: 20),
 
-            const AppFieldLabel('Email Address'),
+            AppFieldLabel(context.l10n.emailAddress),
             const SizedBox(height: 6),
             AppTextField(
               controller: _emailController,
-              hint: 'you@example.com',
+              hint: context.l10n.emailHint,
               keyboardType: TextInputType.emailAddress,
               prefixIcon: const Icon(
                 Icons.mail_outline,
@@ -194,18 +195,18 @@ class _LoginPageState extends State<LoginPage> {
                 color: Colors.grey,
               ),
               validator: (v) => (v == null || !v.contains('@'))
-                  ? 'Enter a valid email'
+                  ? context.l10n.validEmailError
                   : null,
             ),
 
             const SizedBox(height: 16),
 
             // Password
-            const AppFieldLabel('Password'),
+            AppFieldLabel(context.l10n.password),
             const SizedBox(height: 6),
             AppTextField(
               controller: _passwordController,
-              hint: 'Enter password',
+              hint: context.l10n.enterPassword,
               obscureText: _obscurePassword,
               suffixIcon: IconButton(
                 icon: Icon(
@@ -219,7 +220,7 @@ class _LoginPageState extends State<LoginPage> {
                     setState(() => _obscurePassword = !_obscurePassword),
               ),
               validator: (v) =>
-                  (v == null || v.length < 6) ? 'Min 6 characters' : null,
+                  (v == null || v.length < 6) ? context.l10n.minSixCharsError : null,
             ),
             Align(
               alignment: Alignment.centerRight,
@@ -230,9 +231,9 @@ class _LoginPageState extends State<LoginPage> {
                   minimumSize: const Size(0, 32),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 ),
-                child: const Text(
-                  'Forgot Password?',
-                  style: TextStyle(
+                child: Text(
+                  context.l10n.forgotPassword,
+                  style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: AppTheme.blue,
@@ -258,20 +259,20 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ],
                 ),
-                child: const Center(
+                child: Center(
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Login',
-                        style: TextStyle(
+                        context.l10n.loginButton,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(width: 8),
-                      Icon(Icons.arrow_forward, color: Colors.white, size: 18),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.arrow_forward, color: Colors.white, size: 18),
                     ],
                   ),
                 ),
@@ -286,7 +287,7 @@ class _LoginPageState extends State<LoginPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
-                    'or continue with',
+                    context.l10n.orContinueWith,
                     style: TextStyle(
                       fontSize: 12,
                       color: context.colors.secondaryText,
@@ -325,7 +326,7 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Don't have an account? ",
+                  context.l10n.noAccount,
                   style: TextStyle(
                     fontSize: 13,
                     color: context.colors.greyText,
@@ -334,9 +335,9 @@ class _LoginPageState extends State<LoginPage> {
                 GestureDetector(
                   onTap: () =>
                       context.go('${AppRouter.register}?role=${widget.role}'),
-                  child: const Text(
-                    'Sign Up',
-                    style: TextStyle(
+                  child: Text(
+                    context.l10n.signUp,
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                       color: AppTheme.blue,

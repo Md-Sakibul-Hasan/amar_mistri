@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/domain/entities/app_user.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
@@ -137,9 +138,9 @@ class _ProfileViewState extends State<_ProfileView> {
                 backgroundColor: Color(0xFFE8F0FE),
                 child: Icon(Icons.camera_alt, color: Color(0xFF1A73E8)),
               ),
-              title: const Text(
-                'Take a photo',
-                style: TextStyle(fontWeight: FontWeight.w600),
+              title: Text(
+                context.l10n.takeAPhoto,
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
               onTap: () => _pickAndUpload(context, ImageSource.camera),
             ),
@@ -148,9 +149,9 @@ class _ProfileViewState extends State<_ProfileView> {
                 backgroundColor: Color(0xFFE8F0FE),
                 child: Icon(Icons.photo_library, color: Color(0xFF1A73E8)),
               ),
-              title: const Text(
-                'Choose from gallery',
-                style: TextStyle(fontWeight: FontWeight.w600),
+              title: Text(
+                context.l10n.chooseFromGallery,
+                style: const TextStyle(fontWeight: FontWeight.w600),
               ),
               onTap: () => _pickAndUpload(context, ImageSource.gallery),
             ),
@@ -215,8 +216,8 @@ class _ProfileViewState extends State<_ProfileView> {
               content: Text(
                 state.user.photoUrl != null &&
                         state.user.photoUrl != widget.user.photoUrl
-                    ? 'Profile photo updated'
-                    : 'Profile updated successfully',
+                    ? context.l10n.profilePhotoUpdated
+                    : context.l10n.profileUpdatedSuccessfully,
               ),
               backgroundColor: const Color(0xFF22C55E),
             ),
@@ -264,16 +265,16 @@ class _ProfileViewState extends State<_ProfileView> {
                         children: [
                           TextButton(
                             onPressed: _cancelEdit,
-                            child: const Text(
-                              'Cancel',
-                              style: TextStyle(color: Colors.white70),
+                            child: Text(
+                              context.l10n.cancel,
+                              style: const TextStyle(color: Colors.white70),
                             ),
                           ),
                           TextButton(
                             onPressed: () => _save(context),
-                            child: const Text(
-                              'Save',
-                              style: TextStyle(
+                            child: Text(
+                              context.l10n.save,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -284,7 +285,7 @@ class _ProfileViewState extends State<_ProfileView> {
                     }
                     return IconButton(
                       icon: const Icon(Icons.edit_outlined),
-                      tooltip: 'Edit profile',
+                      tooltip: context.l10n.editProfile,
                       onPressed: () => setState(() => _isEditing = true),
                     );
                   },
@@ -418,37 +419,37 @@ class _ProfileViewState extends State<_ProfileView> {
                       children: [
                         // ── Basic Info ─────────────────────────────
                         _SectionCard(
-                          title: 'Basic Information',
+                          title: context.l10n.basicInformation,
                           icon: Icons.person_outline,
                           children: [
                             _ProfileField(
-                              label: 'Full Name',
+                              label: context.l10n.fullName,
                               controller: _nameCtrl,
                               enabled: _isEditing,
                               icon: Icons.badge_outlined,
                               validator: (v) => (v == null || v.trim().isEmpty)
-                                  ? 'Name is required'
+                                  ? context.l10n.nameIsRequired
                                   : null,
                             ),
                             const SizedBox(height: 16),
                             _ProfileField(
-                              label: 'Email',
+                              label: context.l10n.email,
                               controller: TextEditingController(
                                 text: widget.user.email,
                               ),
                               enabled: false,
                               icon: Icons.email_outlined,
-                              hint: 'Cannot be changed',
+                              hint: context.l10n.cannotBeChanged,
                             ),
                             const SizedBox(height: 16),
                             _ProfileField(
-                              label: 'Phone',
+                              label: context.l10n.phone,
                               controller: _phoneCtrl,
                               enabled: _isEditing,
                               icon: Icons.phone_outlined,
                               keyboardType: TextInputType.phone,
                               validator: (v) => (v == null || v.trim().isEmpty)
-                                  ? 'Phone is required'
+                                  ? context.l10n.phoneIsRequired
                                   : null,
                             ),
                           ],
@@ -458,11 +459,11 @@ class _ProfileViewState extends State<_ProfileView> {
                         if (isProvider) ...[
                           const SizedBox(height: 16),
                           _SectionCard(
-                            title: 'Professional Details',
+                            title: context.l10n.professionalDetails,
                             icon: Icons.work_outline,
                             children: [
                               _ProfileField(
-                                label: 'Experience (years)',
+                                label: context.l10n.experienceYearsLabel,
                                 controller: _expCtrl,
                                 enabled: _isEditing,
                                 icon: Icons.workspace_premium_outlined,
@@ -470,7 +471,7 @@ class _ProfileViewState extends State<_ProfileView> {
                               ),
                               const SizedBox(height: 16),
                               _ProfileField(
-                                label: 'Skills',
+                                label: context.l10n.skills,
                                 controller: _skillsCtrl,
                                 enabled: _isEditing,
                                 icon: Icons.star_border_rounded,
@@ -478,14 +479,14 @@ class _ProfileViewState extends State<_ProfileView> {
                               ),
                               const SizedBox(height: 16),
                               _ProfileField(
-                                label: 'Service Area',
+                                label: context.l10n.serviceAreaLabel,
                                 controller: _serviceAreaCtrl,
                                 enabled: _isEditing,
                                 icon: Icons.location_on_outlined,
                               ),
                               const SizedBox(height: 16),
                               _ProfileField(
-                                label: 'NID Number',
+                                label: context.l10n.nidNumber,
                                 controller: _nidCtrl,
                                 enabled: _isEditing,
                                 icon: Icons.credit_card_outlined,
@@ -494,13 +495,13 @@ class _ProfileViewState extends State<_ProfileView> {
                           ),
                           const SizedBox(height: 16),
                           _SectionCard(
-                            title: 'Services Offered',
+                            title: context.l10n.servicesOffered,
                             icon: Icons.build_circle_outlined,
                             children: [
                               if (!_isEditing && _selectedServices.isEmpty)
-                                const Text(
-                                  'No services added',
-                                  style: TextStyle(
+                                Text(
+                                  context.l10n.noServicesAdded,
+                                  style: const TextStyle(
                                     color: Color(0xFF6B7280),
                                     fontSize: 13,
                                   ),

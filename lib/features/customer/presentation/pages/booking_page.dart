@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../features/auth/domain/entities/app_user.dart';
 import '../bloc/booking_bloc.dart';
@@ -109,9 +110,9 @@ class _BookingPageViewState extends State<_BookingPageView> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Text(
-                                      'Book Service',
-                                      style: TextStyle(
+                                    Text(
+                                      context.l10n.bookService,
+                                      style: const TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.w800,
                                         color: Colors.white,
@@ -147,7 +148,7 @@ class _BookingPageViewState extends State<_BookingPageView> {
                           _serviceTag(widget.provider),
                           const SizedBox(height: 12),
                           Text(
-                            'Provide job details so the provider can prepare properly.',
+                            context.l10n.bookingJobDetailsHint,
                             style: TextStyle(
                               fontSize: 13,
                               color: context.colors.secondaryText,
@@ -204,9 +205,9 @@ class _BookingPageViewState extends State<_BookingPageView> {
                                 ),
                               ),
                             )
-                          : const Text(
-                              'Confirm Booking',
-                              style: TextStyle(
+                          : Text(
+                              context.l10n.confirmBooking,
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -228,7 +229,7 @@ class _BookingPageViewState extends State<_BookingPageView> {
       c: c,
       children: [
         Text(
-          'Booking Form',
+          context.l10n.bookingForm,
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w700,
@@ -246,12 +247,12 @@ class _BookingPageViewState extends State<_BookingPageView> {
                 textInputAction: TextInputAction.next,
                 decoration: _inputDecoration(
                   c: c,
-                  label: 'Area',
-                  hint: 'Ex: Mirpur-10, Dhaka',
+                  label: context.l10n.area,
+                  hint: context.l10n.areaHint,
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Area is required';
+                    return context.l10n.areaRequired;
                   }
                   return null;
                 },
@@ -263,19 +264,19 @@ class _BookingPageViewState extends State<_BookingPageView> {
                 maxLines: 5,
                 decoration: _inputDecoration(
                   c: c,
-                  label: 'Note / Description',
-                  hint: 'Describe the problem clearly',
+                  label: context.l10n.noteDescription,
+                  hint: context.l10n.describeTheProblem,
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Description is required';
+                    return context.l10n.descriptionRequired;
                   }
                   return null;
                 },
               ),
               const SizedBox(height: 14),
               Text(
-                'Priority',
+                context.l10n.priority,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
@@ -292,19 +293,19 @@ class _BookingPageViewState extends State<_BookingPageView> {
                         context,
                         state.priority,
                         'normal',
-                        'Normal',
+                        context.l10n.normal,
                       ),
                       _priorityChip(
                         context,
                         state.priority,
                         'urgent',
-                        'Urgent',
+                        context.l10n.urgent,
                       ),
                       _priorityChip(
                         context,
                         state.priority,
                         'emergency',
-                        'Emergency',
+                        context.l10n.emergency,
                       ),
                     ],
                   );

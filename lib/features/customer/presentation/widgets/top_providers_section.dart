@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class TopProvidersSection extends StatelessWidget {
@@ -34,13 +35,16 @@ class TopProvidersSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final l10n = context.l10n;
+    final badges = [l10n.topRated, l10n.verified, l10n.popular];
+    final types = [l10n.electrician, l10n.plumber, l10n.acRepair];
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Top Providers',
+              l10n.topProviders,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w800,
@@ -54,18 +58,18 @@ class TopProvidersSection extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 4),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
-              child: const Row(
+              child: Row(
                 children: [
                   Text(
-                    'View all',
-                    style: TextStyle(
+                    l10n.viewAll,
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: Color(0xFF1A73E8),
                     ),
                   ),
-                  SizedBox(width: 2),
-                  Icon(Icons.chevron_right, size: 14, color: Color(0xFF1A73E8)),
+                  const SizedBox(width: 2),
+                  const Icon(Icons.chevron_right, size: 14, color: Color(0xFF1A73E8)),
                 ],
               ),
             ),
@@ -125,7 +129,7 @@ class TopProvidersSection extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
-                            p.badge,
+                            badges[i],
                             style: const TextStyle(
                               fontSize: 8,
                               fontWeight: FontWeight.bold,
@@ -149,7 +153,7 @@ class TopProvidersSection extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      p.type,
+                      types[i],
                       style: TextStyle(fontSize: 10, color: c.greyText),
                     ),
                     const Spacer(),

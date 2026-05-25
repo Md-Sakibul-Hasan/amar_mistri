@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_theme.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/router/app_router.dart';
 import '../bloc/auth_bloc.dart';
 
@@ -134,10 +135,10 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
                       // Brand name
                       AppTheme.brandName(fontSize: 36),
                       const SizedBox(height: 8),
-                      const Text(
-                        'Find trusted local services near you',
+                      Text(
+                        context.l10n.splashTagline,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 13,
                           color: Colors.white,
                           fontWeight: FontWeight.w500,

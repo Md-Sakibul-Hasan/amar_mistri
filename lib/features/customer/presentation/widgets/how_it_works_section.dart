@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class HowItWorksSection extends StatelessWidget {
   const HowItWorksSection({super.key});
 
-  static const _steps = [
-    ('Pick Service', '🔍'),
-    ('Choose Pro', '👷'),
-    ('Book & Done!', '✅'),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final l10n = context.l10n;
+    final steps = [
+      (l10n.stepPickService, '🔍'),
+      (l10n.stepChoosePro, '👷'),
+      (l10n.stepBookDone, '✅'),
+    ];
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -26,7 +27,7 @@ class HowItWorksSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'How Amar Mistri Works',
+            l10n.howItWorks,
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w800,
@@ -35,13 +36,13 @@ class HowItWorksSection extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Row(
-            children: List.generate(_steps.length * 2 - 1, (i) {
+            children: List.generate(steps.length * 2 - 1, (i) {
               if (i.isOdd) {
                 return Expanded(
                   child: Divider(color: c.lightBlueBg, thickness: 2, height: 2),
                 );
               }
-              final s = _steps[i ~/ 2];
+              final s = steps[i ~/ 2];
               return Expanded(
                 flex: 2,
                 child: Column(

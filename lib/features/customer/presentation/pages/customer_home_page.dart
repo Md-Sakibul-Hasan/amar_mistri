@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/greeting_utils.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
@@ -25,7 +26,7 @@ class CustomerHomePage extends StatelessWidget {
         child: CustomScrollView(
           slivers: [
             SliverToBoxAdapter(
-              child: HomeHeader(greeting: getGreeting(), firstName: firstName),
+              child: HomeHeader(greeting: getGreeting(context.l10n), firstName: firstName),
             ),
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
@@ -103,7 +104,7 @@ class _MyBookingsEntry extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'My Bookings',
+                    context.l10n.myBookings,
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
@@ -112,7 +113,7 @@ class _MyBookingsEntry extends StatelessWidget {
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    'View all your booking requests and details',
+                    context.l10n.myBookingsSubtitle,
                     style: TextStyle(fontSize: 12, color: c.secondaryText),
                   ),
                 ],

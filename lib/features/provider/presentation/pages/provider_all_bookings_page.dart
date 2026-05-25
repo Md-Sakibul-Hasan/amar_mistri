@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 
 import '../bloc/provider_bookings_bloc.dart';
@@ -22,7 +23,7 @@ class ProviderAllBookingsPage extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'All Bookings',
+          context.l10n.allBookings,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w800,
@@ -53,7 +54,7 @@ class ProviderAllBookingsPage extends StatelessWidget {
             if (state.bookings.isEmpty) {
               return Center(
                 child: Text(
-                  'No bookings yet.',
+                  context.l10n.noBookingsYetDot,
                   style: TextStyle(fontSize: 13, color: c.greyText),
                 ),
               );

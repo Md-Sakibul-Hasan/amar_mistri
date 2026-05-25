@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/locale/locale_cubit.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
@@ -77,10 +78,10 @@ class HomeHeader extends StatelessWidget {
                                     color: Colors.white70,
                                   ),
                                   const SizedBox(width: 3),
-                                  const Flexible(
+                                  Flexible(
                                     child: Text(
-                                      'Rajshahi, Bangladesh',
-                                      style: TextStyle(
+                                      context.l10n.locationText,
+                                      style: const TextStyle(
                                         fontSize: 12,
                                         color: Colors.white70,
                                         fontWeight: FontWeight.w500,
@@ -179,23 +180,23 @@ class HomeHeader extends StatelessWidget {
                               borderRadius: BorderRadius.circular(16),
                             ),
                             title: Text(
-                              'Logout',
+                              context.l10n.logoutConfirmTitle,
                               style: TextStyle(
                                 fontWeight: FontWeight.w800,
                                 color: context.colors.primaryText,
                               ),
                             ),
                             content: Text(
-                              'Are you sure you want to logout?',
+                              context.l10n.logoutConfirmBody,
                               style: TextStyle(color: context.colors.greyText),
                             ),
                             actions: [
                               TextButton(
                                 onPressed: () =>
                                     Navigator.of(dialogContext).pop(),
-                                child: const Text(
-                                  'Cancel',
-                                  style: TextStyle(color: Colors.grey),
+                                child: Text(
+                                  context.l10n.cancel,
+                                  style: const TextStyle(color: Colors.grey),
                                 ),
                               ),
                               TextButton(
@@ -205,9 +206,9 @@ class HomeHeader extends StatelessWidget {
                                     const AuthLogoutRequested(),
                                   );
                                 },
-                                child: const Text(
-                                  'Logout',
-                                  style: TextStyle(
+                                child: Text(
+                                  context.l10n.logout,
+                                  style: const TextStyle(
                                     color: Color(0xFFEF4444),
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -230,7 +231,7 @@ class HomeHeader extends StatelessWidget {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              'Profile',
+                              menuCtx.l10n.profile,
                               style: TextStyle(
                                 fontSize: 13,
                                 color: menuCtx.colors.primaryText,
@@ -253,8 +254,8 @@ class HomeHeader extends StatelessWidget {
                             const SizedBox(width: 10),
                             Text(
                               menuCtx.read<ThemeCubit>().state == ThemeMode.dark
-                                  ? 'Light Mode'
-                                  : 'Dark Mode',
+                                  ? menuCtx.l10n.lightMode
+                                  : menuCtx.l10n.darkMode,
                               style: TextStyle(
                                 fontSize: 13,
                                 color: menuCtx.colors.primaryText,
@@ -274,10 +275,7 @@ class HomeHeader extends StatelessWidget {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              menuCtx.read<LocaleCubit>().state.languageCode ==
-                                      'bn'
-                                  ? 'ভাষা'
-                                  : 'Language',
+                              menuCtx.l10n.language,
                               style: TextStyle(
                                 fontSize: 13,
                                 color: menuCtx.colors.primaryText,
@@ -297,8 +295,8 @@ class HomeHeader extends StatelessWidget {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              'Logout',
-                              style: TextStyle(
+                              context.l10n.logout,
+                              style: const TextStyle(
                                 fontSize: 13,
                                 color: Color(0xFFEF4444),
                               ),
@@ -326,7 +324,7 @@ class HomeHeader extends StatelessWidget {
                     Icon(Icons.search, size: 18, color: Colors.grey.shade400),
                     const SizedBox(width: 12),
                     Text(
-                      'Search for a service...',
+                      context.l10n.searchHint,
                       style: TextStyle(
                         fontSize: 13,
                         color: Colors.grey.shade400,
@@ -350,7 +348,7 @@ class HomeHeader extends StatelessWidget {
       builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: Text(
-          currentCode == 'bn' ? 'ভাষা নির্বাচন করুন' : 'Select Language',
+          context.l10n.selectLanguage,
           style: TextStyle(
             fontWeight: FontWeight.w800,
             color: context.colors.primaryText,

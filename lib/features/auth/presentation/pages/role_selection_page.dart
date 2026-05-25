@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_theme.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/router/app_router.dart';
 
 class RoleSelectionPage extends StatelessWidget {
@@ -65,10 +66,10 @@ class RoleSelectionPage extends StatelessWidget {
                     // Title
                     AppTheme.brandName(fontSize: 32),
                     const SizedBox(height: 8),
-                    const Text(
-                      'How would you like to continue?',
+                    Text(
+                      context.l10n.roleSelectionSubtitle,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 15,
                         color: Colors.white70,
                         fontWeight: FontWeight.w500,
@@ -79,16 +80,16 @@ class RoleSelectionPage extends StatelessWidget {
                     // Role cards
                     _RoleCard(
                       emoji: '🔍',
-                      title: 'I need a service',
-                      subtitle: 'Find and hire skilled professionals',
+                      title: context.l10n.roleCustomerTitle,
+                      subtitle: context.l10n.roleCustomerSubtitle,
                       onTap: () =>
                           context.go('${AppRouter.login}?role=customer'),
                     ),
                     const SizedBox(height: 16),
                     _RoleCard(
                       emoji: '🔧',
-                      title: 'I provide services',
-                      subtitle: 'Offer your skills and grow your business',
+                      title: context.l10n.roleProviderTitle,
+                      subtitle: context.l10n.roleProviderSubtitle,
                       onTap: () =>
                           context.go('${AppRouter.login}?role=provider'),
                     ),

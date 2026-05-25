@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_cubit.dart';
+import '../../../../core/utils/greeting_utils.dart';
 import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../bloc/provider_bookings_bloc.dart';
 import '../widgets/quick_actions_section.dart';
@@ -12,13 +14,6 @@ import '../widgets/recent_bookings_section.dart';
 
 class ProviderHomePage extends StatelessWidget {
   const ProviderHomePage({super.key});
-
-  static String _greeting() {
-    final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good Morning';
-    if (hour < 17) return 'Good Afternoon';
-    return 'Good Evening';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +32,7 @@ class ProviderHomePage extends StatelessWidget {
             slivers: [
               SliverToBoxAdapter(
                 child: _ProviderHeader(
-                  greeting: _greeting(),
+                  greeting: getGreeting(context.l10n),
                   firstName: firstName,
                   serviceArea: user.serviceArea,
                 ),
@@ -140,7 +135,7 @@ class _ProviderHeader extends StatelessWidget {
                                   const SizedBox(width: 3),
                                   Flexible(
                                     child: Text(
-                                      serviceArea ?? 'Set service area',
+                                      serviceArea ?? context.l10n.setServiceArea,
                                       style: const TextStyle(
                                         fontSize: 12,
                                         color: Colors.white70,
@@ -232,23 +227,23 @@ class _ProviderHeader extends StatelessWidget {
                               borderRadius: BorderRadius.circular(16),
                             ),
                             title: Text(
-                              'Logout',
+                              context.l10n.logout,
                               style: TextStyle(
                                 fontWeight: FontWeight.w800,
                                 color: context.colors.primaryText,
                               ),
                             ),
                             content: Text(
-                              'Are you sure you want to logout?',
+                              context.l10n.logoutConfirmBody,
                               style: TextStyle(color: context.colors.greyText),
                             ),
                             actions: [
                               TextButton(
                                 onPressed: () =>
                                     Navigator.of(dialogContext).pop(),
-                                child: const Text(
-                                  'Cancel',
-                                  style: TextStyle(color: Colors.grey),
+                                child: Text(
+                                  context.l10n.cancel,
+                                  style: const TextStyle(color: Colors.grey),
                                 ),
                               ),
                               TextButton(
@@ -258,9 +253,9 @@ class _ProviderHeader extends StatelessWidget {
                                     const AuthLogoutRequested(),
                                   );
                                 },
-                                child: const Text(
-                                  'Logout',
-                                  style: TextStyle(
+                                child: Text(
+                                  context.l10n.logout,
+                                  style: const TextStyle(
                                     color: Color(0xFFEF4444),
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -283,7 +278,7 @@ class _ProviderHeader extends StatelessWidget {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              'Profile',
+                              menuCtx.l10n.profile,
                               style: TextStyle(
                                 fontSize: 13,
                                 color: menuCtx.colors.primaryText,
@@ -306,8 +301,8 @@ class _ProviderHeader extends StatelessWidget {
                             const SizedBox(width: 10),
                             Text(
                               menuCtx.read<ThemeCubit>().state == ThemeMode.dark
-                                  ? 'Light Mode'
-                                  : 'Dark Mode',
+                                  ? menuCtx.l10n.lightMode
+                                  : menuCtx.l10n.darkMode,
                               style: TextStyle(
                                 fontSize: 13,
                                 color: menuCtx.colors.primaryText,
@@ -327,7 +322,7 @@ class _ProviderHeader extends StatelessWidget {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              'Logout',
+                              menuCtx.l10n.logout,
                               style: TextStyle(
                                 fontSize: 13,
                                 color: Color(0xFFEF4444),
@@ -352,14 +347,14 @@ class _ProviderHeader extends StatelessWidget {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: Colors.white24),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    _OnlineToggle(),
-                    SizedBox(width: 12),
+                    const _OnlineToggle(),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'You are currently online and accepting bookings',
-                        style: TextStyle(
+                        context.l10n.onlineAcceptingBookings,
+                        style: const TextStyle(
                           fontSize: 12,
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
@@ -428,23 +423,24 @@ class _StatsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final l10n = context.l10n;
     final stats = [
       (
-        label: 'Total Jobs',
+        label: l10n.totalJobs,
         value: '0',
         icon: Icons.handyman_outlined,
         color: const Color(0xFF1A73E8),
         bg: c.lightBlueBg,
       ),
       (
-        label: 'This Month',
+        label: l10n.thisMonth,
         value: '৳0',
         icon: Icons.account_balance_wallet_outlined,
         color: const Color(0xFF22C55E),
         bg: c.lightGreenBg,
       ),
       (
-        label: 'Rating',
+        label: l10n.rating,
         value: '—',
         icon: Icons.star_rounded,
         color: const Color(0xFFFACC15),
@@ -531,18 +527,18 @@ class _EarningsSummarySection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Earnings Overview',
-                style: TextStyle(
+                context.l10n.earningsOverview,
+                style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w800,
                   color: Colors.white,
                 ),
               ),
-              Text(
+              const Text(
                 'April 2026',
                 style: TextStyle(fontSize: 11, color: Colors.white70),
               ),
@@ -559,18 +555,18 @@ class _EarningsSummarySection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          const Text(
-            'Total earnings this month',
-            style: TextStyle(fontSize: 11, color: Colors.white70),
+          Text(
+            context.l10n.totalEarningsThisMonth,
+            style: const TextStyle(fontSize: 11, color: Colors.white70),
           ),
           const SizedBox(height: 16),
           Row(
             children: [
-              _EarningChip(label: 'Jobs Done', value: '0'),
+              _EarningChip(label: context.l10n.jobsDone, value: '0'),
               const SizedBox(width: 12),
-              _EarningChip(label: 'Avg/Job', value: '৳0'),
+              _EarningChip(label: context.l10n.avgPerJob, value: '৳0'),
               const SizedBox(width: 12),
-              _EarningChip(label: 'Pending', value: '৳0'),
+              _EarningChip(label: context.l10n.pending, value: '৳0'),
             ],
           ),
         ],
@@ -620,15 +616,15 @@ class _EarningChip extends StatelessWidget {
 class _TipsSection extends StatelessWidget {
   const _TipsSection();
 
-  static const _steps = [
-    ('Stay Online', '📡'),
-    ('Respond Fast', '⚡'),
-    ('Earn More!', '💸'),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final l10n = context.l10n;
+    final steps = [
+      (l10n.stayOnline, '📡'),
+      (l10n.respondFast, '⚡'),
+      (l10n.earnMore, '💸'),
+    ];
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -642,7 +638,7 @@ class _TipsSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Tips to Earn More',
+            l10n.tipsToEarnMore,
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w800,
@@ -651,13 +647,13 @@ class _TipsSection extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Row(
-            children: List.generate(_steps.length * 2 - 1, (i) {
+            children: List.generate(steps.length * 2 - 1, (i) {
               if (i.isOdd) {
                 return Expanded(
                   child: Divider(color: c.lightBlueBg, thickness: 2, height: 2),
                 );
               }
-              final s = _steps[i ~/ 2];
+              final s = steps[i ~/ 2];
               return Expanded(
                 flex: 2,
                 child: Column(

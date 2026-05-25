@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/customer_booking.dart';
 
@@ -11,10 +12,11 @@ class CustomerBookingDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: c.scaffoldBg,
       appBar: AppBar(
-        title: const Text('Booking Details'),
+        title: Text(l10n.bookingDetails),
         backgroundColor: c.scaffoldBg,
         elevation: 0,
       ),
@@ -26,7 +28,7 @@ class CustomerBookingDetailsPage extends StatelessWidget {
               c: c,
               children: [
                 Text(
-                  'Summary',
+                  l10n.summary,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
@@ -34,10 +36,10 @@ class CustomerBookingDetailsPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                _row('Booking ID', booking.bookingId, c),
-                _row('Status', booking.status, c),
-                _row('Date', booking.date, c),
-                _row('Created', _formatCreatedAt(booking.createdAt), c),
+                _row(l10n.bookingId, booking.bookingId, c),
+                _row(l10n.status, booking.status, c),
+                _row(l10n.date, booking.date, c),
+                _row(l10n.created, _formatCreatedAt(booking.createdAt), c),
               ],
             ),
             const SizedBox(height: 12),
@@ -45,7 +47,7 @@ class CustomerBookingDetailsPage extends StatelessWidget {
               c: c,
               children: [
                 Text(
-                  'Service Info',
+                  l10n.serviceInfo,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
@@ -53,10 +55,10 @@ class CustomerBookingDetailsPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                _row('Service', booking.service, c),
-                _row('Provider', booking.providerName, c),
-                _row('Area', booking.area, c),
-                _row('Priority', booking.priority, c),
+                _row(l10n.service, booking.service, c),
+                _row(l10n.provider, booking.providerName, c),
+                _row(l10n.area, booking.area, c),
+                _row(l10n.priority, booking.priority, c),
               ],
             ),
             const SizedBox(height: 12),
@@ -64,7 +66,7 @@ class CustomerBookingDetailsPage extends StatelessWidget {
               c: c,
               children: [
                 Text(
-                  'Customer Info',
+                  l10n.customerInfo,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
@@ -72,8 +74,8 @@ class CustomerBookingDetailsPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                _row('Name', booking.customerName, c),
-                _row('Phone', booking.phone, c),
+                _row(l10n.name, booking.customerName, c),
+                _row(l10n.phone, booking.phone, c),
               ],
             ),
             const SizedBox(height: 12),
@@ -81,7 +83,7 @@ class CustomerBookingDetailsPage extends StatelessWidget {
               c: c,
               children: [
                 Text(
-                  'Description',
+                  l10n.description,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,

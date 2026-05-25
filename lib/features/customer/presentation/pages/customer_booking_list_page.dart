@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injection_container.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../domain/entities/customer_booking.dart';
 import '../bloc/customer_bookings_bloc.dart';
 import 'customer_booking_details_page.dart';
@@ -28,7 +29,7 @@ class _CustomerBookingListView extends StatelessWidget {
     return Scaffold(
       backgroundColor: context.colors.scaffoldBg,
       appBar: AppBar(
-        title: const Text('My Bookings'),
+        title: Text(context.l10n.myBookings),
         backgroundColor: context.colors.scaffoldBg,
         elevation: 0,
       ),
@@ -204,7 +205,7 @@ class _EmptyView extends StatelessWidget {
             Icon(Icons.inbox_rounded, size: 56, color: c.greyText),
             const SizedBox(height: 12),
             Text(
-              'No bookings yet',
+              context.l10n.noBookingsYet,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
@@ -213,7 +214,7 @@ class _EmptyView extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              'Your bookings will appear here after you place one.',
+              context.l10n.bookingsYetBody,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 13, color: c.secondaryText),
             ),
@@ -241,7 +242,7 @@ class _ErrorView extends StatelessWidget {
             const Icon(Icons.error_outline, size: 56, color: Color(0xFFEF4444)),
             const SizedBox(height: 12),
             Text(
-              'Could not load bookings',
+              context.l10n.couldNotLoadBookings,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
@@ -261,7 +262,7 @@ class _ErrorView extends StatelessWidget {
                   const CustomerBookingsRequested(),
                 );
               },
-              child: const Text('Retry'),
+              child: Text(context.l10n.retry),
             ),
           ],
         ),

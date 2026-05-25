@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 
 import '../bloc/provider_bookings_bloc.dart';
@@ -19,7 +20,7 @@ class RecentBookingsSection extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Recent Bookings',
+                  context.l10n.recentBookings,
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
@@ -42,10 +43,10 @@ class RecentBookingsSection extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 4),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
                         Text(
-                          'View all',
+                          context.l10n.viewAll,
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w600,
@@ -97,7 +98,7 @@ class RecentBookingsSection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 24),
           child: Center(
             child: Text(
-              'No bookings yet.',
+              context.l10n.noBookingsYetDot,
               style: TextStyle(fontSize: 13, color: c.greyText),
             ),
           ),

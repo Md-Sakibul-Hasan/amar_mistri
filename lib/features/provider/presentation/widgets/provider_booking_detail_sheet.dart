@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 
 import '../../../../features/customer/domain/entities/customer_booking.dart';
@@ -44,8 +45,8 @@ class ProviderBookingDetailSheet extends StatelessWidget {
       listener: (context, state) {
         if (state is ProviderBookingStatusUpdated) {
           final label = state.newStatus == 'accepted'
-              ? 'Booking accepted'
-              : 'Booking rejected';
+              ? context.l10n.bookingAccepted
+              : context.l10n.bookingRejected;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(label),
@@ -147,8 +148,8 @@ class ProviderBookingDetailSheet extends StatelessWidget {
                                   ClipboardData(text: booking.phone),
                                 );
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Phone number copied'),
+                                  SnackBar(
+                                    content: Text(context.l10n.phoneNumberCopied),
                                     duration: Duration(seconds: 2),
                                   ),
                                 );
@@ -212,33 +213,33 @@ class ProviderBookingDetailSheet extends StatelessWidget {
                       _card(
                         c: c,
                         icon: Icons.build_outlined,
-                        title: 'Service Info',
+                        title: context.l10n.serviceInfo,
                         rows: [
-                          _InfoRow(label: 'Service', value: booking.service),
-                          _InfoRow(label: 'Date', value: booking.date),
+                          _InfoRow(label: context.l10n.service, value: booking.service),
+                          _InfoRow(label: context.l10n.date, value: booking.date),
                           _InfoRow(
-                            label: 'Priority',
+                            label: context.l10n.priority,
                             value:
                                 booking.priority[0].toUpperCase() +
                                 booking.priority.substring(1),
                           ),
                           if (booking.area.isNotEmpty && booking.area != '-')
-                            _InfoRow(label: 'Area', value: booking.area),
+                            _InfoRow(label: context.l10n.area, value: booking.area),
                         ],
                       ),
                       const SizedBox(height: 12),
                       _card(
                         c: c,
                         icon: Icons.receipt_long_outlined,
-                        title: 'Booking Summary',
+                        title: context.l10n.bookingSummary,
                         rows: [
                           _InfoRow(
-                            label: 'Booking ID',
+                            label: context.l10n.bookingId,
                             value: booking.bookingId,
                             mono: true,
                           ),
                           _InfoRow(
-                            label: 'Submitted',
+                            label: context.l10n.submitted,
                             value: _formatCreatedAt(booking.createdAt),
                           ),
                         ],
@@ -275,7 +276,7 @@ class ProviderBookingDetailSheet extends StatelessWidget {
                                         ),
                                       ),
                                   icon: const Icon(Icons.close, size: 16),
-                                  label: const Text('Reject'),
+                                  label: Text(context.l10n.reject),
                                   style: OutlinedButton.styleFrom(
                                     foregroundColor: const Color(0xFFEF4444),
                                     side: const BorderSide(
@@ -302,7 +303,7 @@ class ProviderBookingDetailSheet extends StatelessWidget {
                                         ),
                                       ),
                                   icon: const Icon(Icons.check, size: 16),
-                                  label: const Text('Accept'),
+                                  label: Text(context.l10n.accept),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF22C55E),
                                     foregroundColor: Colors.white,

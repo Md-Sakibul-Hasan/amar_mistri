@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_theme.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_text_field.dart';
@@ -55,7 +56,7 @@ class _RegisterPageState extends State<RegisterPage> {
     final isProvider = widget.role == 'provider';
     if (isProvider && _selectedServices.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select at least one service.')),
+        SnackBar(content: Text(context.l10n.selectAtLeastOneService)),
       );
       return;
     }
@@ -92,7 +93,7 @@ class _RegisterPageState extends State<RegisterPage> {
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthLoading) {
-            EasyLoading.show(status: 'Please wait...');
+            EasyLoading.show(status: context.l10n.pleaseWait);
           } else {
             EasyLoading.dismiss();
           }
@@ -131,7 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Create Account',
+              context.l10n.createAccount,
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.w800,
@@ -140,33 +141,33 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             const SizedBox(height: 4),
             Text(
-              'Sign up to get started',
+              context.l10n.signUpToGetStarted,
               style: TextStyle(fontSize: 13, color: context.colors.greyText),
             ),
             const SizedBox(height: 24),
 
             // Full Name
-            const AppFieldLabel('Full Name'),
+            AppFieldLabel(context.l10n.fullName),
             const SizedBox(height: 6),
             AppTextField(
               controller: _nameController,
-              hint: 'John Doe',
+              hint: context.l10n.fullNameHint,
               prefixIcon: const Icon(
                 Icons.person_outline,
                 size: 18,
                 color: Colors.grey,
               ),
               validator: (v) =>
-                  (v == null || v.trim().isEmpty) ? 'Enter your name' : null,
+                  (v == null || v.trim().isEmpty) ? context.l10n.enterYourName : null,
             ),
             const SizedBox(height: 16),
 
             // Email
-            const AppFieldLabel('Email Address'),
+            AppFieldLabel(context.l10n.emailAddress),
             const SizedBox(height: 6),
             AppTextField(
               controller: _emailController,
-              hint: 'you@example.com',
+              hint: context.l10n.emailHint,
               keyboardType: TextInputType.emailAddress,
               prefixIcon: const Icon(
                 Icons.mail_outline,
@@ -174,13 +175,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 color: Colors.grey,
               ),
               validator: (v) => (v == null || !v.contains('@'))
-                  ? 'Enter a valid email'
+                  ? context.l10n.validEmailError
                   : null,
             ),
             const SizedBox(height: 16),
 
             // Phone
-            const AppFieldLabel('Phone Number'),
+            AppFieldLabel(context.l10n.phoneNumber),
             const SizedBox(height: 6),
             AppPhoneField(controller: _phoneController),
             const SizedBox(height: 16),
@@ -188,7 +189,7 @@ class _RegisterPageState extends State<RegisterPage> {
             // ── Provider-only fields ─────────────────────────────────────
             if (isProvider) ...[
               // Services
-              const AppFieldLabel('Services Offered'),
+              AppFieldLabel(context.l10n.servicesOffered),
               const SizedBox(height: 8),
               _ServiceChips(
                 selected: _selectedServices,
@@ -203,11 +204,11 @@ class _RegisterPageState extends State<RegisterPage> {
               const SizedBox(height: 16),
 
               // Experience
-              const AppFieldLabel('Experience (Years)'),
+              AppFieldLabel(context.l10n.experienceYears),
               const SizedBox(height: 6),
               AppTextField(
                 controller: _experienceController,
-                hint: 'e.g. 3',
+                hint: context.l10n.experienceHint,
                 keyboardType: TextInputType.number,
                 prefixIcon: const Icon(
                   Icons.work_history_outlined,
@@ -216,10 +217,10 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
                 validator: (v) {
                   if (v == null || v.trim().isEmpty) {
-                    return 'Enter years of experience';
+                    return context.l10n.enterYearsOfExp;
                   }
                   if (int.tryParse(v.trim()) == null) {
-                    return 'Enter a valid number';
+                    return context.l10n.enterValidNumber;
                   }
                   return null;
                 },
@@ -227,45 +228,45 @@ class _RegisterPageState extends State<RegisterPage> {
               const SizedBox(height: 16),
 
               // Service Area
-              const AppFieldLabel('Service Area'),
+              AppFieldLabel(context.l10n.serviceAreaLabel),
               const SizedBox(height: 6),
               AppTextField(
                 controller: _serviceAreaController,
-                hint: 'Enter your service area',
+                hint: context.l10n.serviceAreaHint,
                 prefixIcon: const Icon(
                   Icons.location_on_outlined,
                   size: 18,
                   color: Colors.grey,
                 ),
                 validator: (v) => (v == null || v.trim().isEmpty)
-                    ? 'Enter your service area'
+                    ? context.l10n.enterServiceArea
                     : null,
               ),
               const SizedBox(height: 16),
 
               // NID / ID Number
-              const AppFieldLabel('NID / ID Number'),
+              AppFieldLabel(context.l10n.nidLabel),
               const SizedBox(height: 6),
               AppTextField(
                 controller: _nidController,
-                hint: 'National ID or other ID',
+                hint: context.l10n.nidHint,
                 prefixIcon: const Icon(
                   Icons.badge_outlined,
                   size: 18,
                   color: Colors.grey,
                 ),
                 validator: (v) => (v == null || v.trim().isEmpty)
-                    ? 'Enter your NID / ID number'
+                    ? context.l10n.enterNid
                     : null,
               ),
               const SizedBox(height: 16),
 
               // Skills (optional)
-              const AppFieldLabel('Skills (Optional)'),
+              AppFieldLabel(context.l10n.skillsLabel),
               const SizedBox(height: 6),
               AppTextField(
                 controller: _skillsController,
-                hint: 'e.g. Solar panel installation, inverter repair',
+                hint: context.l10n.skillsHint,
                 maxLines: 3,
                 prefixIcon: const Icon(
                   Icons.build_outlined,
@@ -277,11 +278,11 @@ class _RegisterPageState extends State<RegisterPage> {
             ],
 
             // Password
-            const AppFieldLabel('Password'),
+            AppFieldLabel(context.l10n.password),
             const SizedBox(height: 6),
             AppTextField(
               controller: _passwordController,
-              hint: 'Min. 6 characters',
+              hint: context.l10n.minSixHint,
               obscureText: _obscurePassword,
               suffixIcon: IconButton(
                 icon: Icon(
@@ -295,16 +296,16 @@ class _RegisterPageState extends State<RegisterPage> {
                     setState(() => _obscurePassword = !_obscurePassword),
               ),
               validator: (v) =>
-                  (v == null || v.length < 6) ? 'Min 6 characters' : null,
+                  (v == null || v.length < 6) ? context.l10n.minSixCharsError : null,
             ),
             const SizedBox(height: 16),
 
             // Confirm Password
-            const AppFieldLabel('Confirm Password'),
+            AppFieldLabel(context.l10n.confirmPassword),
             const SizedBox(height: 6),
             AppTextField(
               controller: _confirmPasswordController,
-              hint: 'Re-enter password',
+              hint: context.l10n.reEnterPassword,
               obscureText: _obscureConfirm,
               suffixIcon: IconButton(
                 icon: Icon(
@@ -318,7 +319,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     setState(() => _obscureConfirm = !_obscureConfirm),
               ),
               validator: (v) => v != _passwordController.text
-                  ? 'Passwords do not match'
+                  ? context.l10n.passwordsDontMatch
                   : null,
             ),
             const SizedBox(height: 28),
@@ -339,20 +340,20 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ],
                 ),
-                child: const Center(
+                child: Center(
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Create Account',
-                        style: TextStyle(
+                        context.l10n.createAccountButton,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(width: 8),
-                      Icon(Icons.arrow_forward, color: Colors.white, size: 18),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.arrow_forward, color: Colors.white, size: 18),
                     ],
                   ),
                 ),
@@ -367,7 +368,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Text(
-                    'or sign up with',
+                    context.l10n.orSignUpWith,
                     style: TextStyle(
                       fontSize: 12,
                       color: context.colors.secondaryText,
@@ -406,7 +407,7 @@ class _RegisterPageState extends State<RegisterPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Already have an account? ',
+                  context.l10n.alreadyHaveAccount,
                   style: TextStyle(
                     fontSize: 13,
                     color: context.colors.greyText,
@@ -415,9 +416,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 GestureDetector(
                   onTap: () =>
                       context.go('${AppRouter.login}?role=${widget.role}'),
-                  child: const Text(
-                    'Login',
-                    style: TextStyle(
+                  child: Text(
+                    context.l10n.loginButton,
+                    style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
                       color: AppTheme.blue,

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 
 import '../../../../features/customer/domain/entities/customer_booking.dart';
@@ -104,7 +105,7 @@ class ProviderBookingCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'Service: ${booking.service}',
+                    context.l10n.serviceLabel(booking.service),
                     style: TextStyle(fontSize: 11, color: c.greyText),
                   ),
                   const SizedBox(height: 4),

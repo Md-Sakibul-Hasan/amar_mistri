@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/router/app_router.dart';
 import '../bloc/provider_bookings_bloc.dart';
 import '../pages/provider_all_bookings_page.dart';
@@ -9,10 +10,10 @@ import '../pages/provider_all_bookings_page.dart';
 class QuickActionsSection extends StatelessWidget {
   const QuickActionsSection({super.key});
 
-  static const _actions = [
-    ('Bookings', '📅', Color(0xFFE8F0FE), Color(0xFF1A73E8)),
-    ('Reviews', '⭐', Color(0xFFFEF9C3), Color(0xFFCA8A04)),
-    ('Profile', '👤', Color(0xFFFCE7F3), Color(0xFFEC4899)),
+  static const _actionMeta = [
+    ('bookings', '📅', Color(0xFFE8F0FE), Color(0xFF1A73E8)),
+    ('reviews', '⭐', Color(0xFFFEF9C3), Color(0xFFCA8A04)),
+    ('profile', '👤', Color(0xFFFCE7F3), Color(0xFFEC4899)),
   ];
 
   // Darker tinted backgrounds for dark mode
@@ -22,9 +23,9 @@ class QuickActionsSection extends StatelessWidget {
     Color(0xFF2D1020), // Profile
   ];
 
-  void _onTap(BuildContext context, String label) {
-    switch (label) {
-      case 'Bookings':
+  void _onTap(BuildContext context, String key) {
+    switch (key) {
+      case 'bookings':
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => BlocProvider.value(
@@ -33,7 +34,7 @@ class QuickActionsSection extends StatelessWidget {
             ),
           ),
         );
-      case 'Profile':
+      case 'profile':
         context.push(AppRouter.profile);
     }
   }
@@ -46,6 +47,12 @@ class QuickActionsSection extends StatelessWidget {
         ? const Color(0xFFE2E2F0)
         : const Color(0xFF1A1A2E);
     final shadowColor = Colors.black.withAlpha(isDark ? 40 : 10);
+    final l10n = context.l10n;
+    final actionLabels = [l10n.bookings, l10n.reviews, l10n.profile];
+    final actions = List.generate(
+      _actionMeta.length,
+      (i) => (actionLabels[i], _actionMeta[i].$1, _actionMeta[i].$2, _actionMeta[i].$3, _actionMeta[i].$4),
+    );
 
     return Column(
       children: [
@@ -53,7 +60,7 @@ class QuickActionsSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
-              'Quick Actions',
+              l10n.quickActions,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w800,
@@ -94,12 +101,16 @@ class QuickActionsSection extends StatelessWidget {
             crossAxisSpacing: 12,
             childAspectRatio: 1.1,
           ),
-          itemCount: _actions.length,
+          itemCount: actions.length,
           itemBuilder: (_, i) {
-            final (label, emoji, _, fg) = _actions[i];
-            final bg = isDark ? _darkBgs[i] : _actions[i].$3;
+            final a = actions[i];
+            final label = a.$1;
+            final key = a.$2;
+            final fg = a.$5;
+            final bg = isDark ? _darkBgs[i] : a.$4;
+            final emoji = a.$3;
             return GestureDetector(
-              onTap: () => _onTap(context, label),
+              onTap: () => _onTap(context, key),
               child: Container(
                 decoration: BoxDecoration(
                   color: cardBg,
