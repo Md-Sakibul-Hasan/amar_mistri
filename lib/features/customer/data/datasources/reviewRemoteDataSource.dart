@@ -7,6 +7,7 @@ import '../../domain/entities/review_model.dart';
 
 abstract class ReviewRemoteDataSource {
   Future<void> submitReview(ReviewModel request);
+  Future<void> reviewAndRatingsCountUpdate({required String providerId, required double newRating});
 }
 
 class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
@@ -44,8 +45,32 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
       };
 
       await reviewRef.set(reviewData);
+      await reviewAndRatingsCountUpdate(providerId: request.providerId, newRating: request.rating.toDouble());
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? 'Failed to submit review.');
     }
+  }
+
+  @override
+  Future<void> reviewAndRatingsCountUpdate({required String providerId, required double newRating}) async {
+    final providerRef = FirebaseFirestore.instance.collection('users').doc(providerId);
+
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      final snapshot = await transaction.get(providerRef);
+
+      final data = snapshot.data()!;
+
+      final currentRating = (data['ratings'] ?? 0).toDouble();
+
+      final totalReviews = (data['totalReviews'] ?? 0);
+
+      final totalRatingScore = currentRating * totalReviews;
+
+      final updatedReviews = totalReviews + 1;
+
+      final updatedRating = (totalRatingScore + newRating) / updatedReviews;
+
+      transaction.update(providerRef, {'ratings': updatedRating, 'totalReviews': updatedReviews});
+    });
   }
 }
