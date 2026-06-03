@@ -14,6 +14,10 @@ class AppUserModel extends AppUser {
     super.skills,
     super.serviceArea,
     super.nidNumber,
+    super.ratings,
+    super.totalRatings,
+    super.totalReviews,
+    super.completedJobs,
   });
 
   factory AppUserModel.fromFirestore(Map<String, dynamic> map) {
@@ -29,6 +33,10 @@ class AppUserModel extends AppUser {
       skills: map['skills'] as String?,
       serviceArea: map['serviceArea'] as String?,
       nidNumber: map['nidNumber'] as String?,
+      ratings: map['ratings'] as int?,
+      totalRatings: map['totalRatings'] as int?,
+      totalReviews: map['totalReviews'] as int?,
+      completedJobs: map['completedJobs'] as int?,
     );
   }
 
@@ -45,6 +53,10 @@ class AppUserModel extends AppUser {
       if (skills != null) 'skills': skills,
       if (serviceArea != null) 'serviceArea': serviceArea,
       if (nidNumber != null) 'nidNumber': nidNumber,
+      if (_roleFromString(role.name) == UserRole.provider) 'ratings': 0,
+      if (_roleFromString(role.name) == UserRole.provider) 'totalRatings': 0,
+      if (_roleFromString(role.name) == UserRole.provider) 'totalReviews': 0,
+      if (_roleFromString(role.name) == UserRole.provider) 'completedJobs': 0,
     };
   }
 

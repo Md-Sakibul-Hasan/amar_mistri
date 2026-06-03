@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injection_container.dart';
 import '../../../../core/l10n/app_localizations.dart';
+import '../../../provider/presentation/bloc/provider_bookings_bloc.dart';
 import '../../domain/entities/customer_booking.dart';
 import '../bloc/customer_bookings_bloc.dart';
 import 'customer_booking_details_page.dart';
@@ -13,11 +14,7 @@ class CustomerBookingListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) =>
-          sl<CustomerBookingsBloc>()..add(const CustomerBookingsRequested()),
-      child: const _CustomerBookingListView(),
-    );
+    return BlocProvider(create: (_) => sl<CustomerBookingsBloc>()..add(const CustomerBookingsRequested()), child: const _CustomerBookingListView());
   }
 }
 
@@ -28,15 +25,10 @@ class _CustomerBookingListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colors.scaffoldBg,
-      appBar: AppBar(
-        title: Text(context.l10n.myBookings),
-        backgroundColor: context.colors.scaffoldBg,
-        elevation: 0,
-      ),
+      appBar: AppBar(title: Text(context.l10n.myBookings), backgroundColor: context.colors.scaffoldBg, elevation: 0),
       body: BlocBuilder<CustomerBookingsBloc, CustomerBookingsState>(
         builder: (context, state) {
-          if (state is CustomerBookingsLoading ||
-              state is CustomerBookingsInitial) {
+          if (state is CustomerBookingsLoading || state is CustomerBookingsInitial) {
             return const Center(child: CircularProgressIndicator());
           }
 
@@ -75,9 +67,14 @@ class _BookingCard extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(16),
       onTap: () {
-        Navigator.of(context).push(
+        Navigator.push(
+          context,
           MaterialPageRoute(
-            builder: (_) => CustomerBookingDetailsPage(booking: booking),
+            builder: (_) => BlocProvider(
+              create: (_) =>
+                  ProviderBookingsBloc(getProviderBookingsUseCase: sl(), updateBookingStatusUseCase: sl(), incrementCompletedJobsUseCase: sl()),
+              child: CustomerBookingDetailsPage(booking: booking),
+            ),
           ),
         );
       },
@@ -86,27 +83,15 @@ class _BookingCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: c.cardBg,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: c.shadowMedium,
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          boxShadow: [BoxShadow(color: c.shadowMedium, blurRadius: 10, offset: const Offset(0, 4))],
         ),
         child: Row(
           children: [
             Container(
               width: 44,
               height: 44,
-              decoration: BoxDecoration(
-                color: c.lightBlueBg,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Icon(
-                Icons.event_note_rounded,
-                color: Color(0xFF1A73E8),
-              ),
+              decoration: BoxDecoration(color: c.lightBlueBg, borderRadius: BorderRadius.circular(12)),
+              child: const Icon(Icons.event_note_rounded, color: Color(0xFF1A73E8)),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -115,30 +100,16 @@ class _BookingCard extends StatelessWidget {
                 children: [
                   Text(
                     booking.service,
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w700,
-                      color: c.primaryText,
-                    ),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: c.primaryText),
                   ),
                   const SizedBox(height: 3),
-                  Text(
-                    booking.providerName,
-                    style: TextStyle(fontSize: 12, color: c.secondaryText),
-                  ),
+                  Text(booking.providerName, style: TextStyle(fontSize: 12, color: c.secondaryText)),
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      Icon(
-                        Icons.calendar_today_rounded,
-                        size: 12,
-                        color: c.secondaryText,
-                      ),
+                      Icon(Icons.calendar_today_rounded, size: 12, color: c.secondaryText),
                       const SizedBox(width: 4),
-                      Text(
-                        booking.date,
-                        style: TextStyle(fontSize: 11, color: c.secondaryText),
-                      ),
+                      Text(booking.date, style: TextStyle(fontSize: 11, color: c.secondaryText)),
                     ],
                   ),
                 ],
@@ -146,17 +117,10 @@ class _BookingCard extends StatelessWidget {
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              decoration: BoxDecoration(
-                color: _statusBg(booking.status, c),
-                borderRadius: BorderRadius.circular(20),
-              ),
+              decoration: BoxDecoration(color: _statusBg(booking.status, c), borderRadius: BorderRadius.circular(20)),
               child: Text(
                 booking.status,
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  color: _statusColor(booking.status),
-                ),
+                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: _statusColor(booking.status)),
               ),
             ),
           ],
@@ -206,11 +170,7 @@ class _EmptyView extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               context.l10n.noBookingsYet,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: c.primaryText,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: c.primaryText),
             ),
             const SizedBox(height: 6),
             Text(
@@ -243,11 +203,7 @@ class _ErrorView extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               context.l10n.couldNotLoadBookings,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: c.primaryText,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: c.primaryText),
             ),
             const SizedBox(height: 6),
             Text(
@@ -258,9 +214,7 @@ class _ErrorView extends StatelessWidget {
             const SizedBox(height: 14),
             ElevatedButton(
               onPressed: () {
-                context.read<CustomerBookingsBloc>().add(
-                  const CustomerBookingsRequested(),
-                );
+                context.read<CustomerBookingsBloc>().add(const CustomerBookingsRequested());
               },
               child: Text(context.l10n.retry),
             ),

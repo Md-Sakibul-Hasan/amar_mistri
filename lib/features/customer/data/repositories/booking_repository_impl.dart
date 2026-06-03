@@ -23,6 +23,16 @@ class BookingRepositoryImpl implements BookingRepository {
   }
 
   @override
+  Future<Either<Failure, void>> updateProviderCompletedJobs(String providerUid) async {
+    try {
+      await remoteDataSource.updateProviderCompletedJobs(providerUid);
+      return const Right(null);
+    } on AppException catch (e) {
+      return Left(e.toFailure());
+    }
+  }
+
+  @override
   Future<Either<Failure, List<CustomerBooking>>> getCustomerBookings() async {
     try {
       final bookings = await remoteDataSource.getCustomerBookings();
@@ -33,9 +43,7 @@ class BookingRepositoryImpl implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, List<CustomerBooking>>> getProviderBookings(
-    String providerUid,
-  ) async {
+  Future<Either<Failure, List<CustomerBooking>>> getProviderBookings(String providerUid) async {
     try {
       final bookings = await remoteDataSource.getProviderBookings(providerUid);
       return Right(bookings);
@@ -45,10 +53,7 @@ class BookingRepositoryImpl implements BookingRepository {
   }
 
   @override
-  Future<Either<Failure, void>> updateBookingStatus(
-    String bookingId,
-    String status,
-  ) async {
+  Future<Either<Failure, void>> updateBookingStatus(String bookingId, String status) async {
     try {
       await remoteDataSource.updateBookingStatus(bookingId, status);
       return const Right(null);

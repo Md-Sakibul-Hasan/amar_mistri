@@ -11,6 +11,7 @@ abstract class BookingRemoteDataSource {
   Future<List<CustomerBooking>> getCustomerBookings();
   Future<List<CustomerBooking>> getProviderBookings(String providerUid);
   Future<void> updateBookingStatus(String bookingId, String status);
+  Future<void> updateProviderCompletedJobs(String providerUid);
 }
 
 class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
@@ -19,10 +20,25 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
   final FirebaseAuth firebaseAuth;
   final FirebaseFirestore firestore;
 
-  const BookingRemoteDataSourceImpl({
-    required this.firebaseAuth,
-    required this.firestore,
-  });
+  const BookingRemoteDataSourceImpl({required this.firebaseAuth, required this.firestore});
+
+  @override
+  updateProviderCompletedJobs(String providerUid) async {
+    try {
+      final providerDoc = firestore.collection(AppConstants.usersCollection).doc(providerUid);
+      await firestore.runTransaction((transaction) async {
+        final snapshot = await transaction.get(providerDoc);
+        if (!snapshot.exists) {
+          throw const ServerException('Provider not found.');
+        }
+        final data = snapshot.data()!;
+        final currentJobs = (data['completedJobs'] as int?) ?? 0;
+        transaction.update(providerDoc, {'completedJobs': currentJobs + 1});
+      });
+    } on FirebaseException catch (e) {
+      throw ServerException(e.message ?? 'Failed to update completed jobs.');
+    }
+  }
 
   @override
   Future<void> createBooking(BookingRequest request) async {
@@ -32,10 +48,7 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
         throw const AuthException('Please log in to continue.');
       }
 
-      final userDoc = await firestore
-          .collection(AppConstants.usersCollection)
-          .doc(firebaseUser.uid)
-          .get();
+      final userDoc = await firestore.collection(AppConstants.usersCollection).doc(firebaseUser.uid).get();
 
       if (!userDoc.exists) {
         throw const AuthException('Customer profile not found.');
@@ -43,11 +56,7 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
 
       final userData = userDoc.data()!;
       final now = DateTime.now();
-      final service =
-          request.provider.services != null &&
-              request.provider.services!.isNotEmpty
-          ? request.provider.services!.first
-          : 'AC Repair';
+      final service = request.provider.services != null && request.provider.services!.isNotEmpty ? request.provider.services!.first : 'AC Repair';
 
       final bookingRef = firestore.collection(_bookingsCollection).doc();
 
@@ -84,10 +93,7 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
         throw const AuthException('Please log in to continue.');
       }
 
-      final querySnapshot = await firestore
-          .collection(_bookingsCollection)
-          .where('customerUid', isEqualTo: firebaseUser.uid)
-          .get();
+      final querySnapshot = await firestore.collection(_bookingsCollection).where('customerUid', isEqualTo: firebaseUser.uid).get();
 
       final bookings = querySnapshot.docs.map(_mapBookingDoc).toList();
       bookings.sort((a, b) {
@@ -109,10 +115,7 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
   @override
   Future<List<CustomerBooking>> getProviderBookings(String providerUid) async {
     try {
-      final querySnapshot = await firestore
-          .collection(_bookingsCollection)
-          .where('providerUid', isEqualTo: providerUid)
-          .get();
+      final querySnapshot = await firestore.collection(_bookingsCollection).where('providerUid', isEqualTo: providerUid).get();
 
       final bookings = querySnapshot.docs.map(_mapBookingDoc).toList();
       bookings.sort((a, b) {
@@ -152,23 +155,17 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
   @override
   Future<void> updateBookingStatus(String bookingId, String status) async {
     try {
-      await firestore.collection(_bookingsCollection).doc(bookingId).update({
-        'status': status,
-      });
+      await firestore.collection(_bookingsCollection).doc(bookingId).update({'status': status});
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? 'Failed to update booking status.');
     }
   }
 
-  CustomerBooking _mapBookingDoc(
-    QueryDocumentSnapshot<Map<String, dynamic>> doc,
-  ) {
+  CustomerBooking _mapBookingDoc(QueryDocumentSnapshot<Map<String, dynamic>> doc) {
     final map = doc.data();
     final timestamp = map['createdAt'] as Timestamp?;
     return CustomerBooking(
-      bookingId: (map['bookingId'] as String?)?.trim().isNotEmpty == true
-          ? (map['bookingId'] as String)
-          : doc.id,
+      bookingId: (map['bookingId'] as String?)?.trim().isNotEmpty == true ? (map['bookingId'] as String) : doc.id,
       providerUid: (map['providerUid'] as String?) ?? '',
       providerName: (map['providerName'] as String?) ?? 'Provider',
       customerName: (map['customerName'] as String?) ?? 'Customer',

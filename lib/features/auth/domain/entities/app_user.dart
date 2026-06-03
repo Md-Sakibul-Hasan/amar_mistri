@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+
 import '../../../../core/constants/app_constants.dart';
 
 class AppUser extends Equatable {
@@ -8,6 +9,10 @@ class AppUser extends Equatable {
   final String phone;
   final UserRole role;
   final String? photoUrl;
+  final int? ratings;
+  final int? totalRatings;
+  final int? totalReviews;
+  final int? completedJobs;
 
   // Provider-specific fields
   final List<String>? services;
@@ -28,6 +33,10 @@ class AppUser extends Equatable {
     this.skills,
     this.serviceArea,
     this.nidNumber,
+    this.ratings,
+    this.totalRatings,
+    this.totalReviews,
+    this.completedJobs,
   });
 
   @override
@@ -43,6 +52,10 @@ class AppUser extends Equatable {
     skills,
     serviceArea,
     nidNumber,
+    ratings,
+    totalRatings,
+    totalReviews,
+    completedJobs,
   ];
 
   AppUser copyWith({
@@ -57,6 +70,10 @@ class AppUser extends Equatable {
     String? skills,
     String? serviceArea,
     String? nidNumber,
+    int? ratings,
+    int? totalRatings,
+    int? totalReviews,
+    int? completedJobs,
   }) {
     return AppUser(
       uid: uid ?? this.uid,
@@ -70,6 +87,10 @@ class AppUser extends Equatable {
       skills: skills ?? this.skills,
       serviceArea: serviceArea ?? this.serviceArea,
       nidNumber: nidNumber ?? this.nidNumber,
+      ratings: ratings ?? this.ratings,
+      totalRatings: totalRatings ?? this.totalRatings,
+      totalReviews: totalReviews ?? this.totalReviews,
+      completedJobs: completedJobs ?? this.completedJobs,
     );
   }
 }
