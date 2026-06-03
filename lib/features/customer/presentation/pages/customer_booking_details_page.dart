@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/di/injection_container.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../provider/presentation/bloc/provider_bookings_bloc.dart';
 import '../../domain/entities/customer_booking.dart';
+import '../bloc/review_bloc.dart';
+import '../widgets/review_bottom_sheet.dart';
 
 class CustomerBookingDetailsPage extends StatelessWidget {
   final CustomerBooking booking;
@@ -24,6 +27,24 @@ class CustomerBookingDetailsPage extends StatelessWidget {
       default: // pending
         return (fg: const Color(0xFFF59E0B), bg: c.lightOrangeBg);
     }
+  }
+
+  void showReviewBottomSheet({
+    required BuildContext context,
+    required String bookingId,
+    required String customerId,
+    required String providerId,
+    VoidCallback? onSuccess,
+  }) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => BlocProvider(
+        create: (_) => ReviewBloc(submitReviewUseCase: sl()),
+        child: ReviewBottomSheet(bookingId: bookingId, providerId: providerId, onSuccess: onSuccess, customerId: customerId),
+      ),
+    );
   }
 
   @override
@@ -47,6 +68,12 @@ class CustomerBookingDetailsPage extends StatelessWidget {
                 // Optionally, pop the page after completion
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
+                showReviewBottomSheet(
+                  context: context,
+                  bookingId: booking.bookingId,
+                  providerId: booking.providerUid,
+                  customerId: booking.customerUid,
+                );
               }
             } else if (state is ProviderBookingStatusUpdateFailed) {
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message), backgroundColor: const Color(0xFFEF4444)));

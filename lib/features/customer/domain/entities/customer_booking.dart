@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 class CustomerBooking extends Equatable {
   final String bookingId;
   final String providerUid;
+  final String customerUid;
   final String providerName;
   final String customerName;
   final String phone;
@@ -28,6 +29,7 @@ class CustomerBooking extends Equatable {
     required this.note,
     required this.priority,
     required this.createdAt,
+    required this.customerUid,
     this.customerPhotoUrl,
   });
 
@@ -46,5 +48,6 @@ class CustomerBooking extends Equatable {
     priority,
     createdAt,
     customerPhotoUrl,
+    customerUid,
   ];
 }

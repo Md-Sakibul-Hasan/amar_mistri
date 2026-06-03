@@ -178,6 +178,7 @@ class BookingRemoteDataSourceImpl implements BookingRemoteDataSource {
       note: (map['note'] as String?) ?? '-',
       priority: (map['priority'] as String?) ?? 'normal',
       createdAt: timestamp?.toDate(),
+      customerUid: (map['customerUid'] as String?) ?? '',
     );
   }
 }

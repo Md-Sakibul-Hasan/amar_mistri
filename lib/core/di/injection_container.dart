@@ -1,3 +1,6 @@
+import 'package:amar_mistri/features/customer/data/datasources/reviewRemoteDataSource.dart';
+import 'package:amar_mistri/features/customer/data/repositories/review_repository_impl.dart';
+import 'package:amar_mistri/features/customer/domain/repositories/review_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -25,6 +28,7 @@ import '../../features/customer/domain/usecases/IncrementCompletedJobsUseCase.da
 import '../../features/customer/domain/usecases/create_booking_usecase.dart';
 import '../../features/customer/domain/usecases/get_customer_bookings_usecase.dart';
 import '../../features/customer/domain/usecases/get_provider_bookings_usecase.dart';
+import '../../features/customer/domain/usecases/submit_review_usecase.dart';
 import '../../features/customer/domain/usecases/update_booking_status_usecase.dart';
 import '../../features/customer/presentation/bloc/booking_bloc.dart';
 import '../../features/customer/presentation/bloc/customer_bookings_bloc.dart';
@@ -53,10 +57,12 @@ Future<void> initDependencies() async {
   // Data sources
   sl.registerLazySingleton<AuthRemoteDataSource>(() => AuthRemoteDataSourceImpl(firebaseAuth: sl(), firestore: sl(), pushNotificationService: sl()));
   sl.registerLazySingleton<BookingRemoteDataSource>(() => BookingRemoteDataSourceImpl(firebaseAuth: sl(), firestore: sl()));
+  sl.registerLazySingleton<ReviewRemoteDataSource>(() => ReviewRemoteDataSourceImpl(firebaseAuth: sl(), firestore: sl()));
 
   // Repositories
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(remoteDataSource: sl()));
   sl.registerLazySingleton<BookingRepository>(() => BookingRepositoryImpl(remoteDataSource: sl()));
+  sl.registerLazySingleton<ReviewRepository>(() => ReviewRepositoryImpl(remoteDataSource: sl()));
 
   // Use cases
   sl.registerLazySingleton(() => LoginUseCase(sl()));
@@ -73,6 +79,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<CloudflareR2Service>(() => CloudflareR2Service());
   sl.registerLazySingleton(() => UploadProfilePhotoUseCase(repository: sl(), r2Service: sl()));
   sl.registerLazySingleton(() => IncrementCompletedJobsUseCase(sl()));
+  sl.registerLazySingleton(() => SubmitReviewUseCase(sl()));
 
   // BLoCs
   sl.registerFactory(() => AuthBloc(loginUseCase: sl(), registerUseCase: sl(), logoutUseCase: sl(), getCurrentUserUseCase: sl()));
