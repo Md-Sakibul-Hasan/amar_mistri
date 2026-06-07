@@ -32,6 +32,8 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
         throw const AuthException('Customer profile not found.');
       }
 
+      final userData = userDoc.data()!;
+
       final reviewRef = firestore.collection(_reviewsCollection).doc();
 
       final reviewData = {
@@ -42,6 +44,7 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
         'comment': request.comment,
         'bookingId': request.bookingId,
         'timestamp': FieldValue.serverTimestamp(),
+        'reviewerData': userData,
       };
 
       await reviewRef.set(reviewData);
