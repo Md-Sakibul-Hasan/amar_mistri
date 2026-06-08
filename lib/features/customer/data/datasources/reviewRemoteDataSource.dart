@@ -66,14 +66,16 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
       final currentRating = (data['ratings'] ?? 0).toDouble();
 
       final totalReviews = (data['totalReviews'] ?? 0);
+      final currentTotalRatings = (data['totalRatings'] ?? 0);
 
       final totalRatingScore = currentRating * totalReviews;
+      final totalRatings = currentTotalRatings + newRating;
 
       final updatedReviews = totalReviews + 1;
 
       final updatedRating = (totalRatingScore + newRating) / updatedReviews;
 
-      transaction.update(providerRef, {'ratings': updatedRating, 'totalReviews': updatedReviews});
+      transaction.update(providerRef, {'ratings': updatedRating, 'totalReviews': updatedReviews, 'totalRatings': totalRatings});
     });
   }
 }
