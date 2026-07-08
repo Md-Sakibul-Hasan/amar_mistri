@@ -335,9 +335,9 @@ class _StatsRow extends StatelessWidget {
     final c = context.colors;
     final l10n = context.l10n;
     final stats = [
-      (label: l10n.totalJobs, value: '0', icon: Icons.handyman_outlined, color: const Color(0xFF1A73E8), bg: c.lightBlueBg),
-      (label: l10n.thisMonth, value: '৳0', icon: Icons.account_balance_wallet_outlined, color: const Color(0xFF22C55E), bg: c.lightGreenBg),
-      (label: l10n.rating, value: '—', icon: Icons.star_rounded, color: const Color(0xFFFACC15), bg: c.lightYellowBg),
+      (label: l10n.totalJobs, value: '${user.completedJobs ?? 0}', icon: Icons.handyman_outlined, color: const Color(0xFF1A73E8), bg: c.lightBlueBg),
+      (label: l10n.totalReview, value: '${user.totalReviews ?? 0}', icon: Icons.rate_review_outlined, color: const Color(0xFF22C55E), bg: c.lightGreenBg),
+      (label: l10n.rating, value: '${user.totalRatings ?? 0}', icon: Icons.star_rounded, color: const Color(0xFFFACC15), bg: c.lightYellowBg),
     ];
 
     return Row(

@@ -237,6 +237,7 @@ class AppLocalizations {
 
   // ── Provider home ──────────────────────────────────────────────────────────
   String get totalJobs => _t('Total Jobs', 'মোট কাজ');
+  String get totalReview => _t('Total Review', 'মোট রিভিউ');
   String get thisMonth => _t('This Month', 'এই মাসে');
   String get rating => _t('Rating', 'রেটিং');
 
