@@ -53,11 +53,7 @@ class AppTheme {
         letterSpacing: -0.5,
       ),
       children: const [
-        TextSpan(text: 'Amar '),
-        TextSpan(
-          text: 'Mistri',
-          style: TextStyle(color: tealBright),
-        ),
+        TextSpan(text: 'Sebaghar'),
       ],
     ),
   );

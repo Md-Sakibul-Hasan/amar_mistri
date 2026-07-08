@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Amar Mistri</string>
+	<string>Sebaghar</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>amar_mistri</string>
+	<string>sebaghar</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -50,8 +50,8 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Allow Amar Mistri to access your photos to set a profile picture.</string>
+	<string>Allow Sebaghar to access your photos to set a profile picture.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Allow Amar Mistri to take a photo for your profile picture.</string>
+	<string>Allow Sebaghar to take a photo for your profile picture.</string>
 </dict>
 </plist>

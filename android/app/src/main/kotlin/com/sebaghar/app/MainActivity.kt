@@ -1,4 +1,4 @@
-package com.amar_mistri.amar_mistri
+package com.sebaghar.app
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,6 +1,6 @@
-# amar_mistri
+# sebaghar
 
-A Flutter app for the Amar Mistri marketplace.
+A Flutter app for the Sebaghar marketplace.
 
 ## Getting Started
 

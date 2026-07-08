@@ -1,6 +1,6 @@
 {
   "name": "functions",
-  "description": "Firebase Cloud Functions for Amar Mistri",
+  "description": "Firebase Cloud Functions for Sebaghar",
   "scripts": {
     "build": "tsc",
     "build:watch": "tsc --watch",

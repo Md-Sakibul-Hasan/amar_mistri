@@ -530,8 +530,8 @@ class _HeaderDelegate extends SliverPersistentHeaderDelegate {
                           opacity: (1.0 - t / 0.6).clamp(0.0, 1.0),
                           child: Text(
                             isProvider
-                                ? 'Provider Portal'
-                                : 'Your local service partner',
+                                ? pageContext.l10n.providerPortal
+                                : pageContext.l10n.localServicePartner,
                             style: const TextStyle(
                               fontSize: 12,
                               color: Colors.white70,

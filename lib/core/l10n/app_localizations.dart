@@ -16,7 +16,7 @@ class AppLocalizations {
   String _t(String en, String bn) => _bn ? bn : en;
 
   // ── Common ─────────────────────────────────────────────────────────────────
-  String get appName => 'Amar Mistri';
+  String get appName => 'Sebaghar';
   String get cancel => _t('Cancel', 'বাতিল');
   String get save => _t('Save', 'সংরক্ষণ');
   String get logout => _t('Logout', 'লগআউট');
@@ -161,7 +161,7 @@ class AppLocalizations {
   String get popular => _t('Popular', 'জনপ্রিয়');
 
   // ── How it works ───────────────────────────────────────────────────────────
-  String get howItWorks => _t('How Amar Mistri Works', 'আমার মিস্ত্রি যেভাবে কাজ করে');
+  String get howItWorks => _t('How Sebaghar Works', 'সেবাঘর যেভাবে কাজ করে');
   String get stepPickService => _t('Pick Service', 'সেবা বেছে নিন');
   String get stepChoosePro => _t('Choose Pro', 'পেশাদার বেছে নিন');
   String get stepBookDone => _t('Book & Done!', 'বুক করুন!');

@@ -1,6 +1,6 @@
-import 'package:amar_mistri/features/customer/data/datasources/reviewRemoteDataSource.dart';
-import 'package:amar_mistri/features/customer/data/repositories/review_repository_impl.dart';
-import 'package:amar_mistri/features/customer/domain/repositories/review_repository.dart';
+import 'package:sebaghar/features/customer/data/datasources/reviewRemoteDataSource.dart';
+import 'package:sebaghar/features/customer/data/repositories/review_repository_impl.dart';
+import 'package:sebaghar/features/customer/domain/repositories/review_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

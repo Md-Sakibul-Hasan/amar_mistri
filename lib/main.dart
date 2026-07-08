@@ -18,7 +18,7 @@ void main() async {
   await sl<PushNotificationService>().initialize();
   _configureWidgetErrorUI();
   Bloc.observer = const _AppBlocObserver();
-  runApp(const AmarMistriApp());
+  runApp(const SebagharApp());
 }
 
 void _configureWidgetErrorUI() {
@@ -31,8 +31,8 @@ void _configureWidgetErrorUI() {
   };
 }
 
-class AmarMistriApp extends StatelessWidget {
-  const AmarMistriApp({super.key});
+class SebagharApp extends StatelessWidget {
+  const SebagharApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +51,7 @@ class AmarMistriApp extends StatelessWidget {
             builder: (context, themeMode) {
               final locale = context.watch<LocaleCubit>().state;
               return MaterialApp.router(
-                title: 'Amar Mistri',
+                title: 'Sebaghar',
                 debugShowCheckedModeBanner: false,
                 locale: locale,
                 supportedLocales: const [Locale('en'), Locale('bn')],
