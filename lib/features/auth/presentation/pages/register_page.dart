@@ -361,46 +361,46 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
             const SizedBox(height: 24),
 
-            // Divider
-            Row(
-              children: [
-                Expanded(child: Divider(color: context.colors.greyBorder)),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Text(
-                    context.l10n.orSignUpWith,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: context.colors.secondaryText,
-                    ),
-                  ),
-                ),
-                Expanded(child: Divider(color: context.colors.greyBorder)),
-              ],
-            ),
-            const SizedBox(height: 16),
+            // // Divider
+            // Row(
+            //   children: [
+            //     Expanded(child: Divider(color: context.colors.greyBorder)),
+            //     Padding(
+            //       padding: const EdgeInsets.symmetric(horizontal: 12),
+            //       child: Text(
+            //         context.l10n.orSignUpWith,
+            //         style: TextStyle(
+            //           fontSize: 12,
+            //           color: context.colors.secondaryText,
+            //         ),
+            //       ),
+            //     ),
+            //     Expanded(child: Divider(color: context.colors.greyBorder)),
+            //   ],
+            // ),
+            // const SizedBox(height: 16),
 
-            // Social buttons
-            Row(
-              children: [
-                Expanded(
-                  child: _SocialButton(
-                    emoji: '🌐',
-                    label: 'Google',
-                    onTap: () {},
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _SocialButton(
-                    emoji: '📘',
-                    label: 'Facebook',
-                    onTap: () {},
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
+            // // Social buttons
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: _SocialButton(
+            //         emoji: '🌐',
+            //         label: 'Google',
+            //         onTap: () {},
+            //       ),
+            //     ),
+            //     const SizedBox(width: 12),
+            //     Expanded(
+            //       child: _SocialButton(
+            //         emoji: '📘',
+            //         label: 'Facebook',
+            //         onTap: () {},
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // const SizedBox(height: 20),
 
             // Login link
             Row(
