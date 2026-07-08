@@ -54,9 +54,9 @@ class CategoriesSection extends StatelessWidget {
           ),
           itemCount: categories.length,
           itemBuilder: (_, i) {
-            final (label, emoji) = categories[i];
+            final (englishName, label, emoji) = categories[i];
             return GestureDetector(
-              onTap: () => context.push('${AppRouter.providersByService}?service=${Uri.encodeComponent(label)}'),
+              onTap: () => context.push('${AppRouter.providersByService}?service=${Uri.encodeComponent(englishName)}'),
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(color: c.cardBg, borderRadius: BorderRadius.circular(14)),

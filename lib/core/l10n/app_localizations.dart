@@ -140,17 +140,18 @@ class AppLocalizations {
   String get welder => _t('Welder', 'ঝালাইকারী');
   String get cctvSecurity => _t('CCTV / Security', 'সিসিটিভি / নিরাপত্তা');
 
-  List<(String, String)> get categories => [
-    (electrician, '⚡'),
-    (plumber, '🔧'),
-    (acRepair, '❄️'),
-    (painter, '🎨'),
-    (carpenter, '🪚'),
-    (homeCleaner, '🧹'),
-    (mason, '🧱'),
-    (gasTechnician, '🔥'),
-    (welder, '⚙️'),
-    (cctvSecurity, '📹'),
+  /// Returns (englishName, translatedLabel, emoji)
+  List<(String, String, String)> get categories => [
+    ('Electrician', electrician, '⚡'),
+    ('Plumber', plumber, '🔧'),
+    ('AC Repair', acRepair, '❄️'),
+    ('Painter', painter, '🎨'),
+    ('Carpenter', carpenter, '🪚'),
+    ('Home Cleaner', homeCleaner, '🧹'),
+    ('Mason / Civil', mason, '🧱'),
+    ('Gas Technician', gasTechnician, '🔥'),
+    ('Welder', welder, '⚙️'),
+    ('CCTV / Security', cctvSecurity, '📹'),
   ];
 
   // ── Top providers ──────────────────────────────────────────────────────────
