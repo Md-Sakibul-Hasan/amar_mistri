@@ -20,6 +20,43 @@ class AppUserModel extends AppUser {
     super.completedJobs,
   });
 
+  @override
+  AppUserModel copyWith({
+    String? uid,
+    String? name,
+    String? email,
+    String? phone,
+    UserRole? role,
+    String? photoUrl,
+    List<String>? services,
+    int? experienceYears,
+    String? skills,
+    String? serviceArea,
+    String? nidNumber,
+    int? ratings,
+    int? totalRatings,
+    int? totalReviews,
+    int? completedJobs,
+  }) {
+    return AppUserModel(
+      uid: uid ?? this.uid,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      phone: phone ?? this.phone,
+      role: role ?? this.role,
+      photoUrl: photoUrl ?? this.photoUrl,
+      services: services ?? this.services,
+      experienceYears: experienceYears ?? this.experienceYears,
+      skills: skills ?? this.skills,
+      serviceArea: serviceArea ?? this.serviceArea,
+      nidNumber: nidNumber ?? this.nidNumber,
+      ratings: ratings ?? this.ratings,
+      totalRatings: totalRatings ?? this.totalRatings,
+      totalReviews: totalReviews ?? this.totalReviews,
+      completedJobs: completedJobs ?? this.completedJobs,
+    );
+  }
+
   factory AppUserModel.fromFirestore(Map<String, dynamic> map) {
     return AppUserModel(
       uid: (map['uid'] as String?) ?? '',

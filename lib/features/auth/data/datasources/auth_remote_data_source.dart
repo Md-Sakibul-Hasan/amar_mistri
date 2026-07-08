@@ -68,7 +68,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           .get();
       if (!doc.exists) throw const AuthException('User data not found.');
       await pushNotificationService.syncTokenForCurrentUser();
-      return AppUserModel.fromFirestore(doc.data()!);
+      final user = AppUserModel.fromFirestore(doc.data()!);
+      if (user.name.isEmpty && credential.user!.displayName != null) {
+        return user.copyWith(name: credential.user!.displayName!);
+      }
+      return user;
     } on FirebaseAuthException catch (e) {
       throw AuthException(e.message ?? 'Login failed.');
     } on FirebaseException catch (e) {
@@ -94,6 +98,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         email: email,
         password: password,
       );
+      await credential.user!.updateDisplayName(name);
       final user = AppUserModel(
         uid: credential.user!.uid,
         name: name,
@@ -136,7 +141,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           .get();
       if (!doc.exists) throw const AuthException('User data not found.');
       await pushNotificationService.syncTokenForCurrentUser();
-      return AppUserModel.fromFirestore(doc.data()!);
+      final user = AppUserModel.fromFirestore(doc.data()!);
+      if (user.name.isEmpty && firebaseUser.displayName != null) {
+        return user.copyWith(name: firebaseUser.displayName!);
+      }
+      return user;
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? 'A server error occurred.');
     }

@@ -44,7 +44,7 @@ class HomeHeader extends StatelessWidget {
                           backgroundImage: photoUrl != null ? NetworkImage(photoUrl!) : null,
                           child: photoUrl == null
                               ? Text(
-                                  firstName[0].toUpperCase(),
+                                  firstName.isNotEmpty ? firstName[0].toUpperCase() : '?',
                                   style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w800, color: Colors.white),
                                 )
                               : null,
