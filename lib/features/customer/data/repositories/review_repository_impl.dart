@@ -4,6 +4,7 @@ import '../../../../core/errors/exceptions.dart';
 import '../../../../core/errors/failures.dart';
 import '../../domain/entities/review_model.dart';
 import '../../domain/repositories/review_repository.dart';
+import '../../../provider/data/models/provider_review_model.dart';
 import '../datasources/reviewRemoteDataSource.dart';
 
 class ReviewRepositoryImpl implements ReviewRepository {
@@ -24,6 +25,16 @@ class ReviewRepositoryImpl implements ReviewRepository {
     try {
       await remoteDataSource.submitReview(review);
       return const Right(null);
+    } on AppException catch (e) {
+      return Left(e.toFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ProviderReviewModel>>> getReviewsByProvider(String providerUid) async {
+    try {
+      final reviews = await remoteDataSource.getReviewsByProvider(providerUid);
+      return Right(reviews);
     } on AppException catch (e) {
       return Left(e.toFailure());
     }

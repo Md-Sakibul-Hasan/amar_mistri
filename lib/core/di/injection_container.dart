@@ -28,6 +28,7 @@ import '../../features/customer/domain/usecases/IncrementCompletedJobsUseCase.da
 import '../../features/customer/domain/usecases/create_booking_usecase.dart';
 import '../../features/customer/domain/usecases/get_customer_bookings_usecase.dart';
 import '../../features/customer/domain/usecases/get_provider_bookings_usecase.dart';
+import '../../features/customer/domain/usecases/get_provider_reviews_usecase.dart';
 import '../../features/customer/domain/usecases/submit_review_usecase.dart';
 import '../../features/customer/domain/usecases/update_booking_status_usecase.dart';
 import '../../features/customer/presentation/bloc/booking_bloc.dart';
@@ -35,6 +36,7 @@ import '../../features/customer/presentation/bloc/customer_bookings_bloc.dart';
 import '../../features/customer/presentation/bloc/provider_details_bloc.dart';
 import '../../features/customer/presentation/bloc/providers_bloc.dart';
 import '../../features/provider/presentation/bloc/provider_bookings_bloc.dart';
+import '../../features/provider/presentation/bloc/provider_reviews_bloc.dart';
 import '../locale/locale_cubit.dart';
 import '../services/cloudflare_r2_service.dart';
 import '../services/push_notification_service.dart';
@@ -80,6 +82,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => UploadProfilePhotoUseCase(repository: sl(), r2Service: sl()));
   sl.registerLazySingleton(() => IncrementCompletedJobsUseCase(sl()));
   sl.registerLazySingleton(() => SubmitReviewUseCase(sl()));
+  sl.registerLazySingleton(() => GetProviderReviewsUseCase(sl()));
 
   // BLoCs
   sl.registerFactory(() => AuthBloc(loginUseCase: sl(), registerUseCase: sl(), logoutUseCase: sl(), getCurrentUserUseCase: sl()));
@@ -90,6 +93,7 @@ Future<void> initDependencies() async {
   sl.registerFactory(
     () => ProviderBookingsBloc(getProviderBookingsUseCase: sl(), updateBookingStatusUseCase: sl(), incrementCompletedJobsUseCase: sl()),
   );
+  sl.registerFactory(() => ProviderReviewsBloc(getProviderReviewsUseCase: sl()));
   sl.registerFactory(() => ProfileBloc(updateUserProfile: sl(), uploadProfilePhoto: sl()));
   sl.registerLazySingleton<ThemeCubit>(() => ThemeCubit(sl()));
   sl.registerLazySingleton<LocaleCubit>(() => LocaleCubit(sl()));

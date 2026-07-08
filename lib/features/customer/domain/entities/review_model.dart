@@ -21,8 +21,8 @@ class ReviewModel extends Equatable {
   Map<String, dynamic> toJson() => {
     'reviewId': reviewId,
     'bookingId': bookingId,
-    'providerId': providerId,
-    'customerId': customerId,
+    'providerUid': providerId,
+    'customerUid': customerId,
     'rating': rating,
     'comment': comment,
     'createdAt': FieldValue.serverTimestamp(),

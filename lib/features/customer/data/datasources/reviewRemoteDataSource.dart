@@ -4,10 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../domain/entities/review_model.dart';
+import '../../../provider/data/models/provider_review_model.dart';
 
 abstract class ReviewRemoteDataSource {
   Future<void> submitReview(ReviewModel request);
   Future<void> reviewAndRatingsCountUpdate({required String providerId, required double newRating});
+  Future<List<ProviderReviewModel>> getReviewsByProvider(String providerUid);
 }
 
 class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
@@ -77,5 +79,22 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
 
       transaction.update(providerRef, {'ratings': updatedRating, 'totalReviews': updatedReviews, 'totalRatings': totalRatings});
     });
+  }
+
+  @override
+  Future<List<ProviderReviewModel>> getReviewsByProvider(String providerUid) async {
+    try {
+      final querySnapshot = await firestore
+          .collection(_reviewsCollection)
+          .where('providerUid', isEqualTo: providerUid)
+          .get();
+      final reviews = querySnapshot.docs
+          .map((doc) => ProviderReviewModel.fromMap(doc.id, doc.data()))
+          .toList();
+      reviews.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+      return reviews;
+    } on FirebaseException catch (e) {
+      throw ServerException(e.message ?? 'Failed to load reviews.');
+    }
   }
 }

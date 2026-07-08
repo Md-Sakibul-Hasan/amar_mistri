@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../auth/presentation/bloc/auth_bloc.dart';
 import '../bloc/provider_bookings_bloc.dart';
 import '../pages/provider_all_bookings_page.dart';
+import '../pages/provider_review_list_page.dart';
 
 class QuickActionsSection extends StatelessWidget {
   const QuickActionsSection({super.key});
@@ -34,6 +36,15 @@ class QuickActionsSection extends StatelessWidget {
             ),
           ),
         );
+      case 'reviews':
+        final authState = context.read<AuthBloc>().state;
+        if (authState is AuthAuthenticated) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => ProviderReviewListPage(providerUid: authState.user.uid),
+            ),
+          );
+        }
       case 'profile':
         context.push(AppRouter.profile);
     }
