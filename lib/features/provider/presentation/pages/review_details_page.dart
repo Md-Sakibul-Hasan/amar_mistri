@@ -68,16 +68,21 @@ class _HeroCard extends StatelessWidget {
           CircleAvatar(
             radius: 28,
             backgroundColor: colors.lightBlueBg,
-            child: Text(
-              review.customerUid.isNotEmpty
-                  ? review.customerUid.substring(0, 1).toUpperCase()
-                  : '?',
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w700,
-                color: colors.primaryText,
-              ),
-            ),
+            backgroundImage: review.customerPhotoUrl != null
+                ? NetworkImage(review.customerPhotoUrl!)
+                : null,
+            child: review.customerPhotoUrl == null
+                ? Text(
+                    review.customerUid.isNotEmpty
+                        ? review.customerUid.substring(0, 1).toUpperCase()
+                        : '?',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      color: colors.primaryText,
+                    ),
+                  )
+                : null,
           ),
           const SizedBox(height: 12),
           Text(

@@ -24,6 +24,23 @@ class ProviderReviewModel {
     this.customerPhotoUrl,
   });
 
+  ProviderReviewModel copyWith({
+    String? customerName,
+    String? customerPhotoUrl,
+  }) {
+    return ProviderReviewModel(
+      reviewId: reviewId,
+      bookingId: bookingId,
+      comment: comment,
+      customerUid: customerUid,
+      providerUid: providerUid,
+      rating: rating,
+      timestamp: timestamp,
+      customerName: customerName ?? this.customerName,
+      customerPhotoUrl: customerPhotoUrl ?? this.customerPhotoUrl,
+    );
+  }
+
   factory ProviderReviewModel.fromMap(String id, Map<String, dynamic> map) {
     final rawTimestamp = map['timestamp'];
     DateTime parsedTimestamp;

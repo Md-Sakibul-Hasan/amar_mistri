@@ -88,13 +88,41 @@ class ReviewRemoteDataSourceImpl implements ReviewRemoteDataSource {
           .collection(_reviewsCollection)
           .where('providerUid', isEqualTo: providerUid)
           .get();
-      final reviews = querySnapshot.docs
+      var reviews = querySnapshot.docs
           .map((doc) => ProviderReviewModel.fromMap(doc.id, doc.data()))
           .toList();
       reviews.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+      reviews = await _hydrateCustomerNames(reviews);
       return reviews;
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? 'Failed to load reviews.');
     }
+  }
+
+  Future<List<ProviderReviewModel>> _hydrateCustomerNames(List<ProviderReviewModel> reviews) async {
+    final uids = reviews.where((r) => r.customerName == null).map((r) => r.customerUid).toSet().toList();
+    if (uids.isEmpty) return reviews;
+
+    final userDocs = await firestore
+        .collection(AppConstants.usersCollection)
+        .where(FieldPath.documentId, whereIn: uids)
+        .get();
+
+    final userMap = <String, Map<String, dynamic>>{};
+    for (final doc in userDocs.docs) {
+      userMap[doc.id] = doc.data();
+    }
+
+    return reviews.map((r) {
+      if (r.customerName != null) return r;
+      final userData = userMap[r.customerUid];
+      if (userData == null) return r;
+      return r.copyWith(
+        customerName: (userData['name'] as String?)?.isNotEmpty == true
+            ? userData['name'] as String
+            : null,
+        customerPhotoUrl: userData['photoUrl'] as String?,
+      );
+    }).toList();
   }
 }

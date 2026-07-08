@@ -222,15 +222,20 @@ class _ReviewCard extends StatelessWidget {
             CircleAvatar(
               radius: 20,
               backgroundColor: colors.lightBlueBg,
-              child: Text(
-                review.customerUid.isNotEmpty
-                    ? review.customerUid.substring(0, 1).toUpperCase()
-                    : '?',
-                style: TextStyle(
-                  color: colors.primaryText,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              backgroundImage: review.customerPhotoUrl != null
+                  ? NetworkImage(review.customerPhotoUrl!)
+                  : null,
+              child: review.customerPhotoUrl == null
+                  ? Text(
+                      review.customerUid.isNotEmpty
+                          ? review.customerUid.substring(0, 1).toUpperCase()
+                          : '?',
+                      style: TextStyle(
+                        color: colors.primaryText,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    )
+                  : null,
             ),
             const SizedBox(width: 12),
             Expanded(
