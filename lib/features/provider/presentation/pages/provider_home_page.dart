@@ -48,8 +48,8 @@ class ProviderHomePage extends StatelessWidget {
                     const QuickActionsSection(),
                     const SizedBox(height: 20),
                     const RecentBookingsSection(),
-                    const SizedBox(height: 20),
-                    const _EarningsSummarySection(),
+                    //const SizedBox(height: 20),
+                   // const _EarningsSummarySection(),
                     const SizedBox(height: 20),
                     const _TipsSection(),
                   ]),
@@ -469,7 +469,7 @@ class _StatsRow extends StatelessWidget {
 
 // ── Earnings summary ──────────────────────────────────────────────────────────
 
-class _EarningsSummarySection extends StatelessWidget {
+/*class _EarningsSummarySection extends StatelessWidget {
   const _EarningsSummarySection();
 
   @override
@@ -541,7 +541,7 @@ class _EarningChip extends StatelessWidget {
       ),
     );
   }
-}
+}*/
 
 // ── Tips section ──────────────────────────────────────────────────────────────
 
