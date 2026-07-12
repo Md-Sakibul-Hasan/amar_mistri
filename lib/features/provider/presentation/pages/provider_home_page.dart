@@ -27,38 +27,46 @@ class ProviderHomePage extends StatelessWidget {
 
     return BlocProvider<ProviderBookingsBloc>(
       create: (_) => sl<ProviderBookingsBloc>()..add(ProviderBookingsRequested(user.uid)),
-      child: Scaffold(
+      child: Builder(
+        builder: (context) => Scaffold(
         backgroundColor: context.colors.scaffoldBg,
         body: SafeArea(
-          child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: _ProviderHeader(
-                  greeting: getGreeting(context.l10n),
-                  firstName: firstName,
-                  serviceArea: user.serviceArea,
-                  photoUrl: user.photoUrl,
+          child: RefreshIndicator(
+            onRefresh: () async {
+              context.read<AuthBloc>().add(const AuthRefreshRequested());
+              context.read<ProviderBookingsBloc>().add(ProviderBookingsRequested(user.uid));
+            },
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: _ProviderHeader(
+                    greeting: getGreeting(context.l10n),
+                    firstName: firstName,
+                    serviceArea: user.serviceArea,
+                    photoUrl: user.photoUrl,
+                  ),
                 ),
-              ),
-              SliverPadding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                    _StatsRow(user: user),
-                    const SizedBox(height: 20),
-                    const QuickActionsSection(),
-                    const SizedBox(height: 20),
-                    const RecentBookingsSection(),
-                    //const SizedBox(height: 20),
-                   // const _EarningsSummarySection(),
-                    const SizedBox(height: 20),
-                    const _TipsSection(),
-                  ]),
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+                  sliver: SliverList(
+                    delegate: SliverChildListDelegate([
+                      _StatsRow(user: user),
+                      const SizedBox(height: 20),
+                      const QuickActionsSection(),
+                      const SizedBox(height: 20),
+                      const RecentBookingsSection(),
+                      //const SizedBox(height: 20),
+                     // const _EarningsSummarySection(),
+                      const SizedBox(height: 20),
+                      const _TipsSection(),
+                    ]),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
+      ),
       ),
     );
   }

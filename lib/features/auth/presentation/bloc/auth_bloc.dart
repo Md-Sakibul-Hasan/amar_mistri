@@ -29,6 +29,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthRegisterRequested>(_onRegisterRequested);
     on<AuthLogoutRequested>(_onLogoutRequested);
     on<AuthUserUpdated>(_onUserUpdated);
+    on<AuthRefreshRequested>(_onRefreshRequested);
   }
 
   Future<void> _onCheckRequested(
@@ -92,5 +93,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void _onUserUpdated(AuthUserUpdated event, Emitter<AuthState> emit) {
     emit(AuthAuthenticated(event.user));
+  }
+
+  Future<void> _onRefreshRequested(
+    AuthRefreshRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    final result = await getCurrentUserUseCase(const NoParams());
+    result.fold(
+      (_) => null,
+      (user) => emit(AuthAuthenticated(user)),
+    );
   }
 }

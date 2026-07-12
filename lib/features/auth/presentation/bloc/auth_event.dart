@@ -72,3 +72,7 @@ class AuthUserUpdated extends AuthEvent {
   @override
   List<Object> get props => [user];
 }
+
+class AuthRefreshRequested extends AuthEvent {
+  const AuthRefreshRequested();
+}
