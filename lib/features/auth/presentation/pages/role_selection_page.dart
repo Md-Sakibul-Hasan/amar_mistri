@@ -54,8 +54,14 @@ class RoleSelectionPage extends StatelessWidget {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(14),
                             ),
-                            child: const Center(
-                              child: Text('🏠', style: TextStyle(fontSize: 30)),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(14),
+                              child: Image.asset(
+                                'assets/images/app_logo.png',
+                                width: 60,
+                                height: 60,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         ),

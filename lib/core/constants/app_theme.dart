@@ -58,7 +58,7 @@ class AppTheme {
     ),
   );
 
-  // ── Small logo badge (🏠 in white rounded box) ──────────────────
+  // ── Small logo badge ───────────────────────────────────────────
   static Widget logoBadge({double size = 48, double iconSize = 24}) =>
       Container(
         width: size,
@@ -67,8 +67,14 @@ class AppTheme {
           color: Colors.white,
           borderRadius: BorderRadius.circular(size * 0.29),
         ),
-        child: Center(
-          child: Text('🏠', style: TextStyle(fontSize: iconSize)),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(size * 0.29),
+          child: Image.asset(
+            'assets/images/app_logo.png',
+            width: size,
+            height: size,
+            fit: BoxFit.cover,
+          ),
         ),
       );
 

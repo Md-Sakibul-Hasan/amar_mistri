@@ -253,7 +253,7 @@ class _LogoBadge extends StatelessWidget {
               border: Border.all(color: Colors.white.withAlpha(102), width: 2),
             ),
             child: Center(
-              // Inner white container
+              // Inner white container with logo
               child: Container(
                 width: 72,
                 height: 72,
@@ -261,8 +261,14 @@ class _LogoBadge extends StatelessWidget {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: const Center(
-                  child: Text('🏠', style: TextStyle(fontSize: 36)),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.asset(
+                    'assets/images/app_logo.png',
+                    width: 72,
+                    height: 72,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
