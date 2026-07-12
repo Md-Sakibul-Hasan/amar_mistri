@@ -9,7 +9,7 @@ class AppUser extends Equatable {
   final String phone;
   final UserRole role;
   final String? photoUrl;
-  final int? ratings;
+  final double? ratings;
   final int? totalRatings;
   final int? totalReviews;
   final int? completedJobs;
@@ -70,7 +70,7 @@ class AppUser extends Equatable {
     String? skills,
     String? serviceArea,
     String? nidNumber,
-    int? ratings,
+    double? ratings,
     int? totalRatings,
     int? totalReviews,
     int? completedJobs,
