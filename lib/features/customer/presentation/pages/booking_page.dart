@@ -91,10 +91,10 @@ class _BookingPageViewState extends State<_BookingPageView> {
                                   alpha: 0.25,
                                 ),
                                 backgroundImage:
-                                    widget.provider.photoUrl != null
+                                    (widget.provider.photoUrl != null && widget.provider.photoUrl!.isNotEmpty)
                                     ? NetworkImage(widget.provider.photoUrl!)
                                     : null,
-                                child: widget.provider.photoUrl == null
+                                child: (widget.provider.photoUrl == null || widget.provider.photoUrl!.isEmpty)
                                     ? Text(
                                         _initials(widget.provider.name),
                                         style: const TextStyle(

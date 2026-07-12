@@ -17,8 +17,9 @@ class CustomerHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final authState = context.watch<AuthBloc>().state;
     if (authState is! AuthAuthenticated) return const SizedBox.shrink();
-    final firstName = authState.user.name.isNotEmpty ? authState.user.name.split(' ').first : '';
-    final imageUrl = authState.user.photoUrl;
+    final name = authState.user.name.isNotEmpty ? authState.user.name : authState.user.email.split('@').first;
+    final firstName = name.split(' ').first;
+    final imageUrl = authState.user.photoUrl?.isNotEmpty == true ? authState.user.photoUrl : null;
 
     return Scaffold(
       backgroundColor: context.colors.scaffoldBg,

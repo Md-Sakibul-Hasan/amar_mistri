@@ -101,10 +101,10 @@ class _ProviderCard extends StatelessWidget {
             CircleAvatar(
               radius: 28,
               backgroundColor: const Color(0xFF1A73E8).withValues(alpha: 0.12),
-              backgroundImage: provider.photoUrl != null
+              backgroundImage: (provider.photoUrl != null && provider.photoUrl!.isNotEmpty)
                   ? NetworkImage(provider.photoUrl!)
                   : null,
-              child: provider.photoUrl == null
+              child: (provider.photoUrl == null || provider.photoUrl!.isEmpty)
                   ? Text(
                       initials,
                       style: const TextStyle(

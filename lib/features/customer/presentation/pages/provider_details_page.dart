@@ -87,10 +87,10 @@ class _DetailContent extends StatelessWidget {
                         CircleAvatar(
                           radius: 46,
                           backgroundColor: Colors.white.withValues(alpha: 0.25),
-                          backgroundImage: provider.photoUrl != null
+                          backgroundImage: (provider.photoUrl != null && provider.photoUrl!.isNotEmpty)
                               ? NetworkImage(provider.photoUrl!)
                               : null,
-                          child: provider.photoUrl == null
+                          child: (provider.photoUrl == null || provider.photoUrl!.isEmpty)
                               ? Text(
                                   initials,
                                   style: const TextStyle(

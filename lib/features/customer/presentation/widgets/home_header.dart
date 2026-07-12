@@ -41,8 +41,8 @@ class HomeHeader extends StatelessWidget {
                         CircleAvatar(
                           radius: 30,
                           backgroundColor: Colors.white.withValues(alpha: 0.25),
-                          backgroundImage: photoUrl != null ? NetworkImage(photoUrl!) : null,
-                          child: photoUrl == null
+                          backgroundImage: (photoUrl != null && photoUrl!.isNotEmpty) ? NetworkImage(photoUrl!) : null,
+                          child: (photoUrl == null || photoUrl!.isEmpty)
                               ? Text(
                                   firstName.isNotEmpty ? firstName[0].toUpperCase() : '?',
                                   style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w800, color: Colors.white),

@@ -350,10 +350,10 @@ class _ProfileViewState extends State<_ProfileView> {
                                         alpha: 0.25,
                                       ),
                                       backgroundImage:
-                                          widget.user.photoUrl != null
+                                          (widget.user.photoUrl != null && widget.user.photoUrl!.isNotEmpty)
                                           ? NetworkImage(widget.user.photoUrl!)
                                           : null,
-                                      child: widget.user.photoUrl == null
+                                      child: (widget.user.photoUrl == null || widget.user.photoUrl!.isEmpty)
                                           ? Text(
                                               initials,
                                               style: const TextStyle(

@@ -22,7 +22,8 @@ class ProviderHomePage extends StatelessWidget {
     final authState = context.watch<AuthBloc>().state;
     if (authState is! AuthAuthenticated) return const SizedBox.shrink();
     final user = authState.user;
-    final firstName = user.name.split(' ').first;
+    final displayName = user.name.isNotEmpty ? user.name : user.email.split('@').first;
+    final firstName = displayName.split(' ').first;
 
     return BlocProvider<ProviderBookingsBloc>(
       create: (_) => sl<ProviderBookingsBloc>()..add(ProviderBookingsRequested(user.uid)),
@@ -98,10 +99,10 @@ class _ProviderHeader extends StatelessWidget {
                         CircleAvatar(
                           radius: 30,
                           backgroundColor: Colors.white.withValues(alpha: 0.25),
-                          backgroundImage: photoUrl != null ? NetworkImage(photoUrl!) : null,
-                          child: photoUrl == null
+                          backgroundImage: (photoUrl != null && photoUrl!.isNotEmpty) ? NetworkImage(photoUrl!) : null,
+                          child: (photoUrl == null || photoUrl!.isEmpty)
                               ? Text(
-                                  firstName[0].toUpperCase(),
+                                  firstName.isNotEmpty ? firstName[0].toUpperCase() : '?',
                                   style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w800, color: Colors.white),
                                 )
                               : null,
