@@ -23,7 +23,7 @@ class CategoriesSection extends StatelessWidget {
               style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: c.primaryText),
             ),
             TextButton(
-              onPressed: () {},
+              onPressed: () => context.push(AppRouter.allCategories),
               style: TextButton.styleFrom(
                 minimumSize: Size.zero,
                 padding: const EdgeInsets.symmetric(horizontal: 4),

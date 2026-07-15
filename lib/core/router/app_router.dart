@@ -9,6 +9,7 @@ import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/role_selection_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
+import '../../features/customer/presentation/pages/all_categories_page.dart';
 import '../../features/customer/presentation/pages/customer_home_page.dart';
 import '../../features/customer/presentation/pages/providers_list_page.dart';
 import '../../features/customer/presentation/pages/provider_details_page.dart';
@@ -25,6 +26,7 @@ class AppRouter {
   static const String providerHome = '/provider/home';
   static const String providersByService = '/customer/providers';
   static const String providerDetails = '/customer/provider-details';
+  static const String allCategories = '/customer/all-categories';
   static const String profile = '/profile';
 
   static GoRouter router(BuildContext context) {
@@ -91,6 +93,7 @@ class AppRouter {
           path: providerHome,
           builder: (_, __) => const ProviderHomePage(),
         ),
+        GoRoute(path: allCategories, builder: (_, __) => const AllCategoriesPage()),
         GoRoute(path: profile, builder: (_, __) => const ProfilePage()),
       ],
     );
