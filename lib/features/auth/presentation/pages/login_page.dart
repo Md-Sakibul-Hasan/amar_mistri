@@ -45,41 +45,124 @@ class _LoginPageState extends State<LoginPage> {
     final emailController = TextEditingController(text: _emailController.text.trim());
     showDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(context.l10n.forgotPasswordTitle),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(context.l10n.forgotPasswordBody),
-            const SizedBox(height: 16),
-            AppTextField(
-              controller: emailController,
-              hint: context.l10n.emailHint,
-              keyboardType: TextInputType.emailAddress,
-              prefixIcon: const Icon(Icons.mail_outline, size: 18, color: Colors.grey),
-            ),
-          ],
+      builder: (ctx) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(24, 28, 24, 24),
+                decoration: const BoxDecoration(gradient: AppTheme.headerGradient),
+                child: Column(
+                  children: [
+                    Container(
+                      width: 56,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withAlpha(51),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: const Icon(Icons.lock_reset, color: Colors.white, size: 28),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      context.l10n.forgotPasswordTitle,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
+                child: Text(
+                  context.l10n.forgotPasswordBody,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: context.colors.secondaryText,
+                    height: 1.4,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+                child: AppTextField(
+                  controller: emailController,
+                  hint: context.l10n.emailHint,
+                  keyboardType: TextInputType.emailAddress,
+                  prefixIcon: Icon(Icons.mail_outline, size: 18, color: context.colors.greyIcon),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.of(ctx).pop(),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppTheme.blue,
+                          side: const BorderSide(color: AppTheme.blue),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                        ),
+                        child: Text(context.l10n.cancel),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          final email = emailController.text.trim();
+                          if (email.isEmpty || !email.contains('@')) {
+                            EasyLoading.showError(context.l10n.validEmailError);
+                            return;
+                          }
+                          Navigator.of(ctx).pop();
+                          context.read<AuthBloc>().add(
+                            AuthForgotPasswordRequested(email: email),
+                          );
+                        },
+                        child: Container(
+                          height: 48,
+                          decoration: BoxDecoration(
+                            gradient: AppTheme.headerGradient,
+                            borderRadius: BorderRadius.circular(14),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppTheme.blue.withAlpha(77),
+                                blurRadius: 8,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: Text(
+                              context.l10n.sendResetLink,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(context.l10n.cancel),
-          ),
-          FilledButton(
-            onPressed: () {
-              final email = emailController.text.trim();
-              if (email.isEmpty || !email.contains('@')) {
-                EasyLoading.showError(context.l10n.validEmailError);
-                return;
-              }
-              Navigator.of(ctx).pop();
-              context.read<AuthBloc>().add(
-                AuthForgotPasswordRequested(email: email),
-              );
-            },
-            child: Text(context.l10n.sendResetLink),
-          ),
-        ],
       ),
     );
   }
