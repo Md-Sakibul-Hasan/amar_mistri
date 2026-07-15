@@ -41,4 +41,6 @@ abstract class AuthRepository {
   });
 
   Future<Either<Failure, AppUser>> updatePhotoUrl(String photoUrl);
+
+  Future<Either<Failure, void>> forgotPassword(String email);
 }

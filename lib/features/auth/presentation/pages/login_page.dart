@@ -41,6 +41,49 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  void _showForgotPasswordDialog() {
+    final emailController = TextEditingController(text: _emailController.text.trim());
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(context.l10n.forgotPasswordTitle),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(context.l10n.forgotPasswordBody),
+            const SizedBox(height: 16),
+            AppTextField(
+              controller: emailController,
+              hint: context.l10n.emailHint,
+              keyboardType: TextInputType.emailAddress,
+              prefixIcon: const Icon(Icons.mail_outline, size: 18, color: Colors.grey),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(context.l10n.cancel),
+          ),
+          FilledButton(
+            onPressed: () {
+              final email = emailController.text.trim();
+              if (email.isEmpty || !email.contains('@')) {
+                EasyLoading.showError(context.l10n.validEmailError);
+                return;
+              }
+              Navigator.of(ctx).pop();
+              context.read<AuthBloc>().add(
+                AuthForgotPasswordRequested(email: email),
+              );
+            },
+            child: Text(context.l10n.sendResetLink),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isProvider = widget.role == 'provider';
@@ -56,6 +99,9 @@ class _LoginPageState extends State<LoginPage> {
           }
           if (state is AuthFailureState) {
             EasyLoading.showError(state.message);
+          }
+          if (state is AuthSuccessState) {
+            EasyLoading.showSuccess(context.l10n.passwordResetEmailSent);
           }
           if (state is AuthAuthenticated) {
             final destination = state.user.role == UserRole.provider
@@ -232,7 +278,7 @@ class _LoginPageState extends State<LoginPage> {
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
-                onPressed: () {},
+                onPressed: _showForgotPasswordDialog,
                 style: TextButton.styleFrom(
                   padding: EdgeInsets.zero,
                   minimumSize: const Size(0, 32),

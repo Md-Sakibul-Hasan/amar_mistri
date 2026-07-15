@@ -76,3 +76,11 @@ class AuthUserUpdated extends AuthEvent {
 class AuthRefreshRequested extends AuthEvent {
   const AuthRefreshRequested();
 }
+
+class AuthForgotPasswordRequested extends AuthEvent {
+  final String email;
+  const AuthForgotPasswordRequested({required this.email});
+
+  @override
+  List<Object> get props => [email];
+}

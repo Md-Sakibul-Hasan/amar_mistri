@@ -14,6 +14,7 @@ import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
 import '../../features/auth/domain/usecases/get_provider_details_usecase.dart';
 import '../../features/auth/domain/usecases/get_providers_by_service_usecase.dart';
+import '../../features/auth/domain/usecases/forgot_password_usecase.dart';
 import '../../features/auth/domain/usecases/login_usecase.dart';
 import '../../features/auth/domain/usecases/logout_usecase.dart';
 import '../../features/auth/domain/usecases/register_usecase.dart';
@@ -71,6 +72,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => RegisterUseCase(sl()));
   sl.registerLazySingleton(() => LogoutUseCase(sl()));
   sl.registerLazySingleton(() => GetCurrentUserUseCase(sl()));
+  sl.registerLazySingleton(() => ForgotPasswordUseCase(sl()));
   sl.registerLazySingleton(() => GetProvidersByServiceUseCase(sl()));
   sl.registerLazySingleton(() => GetProviderDetailsUseCase(sl()));
   sl.registerLazySingleton(() => UpdateUserProfileUseCase(sl()));
@@ -85,7 +87,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => GetProviderReviewsUseCase(sl()));
 
   // BLoCs
-  sl.registerFactory(() => AuthBloc(loginUseCase: sl(), registerUseCase: sl(), logoutUseCase: sl(), getCurrentUserUseCase: sl()));
+  sl.registerFactory(() => AuthBloc(loginUseCase: sl(), registerUseCase: sl(), logoutUseCase: sl(), getCurrentUserUseCase: sl(), forgotPasswordUseCase: sl()));
   sl.registerFactory(() => ProvidersBloc(getProvidersByService: sl()));
   sl.registerFactory(() => ProviderDetailsBloc(getProviderDetails: sl()));
   sl.registerFactory(() => BookingBloc(createBookingUseCase: sl()));

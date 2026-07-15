@@ -39,6 +39,8 @@ abstract class AuthRemoteDataSource {
   });
 
   Future<AppUserModel> updatePhotoUrl(String photoUrl);
+
+  Future<void> forgotPassword(String email);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -122,6 +124,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       throw AuthException(e.message ?? 'Registration failed.');
     } on FirebaseException catch (e) {
       throw ServerException(e.message ?? 'A server error occurred.');
+    }
+  }
+
+  @override
+  Future<void> forgotPassword(String email) async {
+    try {
+      await firebaseAuth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(e.message ?? 'Password reset failed.');
     }
   }
 
@@ -291,6 +302,14 @@ class MockAuthDataSource implements AuthRemoteDataSource {
     _store[email] = (password: password, user: user);
     _currentUser = user;
     return user;
+  }
+
+  @override
+  Future<void> forgotPassword(String email) async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (!_store.containsKey(email)) {
+      throw const AuthException('No account found for this email.');
+    }
   }
 
   @override

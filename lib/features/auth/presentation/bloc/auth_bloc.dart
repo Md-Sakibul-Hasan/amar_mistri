@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import '../../../../core/constants/app_constants.dart';
 import '../../../../core/usecases/usecase.dart';
 import '../../domain/entities/app_user.dart';
+import '../../domain/usecases/forgot_password_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import '../../domain/usecases/register_usecase.dart';
@@ -17,12 +18,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final RegisterUseCase registerUseCase;
   final LogoutUseCase logoutUseCase;
   final GetCurrentUserUseCase getCurrentUserUseCase;
+  final ForgotPasswordUseCase forgotPasswordUseCase;
 
   AuthBloc({
     required this.loginUseCase,
     required this.registerUseCase,
     required this.logoutUseCase,
     required this.getCurrentUserUseCase,
+    required this.forgotPasswordUseCase,
   }) : super(const AuthInitial()) {
     on<AuthCheckRequested>(_onCheckRequested);
     on<AuthLoginRequested>(_onLoginRequested);
@@ -30,6 +33,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLogoutRequested>(_onLogoutRequested);
     on<AuthUserUpdated>(_onUserUpdated);
     on<AuthRefreshRequested>(_onRefreshRequested);
+    on<AuthForgotPasswordRequested>(_onForgotPasswordRequested);
   }
 
   Future<void> _onCheckRequested(
@@ -103,6 +107,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     result.fold(
       (_) => null,
       (user) => emit(AuthAuthenticated(user)),
+    );
+  }
+
+  Future<void> _onForgotPasswordRequested(
+    AuthForgotPasswordRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading());
+    final result = await forgotPasswordUseCase(
+      ForgotPasswordParams(email: event.email),
+    );
+    result.fold(
+      (failure) => emit(AuthFailureState(failure.message)),
+      (_) => emit(const AuthSuccessState('Password reset email sent.')),
     );
   }
 }

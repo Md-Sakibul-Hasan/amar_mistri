@@ -65,6 +65,10 @@ class AppLocalizations {
   String get forgotPassword => _t('Forgot Password?', 'পাসওয়ার্ড ভুলে গেছেন?');
   String get loginButton => _t('Login', 'লগইন');
   String get orContinueWith => _t('or continue with', 'বা এর সাথে চালিয়ে যান');
+  String get forgotPasswordTitle => _t('Reset Password', 'পাসওয়ার্ড রিসেট');
+  String get forgotPasswordBody => _t('Enter your email address and we will send you a password reset link.', 'আপনার ইমেইল ঠিকানা দিন, আমরা আপনাকে একটি পাসওয়ার্ড রিসেট লিংক পাঠাব।');
+  String get sendResetLink => _t('Send Reset Link', 'রিসেট লিংক পাঠান');
+  String get passwordResetEmailSent => _t('Password reset email sent! Check your inbox.', 'পাসওয়ার্ড রিসেট ইমেইল পাঠানো হয়েছে! আপনার ইনবক্স চেক করুন।');
   String get noAccount => _t("Don't have an account? ", 'অ্যাকাউন্ট নেই? ');
   String get signUp => _t('Sign Up', 'নিবন্ধন করুন');
   String get validEmailError => _t('Enter a valid email', 'সঠিক ইমেইল লিখুন');
