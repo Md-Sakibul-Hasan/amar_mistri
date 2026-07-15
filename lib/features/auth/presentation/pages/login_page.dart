@@ -54,13 +54,14 @@ class _LoginPageState extends State<LoginPage> {
           } else {
             EasyLoading.dismiss();
           }
+          if (state is AuthFailureState) {
+            EasyLoading.showError(state.message);
+          }
           if (state is AuthAuthenticated) {
             final destination = state.user.role == UserRole.provider
                 ? AppRouter.providerHome
                 : AppRouter.customerHome;
             context.go(destination);
-          } else if (state is AuthFailureState) {
-            EasyLoading.showError(state.message);
           }
         },
         child: SingleChildScrollView(
