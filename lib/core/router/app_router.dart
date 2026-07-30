@@ -46,7 +46,10 @@ class AppRouter {
 
         if (!isLoggedIn && !isLoggingIn) return roleSelection;
         if (isLoggedIn && isLoggingIn) {
-          final role = authState.user.role;
+          final roleParam = state.uri.queryParameters['role'];
+          final role = roleParam != null
+              ? (roleParam == 'provider' ? UserRole.provider : UserRole.customer)
+              : authState.user.role;
           return role == UserRole.provider ? providerHome : customerHome;
         }
         return null;

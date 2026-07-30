@@ -61,6 +61,7 @@ class CategoriesSection extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(color: c.cardBg, borderRadius: BorderRadius.circular(14)),
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Container(
                       width: 52,

@@ -101,7 +101,7 @@ class _RegisterPageState extends State<RegisterPage> {
             EasyLoading.showError(state.message);
           }
           if (state is AuthAuthenticated) {
-            final destination = state.user.role == UserRole.provider
+            final destination = widget.role == 'provider'
                 ? AppRouter.providerHome
                 : AppRouter.customerHome;
             context.go(destination);

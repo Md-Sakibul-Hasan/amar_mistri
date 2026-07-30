@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/constants/app_constants.dart';
 import '../../../../core/constants/app_theme.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/router/app_router.dart';
@@ -187,7 +186,7 @@ class _LoginPageState extends State<LoginPage> {
             EasyLoading.showSuccess(context.l10n.passwordResetEmailSent);
           }
           if (state is AuthAuthenticated) {
-            final destination = state.user.role == UserRole.provider
+            final destination = widget.role == 'provider'
                 ? AppRouter.providerHome
                 : AppRouter.customerHome;
             context.go(destination);
